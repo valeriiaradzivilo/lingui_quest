@@ -5,9 +5,9 @@ class LinLanguage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Wrap(
+      direction: Axis.vertical,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         const Text('Ukr'),
         SizedBox(

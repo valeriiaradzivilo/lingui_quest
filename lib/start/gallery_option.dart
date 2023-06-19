@@ -5,7 +5,7 @@ class GalleryOptionTheme {
   static const _lightFillColor = Colors.black;
   static const _darkFillColor = Colors.white;
 
-  static ThemeData lightThemeData = themeData(darkColorScheme);
+  static ThemeData lightThemeData = themeData(lightColorScheme);
   static ThemeData darkThemeData = themeData(darkColorScheme);
 
   static ThemeData themeData(ColorScheme colorScheme) {
