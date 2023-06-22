@@ -8,11 +8,14 @@ class LinRoundPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: CircleAvatar(
-        minRadius: radius ?? 20,
-        child: const Icon(FeatherIcons.user),
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 50, maxHeight: 50),
+      child: InkWell(
+        onTap: onTap,
+        child: CircleAvatar(
+          minRadius: radius ?? 20,
+          child: const Icon(FeatherIcons.user),
+        ),
       ),
     );
   }

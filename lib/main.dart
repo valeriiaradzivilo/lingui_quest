@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:lingui_quest/start/gallery_option.dart';
 import 'package:lingui_quest/start/start_page.dart';
 import 'package:provider/provider.dart';
@@ -15,15 +16,17 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<ThemeModel>(
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(builder: (_, model, __) {
-        return MaterialApp(
-          title: 'LinguiQuest',
-          theme: GalleryOptionTheme.lightThemeData,
-          darkTheme: GalleryOptionTheme.darkThemeData,
-          themeMode: model.mode,
-          home: StartPage(
-            changeTheme: () {
-              model.toggleMode();
-            },
+        return Portal(
+          child: MaterialApp(
+            title: 'LinguiQuest',
+            theme: GalleryOptionTheme.lightThemeData,
+            darkTheme: GalleryOptionTheme.darkThemeData,
+            themeMode: model.mode,
+            home: StartPage(
+              changeTheme: () {
+                model.toggleMode();
+              },
+            ),
           ),
         );
       }),

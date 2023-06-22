@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 
-class LinMainButton extends StatelessWidget {
-  const LinMainButton({super.key, this.icon, required this.label, required this.onTap});
+class LinButton extends StatelessWidget {
+  const LinButton({super.key, this.icon, required this.label, required this.onTap});
   final IconData? icon;
   final String label;
   final Function() onTap;
@@ -12,10 +12,11 @@ class LinMainButton extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(PaddingConst.small),
       child: Container(
-        padding: EdgeInsets.all(PaddingConst.large),
-        constraints: const BoxConstraints(maxWidth: 200, maxHeight: 200),
+        constraints: const BoxConstraints(maxWidth: 100, maxHeight: 200),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer, borderRadius: BorderRadius.circular(20)),
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: InkWell(
           onTap: onTap,
           child: Row(

@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   feather_icons: ^1.2.0
   provider: ^6.0.5
+  flutter_portal: ^1.1.4
 
 dev_dependencies:
   flutter_test:
@@ -90,3 +91,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  assets:
+    - assets/
+    - assets/logo/

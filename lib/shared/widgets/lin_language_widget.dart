@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
+//TODO: Maybe delete it
 class LinLanguage extends StatelessWidget {
   const LinLanguage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      direction: Axis.vertical,
-      crossAxisAlignment: WrapCrossAlignment.center,
+    return Column(
       children: [
         const Text('Ukr'),
         SizedBox(
