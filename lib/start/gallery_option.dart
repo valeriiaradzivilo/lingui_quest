@@ -51,7 +51,7 @@ class GalleryOptionTheme {
       appBarTheme: AppBarTheme(
         color: colorScheme.background,
         elevation: 0,
-        iconTheme: IconThemeData(color: colorScheme.secondary),
+        iconTheme: IconThemeData(color: colorScheme.onPrimary),
       ),
       iconTheme: IconThemeData(color: colorScheme.onPrimary),
       canvasColor: colorScheme.background,
@@ -120,7 +120,7 @@ class GalleryOptionTheme {
 
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.secondaryContainer,
+              backgroundColor: colorScheme.primary,
               elevation: 2,
               textStyle:
                   TextStyle(fontSize: 10, fontWeight: FontWeight.w300, color: colorScheme.onSecondaryContainer))),

@@ -12,7 +12,7 @@ class LinMainButton extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(PaddingConst.small),
       child: Container(
-        padding: EdgeInsets.all(PaddingConst.large),
+        padding: EdgeInsets.all(PaddingConst.small),
         constraints: const BoxConstraints(maxWidth: 200, maxHeight: 200),
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondaryContainer, borderRadius: BorderRadius.circular(20)),
