@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingui_quest/core/extentions/custom_exceptions.dart';
 
 class FirebaseDatabaseImpl {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   Future<void> createUserWithEmailAndPassword(String email, String password) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -21,7 +23,7 @@ class FirebaseDatabaseImpl {
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw NoUserFoundException();
@@ -35,7 +37,7 @@ class FirebaseDatabaseImpl {
 
   Future<void> signOut() async {
     try {
-      await FirebaseAuth.instance.signOut();
+      await _firebaseAuth.signOut();
     } catch (e) {
       rethrow;
     }

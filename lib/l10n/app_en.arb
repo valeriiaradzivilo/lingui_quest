@@ -43,5 +43,7 @@
   "games":"Games",
   "planner":"Planner",
   "levelTest":"Level test",
-  "mainDesription":""
+  "mainDesription":"",
+
+  "noProfileYet":"no profile yet, sign up"
 }

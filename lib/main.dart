@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_portal/flutter_portal.dart';
+import 'package:hive/hive.dart';
 import 'package:lingui_quest/data/firebase/firebase_options.dart';
 import 'package:lingui_quest/start/di.dart';
 import 'package:lingui_quest/start/gallery_option.dart';
@@ -10,6 +11,8 @@ import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/start/start_page.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 import 'package:lingui_quest/view/sign_in_page/sign_in_page.dart';
+import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
+import 'package:lingui_quest/view/sign_up_page/sign_up_page.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -18,6 +21,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   init();
+  Hive.init(null);
   runApp(const MyApp());
 }
 
@@ -29,6 +33,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<SignInCubit>(create: (_) => serviceLocator<SignInCubit>()),
+        BlocProvider<SignUpCubit>(create: (_) => serviceLocator<SignUpCubit>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),
@@ -57,6 +62,7 @@ class MyApp extends StatelessWidget {
             },
           ),
       AppRoutes.signIn: (context) => const SignInPage(),
+      AppRoutes.signUp: (context) => const SignUpPage(),
     };
   }
 }

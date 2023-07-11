@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
+import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 
 class SignInPage extends StatefulWidget {
@@ -29,18 +31,20 @@ class _SignInPageState extends State<SignInPage> {
                   children: [
                     LinTextField(
                       controller: emailController,
-                      label: 'Email',
+                      label: context.loc.email,
                     ),
                     LinTextField(
                       controller: passwordController,
-                      label: 'Password',
+                      label: context.loc.password,
                     ),
-                    LinMainButton(label: 'Sign in', onTap: () {}),
+                    LinMainButton(label: context.loc.signIn, onTap: () {}),
                     InkWell(
-                        onTap: () {},
-                        child: const Text(
-                          'no profile yet, sign up',
-                          style: TextStyle(decoration: TextDecoration.underline),
+                        onTap: () {
+                          Navigator.of(context).pushNamed(AppRoutes.signUp);
+                        },
+                        child: Text(
+                          context.loc.noProfileYet,
+                          style: const TextStyle(decoration: TextDecoration.underline),
                         ))
                   ],
                 ),
