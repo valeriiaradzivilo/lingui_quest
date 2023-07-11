@@ -6,6 +6,7 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_round_photo.dart';
+import 'package:lingui_quest/start/app_localization_context.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 
 class StartPage extends StatefulWidget {
@@ -84,25 +85,25 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                     ),
                   ),
                   LinMainButton(
-                    label: 'ROADMAP',
+                    label: context.loc.roadmap.toUpperCase(),
                     onTap: () {
                       goTo(1);
                     },
                   ),
                   LinMainButton(
-                    label: 'GAMES',
+                    label: context.loc.games.toUpperCase(),
                     onTap: () {
                       goTo(2);
                     },
                   ),
                   LinMainButton(
-                    label: 'PLANNER',
+                    label: context.loc.planner.toUpperCase(),
                     onTap: () {
                       goTo(3);
                     },
                   ),
                   LinMainButton(
-                    label: 'LEVEL TEST',
+                    label: context.loc.levelTest.toUpperCase(),
                     onTap: () {
                       goTo(3);
                     },
@@ -117,7 +118,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: LinButton(
-                        label: 'Sign in',
+                        label: context.loc.signIn,
                         onTap: () {},
                       ),
                     ),

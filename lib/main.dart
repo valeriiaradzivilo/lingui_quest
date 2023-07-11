@@ -1,16 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_portal/flutter_portal.dart';
+import 'package:lingui_quest/data/firebase_options.dart';
 import 'package:lingui_quest/l10n/app_localizations.dart';
 import 'package:lingui_quest/start/gallery_option.dart';
 import 'package:lingui_quest/start/start_page.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +24,19 @@ class MyApp extends StatelessWidget {
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(builder: (_, model, __) {
         return Portal(
-          child: MaterialApp(
-            title: AppLocalizations.of(context)!.shortTitle,
-            theme: GalleryOptionTheme.lightThemeData,
-            darkTheme: GalleryOptionTheme.darkThemeData,
-            themeMode: model.mode,
-            supportedLocales: const [
-              Locale('en'), // English
-            ],
-            home: StartPage(
-              changeTheme: () {
-                model.toggleMode();
-              },
-            ),
+            child: MaterialApp(
+          title: 'LinguiQuest',
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: GalleryOptionTheme.lightThemeData,
+          darkTheme: GalleryOptionTheme.darkThemeData,
+          themeMode: model.mode,
+          home: StartPage(
+            changeTheme: () {
+              model.toggleMode();
+            },
           ),
-        );
+        ));
       }),
     );
   }

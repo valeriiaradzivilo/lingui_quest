@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "836741756103",
+    "project_id": "lingui-quest",
+    "storage_bucket": "lingui-quest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836741756103:android:df75f348201bbc3f19fae2",
+        "android_client_info": {
+          "package_name": "com.example.lingui_quest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836741756103-psv4rg98gv5nj0u7aohicmi2adg0vofa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcPsaLqM97sw6cb-zjKGfoL0b51hpRr48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836741756103-psv4rg98gv5nj0u7aohicmi2adg0vofa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
