@@ -2,12 +2,14 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_round_photo.dart';
-import 'package:lingui_quest/start/app_localization_context.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
+
+enum TabBarOption { logo, roadmap, games, planner, level }
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key, required this.changeTheme});
@@ -19,7 +21,7 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
   late final TabController tabController;
-  int currentTab = 0;
+
   bool _clikedOnAvatar = false;
   @override
   void initState() {
@@ -27,11 +29,8 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
     tabController = TabController(initialIndex: 0, length: 5, vsync: this);
   }
 
-  void goTo(int index) {
-    tabController.animateTo(index);
-    setState(() {
-      currentTab = index;
-    });
+  void goTo(TabBarOption option) {
+    tabController.animateTo(option.index);
   }
 
   @override
@@ -53,6 +52,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
               onPressed: widget.changeTheme,
             ),
           ),
+          //TODO: Add languages here
         ],
       ),
       body: Center(
@@ -69,45 +69,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                 direction: Axis.horizontal,
                 alignment: WrapAlignment.center,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      goTo(0);
-                    },
-                    child: SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: SvgPicture.asset(
-                        allowDrawingOutsideViewBox: true,
-                        "assets/logo/logo.svg",
-                        width: 100,
-                        height: 100,
-                      ),
-                    ),
-                  ),
-                  LinMainButton(
-                    label: context.loc.roadmap.toUpperCase(),
-                    onTap: () {
-                      goTo(1);
-                    },
-                  ),
-                  LinMainButton(
-                    label: context.loc.games.toUpperCase(),
-                    onTap: () {
-                      goTo(2);
-                    },
-                  ),
-                  LinMainButton(
-                    label: context.loc.planner.toUpperCase(),
-                    onTap: () {
-                      goTo(3);
-                    },
-                  ),
-                  LinMainButton(
-                    label: context.loc.levelTest.toUpperCase(),
-                    onTap: () {
-                      goTo(3);
-                    },
-                  ),
+                  for (TabBarOption tab in TabBarOption.values) _buildTabButton(tab),
                   PortalTarget(
                     visible: _clikedOnAvatar,
                     anchor: const Aligned(
@@ -137,18 +99,82 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
             Expanded(
               child: TabBarView(
                 controller: tabController,
-                children: const <Widget>[
-                  HomePage(),
-                  Placeholder(),
-                  Placeholder(),
-                  Placeholder(),
-                  Placeholder(),
-                ],
+                children: <Widget>[for (TabBarOption option in TabBarOption.values) _buildCurrentTab(option)],
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildCurrentTab(TabBarOption tab) {
+    switch (tab) {
+      case TabBarOption.logo:
+        return const HomePage();
+      case TabBarOption.games:
+        return const Placeholder();
+      case TabBarOption.level:
+        return const Placeholder();
+      case TabBarOption.planner:
+        return const Placeholder();
+      case TabBarOption.roadmap:
+        return const Placeholder();
+
+      default:
+        return const Placeholder();
+    }
+  }
+
+  Widget _buildTabButton(TabBarOption tab) {
+    switch (tab) {
+      case TabBarOption.logo:
+        return InkWell(
+          onTap: () {
+            goTo(tab);
+          },
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: SvgPicture.asset(
+              allowDrawingOutsideViewBox: true,
+              "assets/logo/logo.svg",
+              width: 100,
+              height: 100,
+            ),
+          ),
+        );
+      case TabBarOption.roadmap:
+        return LinMainButton(
+          label: context.loc.roadmap.toUpperCase(),
+          onTap: () {
+            goTo(tab);
+          },
+        );
+      case TabBarOption.planner:
+        return LinMainButton(
+          label: context.loc.planner.toUpperCase(),
+          onTap: () {
+            goTo(tab);
+          },
+        );
+      case TabBarOption.games:
+        return LinMainButton(
+          label: context.loc.games.toUpperCase(),
+          onTap: () {
+            goTo(tab);
+          },
+        );
+      case TabBarOption.level:
+        return LinMainButton(
+          label: context.loc.levelTest.toUpperCase(),
+          onTap: () {
+            goTo(tab);
+          },
+        );
+
+      default:
+        return const SizedBox();
+    }
   }
 }

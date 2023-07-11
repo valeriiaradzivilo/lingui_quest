@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lingui_quest/core/custom_exceptions.dart';
+import 'package:lingui_quest/core/extentions/custom_exceptions.dart';
 
-class FirebaseDatabaseInstance {
+class FirebaseDatabaseImpl {
   Future<void> createUserWithEmailAndPassword(String email, String password) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
