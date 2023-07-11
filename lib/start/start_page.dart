@@ -7,6 +7,7 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_round_photo.dart';
+import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 
 enum TabBarOption { logo, roadmap, games, planner, level }
@@ -81,7 +82,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                       ),
                       child: LinButton(
                         label: context.loc.signIn,
-                        onTap: () {},
+                        onTap: () => Navigator.of(context).pushNamed(AppRoutes.signIn),
                       ),
                     ),
                     child: LinRoundPhoto(

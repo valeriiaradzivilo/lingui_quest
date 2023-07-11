@@ -6,8 +6,10 @@ import 'package:flutter_portal/flutter_portal.dart';
 import 'package:lingui_quest/data/firebase/firebase_options.dart';
 import 'package:lingui_quest/start/di.dart';
 import 'package:lingui_quest/start/gallery_option.dart';
+import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/start/start_page.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
+import 'package:lingui_quest/view/sign_in_page/sign_in_page.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -15,6 +17,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  init();
   runApp(const MyApp());
 }
 
@@ -38,15 +41,23 @@ class MyApp extends StatelessWidget {
             themeMode: model.mode,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: StartPage(
-              changeTheme: () {
-                model.toggleMode();
-              },
-            ),
+            initialRoute: '/',
+            routes: _routes(model),
           ));
         }),
       ),
     );
+  }
+
+  Map<String, Widget Function(BuildContext)> _routes(ThemeModel model) {
+    return {
+      AppRoutes.initial: (context) => StartPage(
+            changeTheme: () {
+              model.toggleMode();
+            },
+          ),
+      AppRoutes.signIn: (context) => const SignInPage(),
+    };
   }
 }
 

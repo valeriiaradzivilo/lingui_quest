@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lingui_quest/shared/widgets/lin_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 
@@ -16,30 +16,41 @@ class _SignInPageState extends State<SignInPage> {
   TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignInCubit, SignInState>(builder: (context, state) {
-      if (state.status == SignInStatus.success) {
-        return Column(
-          children: [
-            LinTextField(
-              controller: emailController,
-              label: 'Email',
+    return Scaffold(
+      body: BlocBuilder<SignInCubit, SignInState>(builder: (context, state) {
+        if (state.status == SignInStatus.initial) {
+          return Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LinTextField(
+                      controller: emailController,
+                      label: 'Email',
+                    ),
+                    LinTextField(
+                      controller: passwordController,
+                      label: 'Password',
+                    ),
+                    LinMainButton(label: 'Sign in', onTap: () {}),
+                    InkWell(
+                        onTap: () {},
+                        child: const Text(
+                          'no profile yet, sign up',
+                          style: TextStyle(decoration: TextDecoration.underline),
+                        ))
+                  ],
+                ),
+              ),
             ),
-            LinTextField(
-              controller: passwordController,
-              label: 'Password',
-            ),
-            LinButton(label: 'Sign in', onTap: () {}),
-            InkWell(
-                onTap: () {},
-                child: const Text(
-                  'no profile yet, sign up',
-                  style: TextStyle(decoration: TextDecoration.underline),
-                ))
-          ],
-        );
-      } else {
-        return const CircularProgressIndicator();
-      }
-    });
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      }),
+    );
   }
 }
