@@ -14,8 +14,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignUpPage> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final SignUpCubit bloc = BlocProvider.of<SignUpCubit>(context);
@@ -28,21 +29,30 @@ class _SignInPageState extends State<SignUpPage> {
                 child: Container(
                   constraints: const BoxConstraints(maxWidth: 600),
                   child: Form(
+                    key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         LinTextField(
+                          key: const ValueKey('emailSignUpField'),
                           controller: emailController,
-                          label: 'Email',
+                          label: context.loc.email,
+                          option: TextFieldOption.email,
                         ),
                         LinTextField(
+                          key: const ValueKey('passwordSignUpField'),
                           controller: passwordController,
-                          label: 'Password',
+                          label: context.loc.password,
+                          option: TextFieldOption.password,
                         ),
                         LinMainButton(
-                            label: context.loc.signUp,
-                            onTap: () => bloc.signUp(emailController.text, passwordController.text)),
+                          key: const ValueKey('signUpButton'),
+                          label: context.loc.signUp,
+                          onTap: () => bloc.signUp(
+                              emailController.text, passwordController.text),
+                          isEnabled: _formKey.currentState?.validate() ?? false,
+                        ),
                       ],
                     ),
                   ),

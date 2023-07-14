@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:lingui_quest/shared/constants/validation_constant.dart';
+
+enum TextFieldOption { undefined, email, password }
 
 class LinTextField extends StatelessWidget {
-  const LinTextField({super.key, required this.controller, this.initialValue, this.isRequired = false, this.label});
+  const LinTextField(
+      {super.key,
+      required this.controller,
+      this.initialValue,
+      this.isRequired = false,
+      this.label,
+      this.option = TextFieldOption.undefined});
   final TextEditingController controller;
   final String? initialValue;
   final bool isRequired;
   final String? label;
+  final TextFieldOption option;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +23,14 @@ class LinTextField extends StatelessWidget {
       controller: controller,
       initialValue: initialValue,
       validator: (value) {
-        if (value?.isEmpty ?? isRequired) return 'This field must not be empty';
+        if (value?.isEmpty ?? isRequired) {
+          return 'This field must not be empty';
+        } else if (option == TextFieldOption.email) {
+          return ValidationConstant.email(value, context);
+        } else if (option == TextFieldOption.password) {
+          return ValidationConstant.password(value, context);
+        }
+
         return null;
       },
       decoration: InputDecoration(
