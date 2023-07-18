@@ -18,6 +18,7 @@ class _SignInPageState extends State<SignInPage> {
   TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final SignInCubit bloc = BlocProvider.of<SignInCubit>(context);
     return Scaffold(
       body: BlocBuilder<SignInCubit, SignInState>(builder: (context, state) {
         if (state.status == SignInStatus.initial) {
@@ -32,12 +33,18 @@ class _SignInPageState extends State<SignInPage> {
                     LinTextField(
                       controller: emailController,
                       label: context.loc.email,
+                      option: TextFieldOption.email,
                     ),
                     LinTextField(
                       controller: passwordController,
                       label: context.loc.password,
+                      option: TextFieldOption.password,
                     ),
-                    LinMainButton(label: context.loc.signIn, onTap: () {}),
+                    LinMainButton(
+                        label: context.loc.signIn,
+                        onTap: () {
+                          bloc.login(emailController.text, passwordController.text);
+                        }),
                     InkWell(
                         onTap: () {
                           Navigator.of(context).pushNamed(AppRoutes.signUp);
@@ -49,6 +56,21 @@ class _SignInPageState extends State<SignInPage> {
                   ],
                 ),
               ),
+            ),
+          );
+        } else if (state.status == SignInStatus.success) {
+          return Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(context.loc.signedInSuccessfully),
+                LinMainButton(
+                    label: context.loc.goToMainPage,
+                    onTap: () {
+                      Navigator.of(context).pushNamed(AppRoutes.initial);
+                    })
+              ],
             ),
           );
         } else {

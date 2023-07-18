@@ -5,6 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:hive/hive.dart';
 import 'package:lingui_quest/data/firebase/firebase_options.dart';
+import 'package:lingui_quest/data/local_storage/hive_database.dart';
+import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/di.dart';
 import 'package:lingui_quest/start/gallery_option.dart';
 import 'package:lingui_quest/start/routes.dart';
@@ -22,6 +24,7 @@ void main() async {
   );
   init();
   Hive.init(null);
+  HiveDatabase().openBox();
   runApp(const MyApp());
 }
 
@@ -34,6 +37,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<SignInCubit>(create: (_) => serviceLocator<SignInCubit>()),
         BlocProvider<SignUpCubit>(create: (_) => serviceLocator<SignUpCubit>()),
+        BlocProvider<StartCubit>(create: (_) => serviceLocator<StartCubit>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),

@@ -5,6 +5,7 @@ import 'package:lingui_quest/data/firebase/firebase_database.dart';
 import 'package:lingui_quest/data/repository/remote_repository.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
+import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
 
@@ -21,6 +22,9 @@ Future<void> init() async {
     () => SignUpCubit(
       serviceLocator<SignUpWithEmailUsecase>(),
     ),
+  );
+  serviceLocator.registerFactory(
+    () => StartCubit(),
   );
 
   //usecases

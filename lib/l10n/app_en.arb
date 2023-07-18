@@ -45,6 +45,11 @@
   "levelTest":"Level test",
   "mainDesription":"",
 
+  "signedInSuccessfully":"You signed in successfully. Return to home page to continue your journey.",
+  "goToMainPage":"Go back",
+
+  "profile":"Profile",
+
   "noProfileYet":"no profile yet, sign up",
   "enterValidEmail":"Enter valid email",
   "passwordMinLength":"Password must have at least 8 characters"
