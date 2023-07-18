@@ -24,18 +24,17 @@ void main() {
       await tester.pumpWidget(const MyApp());
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(ValueKey(KeyConstants.avatarPortal)));
-      await addDelay(100);
-      await tester.tap(find.byKey(ValueKey(KeyConstants.avatarPortal)));
       await tester.pumpAndSettle();
-
       await tester.tap(find.byKey(ValueKey(KeyConstants.signInButton)));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(ValueKey(KeyConstants.noProfileYet)));
-
+      await tester.pumpAndSettle();
       await tester.enterText(
           find.byKey(ValueKey(KeyConstants.emailSignUpField)), 'test@zip.com');
+      await tester.pumpAndSettle();
       await tester.enterText(
           find.byKey(ValueKey(KeyConstants.passwordSignUpField)), 'test');
-      await addDelay(10);
+      await tester.pumpAndSettle();
       expect(
           tester
               .widget<LinMainButton>(

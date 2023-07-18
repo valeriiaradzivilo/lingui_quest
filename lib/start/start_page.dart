@@ -46,8 +46,9 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               toolbarHeight: 60,
-              actions: [
-                InkWell(
+              leading: Padding(
+                padding: EdgeInsets.all(PaddingConst.small),
+                child: InkWell(
                   onTap: () => goTo(TabBarOption.logo),
                   child: SvgPicture.asset(
                     allowDrawingOutsideViewBox: true,
@@ -56,6 +57,8 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                     height: kIsWeb ? 100 : 50,
                   ),
                 ),
+              ),
+              actions: [
                 Padding(
                   padding: EdgeInsets.only(right: PaddingConst.medium),
                   child: IconButton(
