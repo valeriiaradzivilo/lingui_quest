@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
+import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_round_photo.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
@@ -22,7 +24,10 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
     return BlocBuilder<StartCubit, StartState>(builder: (context, state) {
       return PortalTarget(
         visible: _clikedOnAvatar,
-        anchor: const Aligned(follower: Alignment.topLeft, target: Alignment.bottomCenter, offset: Offset(0, -5)),
+        anchor: const Aligned(
+            follower: kIsWeb ? Alignment.topLeft : Alignment.bottomCenter,
+            target: kIsWeb ? Alignment.bottomCenter : Alignment.topLeft,
+            offset: Offset(0, -5)),
         portalFollower: Container(
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceVariant,
@@ -30,12 +35,13 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
             ),
             child: _child(state.isLoggedIn)),
         child: LinRoundPhoto(
+          key: ValueKey(KeyConstants.avatarPortal),
+          radius: kIsWeb ? 50 : 20,
           onTap: () {
             setState(() {
               _clikedOnAvatar = !_clikedOnAvatar;
             });
           },
-          radius: 40,
         ),
       );
     });
@@ -44,6 +50,7 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
   Widget _child(bool isLoggedIn) {
     if (!isLoggedIn) {
       return LinButton(
+        key: ValueKey(KeyConstants.signInButton),
         label: context.loc.signIn,
         onTap: () => Navigator.of(context).pushNamed(AppRoutes.signIn),
       );

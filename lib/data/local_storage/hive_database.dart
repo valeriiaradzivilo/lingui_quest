@@ -1,8 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:lingui_quest/shared/constants/hive_constants.dart';
+import 'package:path_provider/path_provider.dart';
 
 class HiveDatabase {
   Future<void> openBox() async {
+    if (!kIsWeb && !Hive.isBoxOpen(HiveConstants.currentUserDataBox)) {
+      Hive.init((await getApplicationDocumentsDirectory()).path);
+    }
     await Hive.openBox(HiveConstants.currentUserDataBox);
   }
 
@@ -25,7 +30,7 @@ class HiveDatabase {
   }
 
   Future<bool> isSignedIn() async {
-    await Hive.openBox(HiveConstants.currentUserDataBox);
+    await openBox();
     final userBox = Hive.box(HiveConstants.currentUserDataBox);
     if (userBox.isOpen && userBox.isNotEmpty) {
       return true;

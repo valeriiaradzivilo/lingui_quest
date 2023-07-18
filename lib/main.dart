@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_portal/flutter_portal.dart';
-import 'package:hive/hive.dart';
 import 'package:lingui_quest/data/firebase/firebase_options.dart';
 import 'package:lingui_quest/data/local_storage/hive_database.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
@@ -23,7 +22,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   init();
-  Hive.init(null);
   HiveDatabase().openBox();
   runApp(const MyApp());
 }

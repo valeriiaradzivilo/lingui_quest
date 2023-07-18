@@ -37,6 +37,7 @@ dependencies:
   json_annotation: ^4.8.1
   json_serializable: any
   simple_logger: ^1.9.0+2
+  path_provider: any
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
+import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
@@ -35,19 +36,19 @@ class _SignInPageState extends State<SignUpPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         LinTextField(
-                          key: const ValueKey('emailSignUpField'),
+                          key: ValueKey(KeyConstants.emailSignUpField),
                           controller: emailController,
                           label: context.loc.email,
                           option: TextFieldOption.email,
                         ),
                         LinTextField(
-                          key: const ValueKey('passwordSignUpField'),
+                          key: ValueKey(KeyConstants.passwordSignUpField),
                           controller: passwordController,
                           label: context.loc.password,
                           option: TextFieldOption.password,
                         ),
                         LinMainButton(
-                          key: const ValueKey('signUpButton'),
+                          key: ValueKey(KeyConstants.signUpButton),
                           label: context.loc.signUp,
                           onTap: () => bloc.signUp(
                               emailController.text, passwordController.text),

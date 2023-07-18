@@ -24,7 +24,7 @@ Future<void> init() async {
     ),
   );
   serviceLocator.registerFactory(
-    () => StartCubit(),
+    StartCubit.new,
   );
 
   //usecases
