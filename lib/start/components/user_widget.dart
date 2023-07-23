@@ -21,23 +21,25 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    final StartCubit bloc = BlocProvider.of<StartCubit>(context);
     return BlocBuilder<StartCubit, StartState>(builder: (context, state) {
       return PortalTarget(
         visible: _clikedOnAvatar,
         anchor: const Aligned(
-            follower: kIsWeb ? Alignment.topLeft : Alignment.bottomCenter,
-            target: kIsWeb ? Alignment.bottomCenter : Alignment.topLeft,
-            offset: Offset(0, -5)),
+          follower: kIsWeb ? Alignment.topCenter : Alignment.bottomCenter,
+          target: kIsWeb ? Alignment.bottomCenter : Alignment.topLeft,
+        ),
         portalFollower: Container(
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceVariant,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: _child(state.isLoggedIn)),
+            child: _child(state.status == StartStatus.loggedIn)),
         child: LinRoundPhoto(
           key: ValueKey(KeyConstants.avatarPortal),
           radius: kIsWeb ? 50 : 20,
           onTap: () {
+            bloc.checkLoggedIn();
             setState(() {
               _clikedOnAvatar = !_clikedOnAvatar;
             });
@@ -55,18 +57,21 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
         onTap: () => Navigator.of(context).pushNamed(AppRoutes.signIn),
       );
     } else {
-      return Column(
-        children: [
-          LinButton(
-            label: context.loc.profile,
-            onTap: () {},
-          ),
-          const Divider(),
-          LinButton(
-            label: context.loc.signOut,
-            onTap: () {},
-          ),
-        ],
+      return Container(
+        constraints: const BoxConstraints(maxHeight: 200, maxWidth: 200),
+        child: Column(
+          children: [
+            LinButton(
+              label: context.loc.profile,
+              onTap: () {},
+            ),
+            const Divider(),
+            LinButton(
+              label: context.loc.signOut,
+              onTap: () {},
+            ),
+          ],
+        ),
       );
     }
   }

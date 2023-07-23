@@ -1,14 +1,13 @@
 part of 'start_cubit.dart';
 
-enum StartStatus { initial, progress, error, success }
+enum StartStatus { initial, progress, error, loggedIn }
 
 class StartState extends Equatable {
   final StartStatus status;
   final String? errorMessage;
-  final bool isLoggedIn;
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
-  const StartState({required this.status, this.errorMessage, this.isLoggedIn = false});
+  const StartState({required this.status, this.errorMessage});
   factory StartState.initial() {
     return const StartState(status: StartStatus.initial);
   }
@@ -19,11 +18,10 @@ class StartState extends Equatable {
   StartState copyWith({
     StartStatus? status,
     String? errorMessage,
-    bool? isLoggedIn,
   }) {
     return StartState(
-        status: status ?? this.status,
-        errorMessage: errorMessage ?? this.errorMessage,
-        isLoggedIn: isLoggedIn ?? this.isLoggedIn);
+      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
   }
 }

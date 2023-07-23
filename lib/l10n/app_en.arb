@@ -49,6 +49,7 @@
   "goToMainPage":"Go back",
 
   "profile":"Profile",
+  "createTestTask":"Create test task",
 
   "noProfileYet":"no profile yet, sign up",
   "enterValidEmail":"Enter valid email",

@@ -1,14 +1,13 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
-import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/components/tab_bar.dart';
 import 'package:lingui_quest/start/components/user_widget.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
+import 'package:lingui_quest/view/level_test/level_test_screen.dart';
 
 enum TabBarOption { logo, roadmap, games, planner, level }
 
@@ -37,76 +36,74 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
-    final StartCubit bloc = BlocProvider.of<StartCubit>(context);
-    return BlocBuilder<StartCubit, StartState>(
-        bloc: bloc..checkIfUserLoggedIn(),
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              toolbarHeight: 60,
-              leading: Padding(
-                padding: EdgeInsets.all(PaddingConst.small),
-                child: InkWell(
-                  onTap: () => goTo(TabBarOption.logo),
-                  child: SvgPicture.asset(
-                    allowDrawingOutsideViewBox: true,
-                    "assets/logo/logo.svg",
-                    width: kIsWeb ? 200 : 50,
-                    height: kIsWeb ? 200 : 50,
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 60,
+        leading: Padding(
+          padding: EdgeInsets.all(PaddingConst.small),
+          child: InkWell(
+            onTap: () => goTo(TabBarOption.logo),
+            child: SvgPicture.asset(
+              allowDrawingOutsideViewBox: true,
+              "assets/logo/logo.svg",
+              width: kIsWeb ? 200 : 50,
+              height: kIsWeb ? 200 : 50,
+            ),
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: PaddingConst.medium),
+            child: const UserAvatarWidget(),
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: PaddingConst.medium),
+            child: IconButton(
+              icon: Icon(
+                isDarkMode ? FeatherIcons.sun : FeatherIcons.moon,
+                size: 40,
+              ),
+              onPressed: widget.changeTheme,
+            ),
+          ),
+          //TODO: Add languages here
+        ],
+      ),
+      body: SafeArea(
+        minimum: EdgeInsets.all(PaddingConst.medium),
+        child: Center(
+          child: Row(
+            children: [
+              if (kIsWeb)
+                PreferredSize(
+                  preferredSize: Size.fromHeight(size.height - 100),
+                  child: RotatedBox(
+                      quarterTurns: 3, child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
+                ),
+              Expanded(
+                child: TabBarView(
+                  controller: tabController,
+                  children: _buildTabViews(),
                 ),
               ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(right: PaddingConst.medium),
-                  child: IconButton(
-                    icon: Icon(
-                      isDarkMode ? FeatherIcons.sun : FeatherIcons.moon,
-                      size: 40,
-                    ),
-                    onPressed: widget.changeTheme,
-                  ),
-                ),
-                //TODO: Add languages here
-              ],
-            ),
-            body: SafeArea(
-              minimum: EdgeInsets.all(PaddingConst.medium),
-              child: Center(
-                child: Row(
-                  children: [
-                    if (kIsWeb)
-                      PreferredSize(
-                        preferredSize: Size.fromHeight(size.height - 100),
-                        child: RotatedBox(
-                            quarterTurns: 3,
-                            child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
-                      ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: tabController,
-                        children: _buildTabViews(),
-                      ),
-                    ),
-                  ],
-                ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: !kIsWeb
+          ? BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  for (TabBarOption tab in TabBarOption.values) _buildTabButton(tab),
+                  const UserAvatarWidget()
+                ],
               ),
-            ),
-            bottomNavigationBar: !kIsWeb
-                ? BottomAppBar(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        for (TabBarOption tab in TabBarOption.values) _buildTabButton(tab),
-                        const UserAvatarWidget()
-                      ],
-                    ),
-                  )
-                : null,
-          );
-        });
+            )
+          : null,
+    );
   }
 
   List<Widget> _buildTabViews() {
@@ -122,7 +119,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
       case TabBarOption.games:
         return const Placeholder();
       case TabBarOption.level:
-        return const Placeholder();
+        return const LevelTestScreen();
       case TabBarOption.planner:
         return const Placeholder();
       case TabBarOption.roadmap:

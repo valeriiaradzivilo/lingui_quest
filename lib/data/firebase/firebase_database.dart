@@ -14,7 +14,7 @@ class FirebaseDatabaseImpl {
       );
       final User? user = _firebaseAuth.currentUser;
       if (user != null) {
-        HiveDatabase().addUserIdToBox(user.uid);
+        HiveDatabase.addUserIdToBox(user.uid);
         SimpleLogger().info('Created an account for $email');
       } else {
         throw Exception();
@@ -38,7 +38,7 @@ class FirebaseDatabaseImpl {
       SimpleLogger().info('Signed user $email in');
       final User? user = _firebaseAuth.currentUser;
       if (user != null) {
-        HiveDatabase().addUserIdToBox(user.uid);
+        HiveDatabase.addUserIdToBox(user.uid);
         SimpleLogger().info('Created an account for $email');
       } else {
         throw Exception();
@@ -58,7 +58,7 @@ class FirebaseDatabaseImpl {
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
-      HiveDatabase().cleanUserId();
+      HiveDatabase.cleanUserId();
     } catch (e) {
       rethrow;
     }

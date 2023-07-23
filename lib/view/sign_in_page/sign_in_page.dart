@@ -4,6 +4,7 @@ import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
+import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 
@@ -20,8 +21,14 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     final SignInCubit bloc = BlocProvider.of<SignInCubit>(context);
+    final StartCubit blocStart = BlocProvider.of<StartCubit>(context);
     return Scaffold(
-      body: BlocBuilder<SignInCubit, SignInState>(builder: (context, state) {
+      body: BlocConsumer<SignInCubit, SignInState>(listener: (context, state) {
+        if (state.status == SignInStatus.success) {
+          blocStart.setLoggedIn();
+          Navigator.of(context).pushNamed(AppRoutes.initial);
+        }
+      }, builder: (context, state) {
         if (state.status == SignInStatus.initial) {
           return Center(
             child: Container(
@@ -43,9 +50,8 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     LinMainButton(
                         label: context.loc.signIn,
-                        onTap: () {
-                          bloc.login(
-                              emailController.text, passwordController.text);
+                        onTap: () async {
+                          await bloc.login(emailController.text, passwordController.text);
                         }),
                     InkWell(
                         key: ValueKey(KeyConstants.noProfileYet),
@@ -54,30 +60,31 @@ class _SignInPageState extends State<SignInPage> {
                         },
                         child: Text(
                           context.loc.noProfileYet,
-                          style: const TextStyle(
-                              decoration: TextDecoration.underline),
+                          style: const TextStyle(decoration: TextDecoration.underline),
                         ))
                   ],
                 ),
               ),
             ),
           );
-        } else if (state.status == SignInStatus.success) {
-          return Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(context.loc.signedInSuccessfully),
-                LinMainButton(
-                    label: context.loc.goToMainPage,
-                    onTap: () {
-                      Navigator.of(context).pushNamed(AppRoutes.initial);
-                    })
-              ],
-            ),
-          );
-        } else {
+        }
+        // else if (state.status == SignInStatus.success) {
+        //   return Center(
+        //     child: Column(
+        //       crossAxisAlignment: CrossAxisAlignment.center,
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         Text(context.loc.signedInSuccessfully),
+        //         LinMainButton(
+        //             label: context.loc.goToMainPage,
+        //             onTap: () {
+        //               Navigator.of(context).pushNamed(AppRoutes.initial);
+        //             })
+        //       ],
+        //     ),
+        //   );
+        // }
+        else {
           return const Center(child: CircularProgressIndicator());
         }
       }),

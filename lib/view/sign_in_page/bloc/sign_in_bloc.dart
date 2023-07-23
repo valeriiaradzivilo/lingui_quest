@@ -13,7 +13,7 @@ class SignInCubit extends Cubit<SignInState> {
     this._signInUseCase,
   ) : super(SignInState.initial());
 
-  void login(String email, String password) async {
+  Future<void> login(String email, String password) async {
     final Either<Failure, void> result = await _signInUseCase(SignInParams(email, password));
 
     result.fold((l) {

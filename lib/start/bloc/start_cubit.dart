@@ -1,13 +1,22 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lingui_quest/data/local_storage/hive_database.dart';
+import 'package:lingui_quest/core/usecase/usercase.dart';
+import 'package:lingui_quest/data/usecase/check_logged_in.dart';
 
 part 'start_state.dart';
 
 class StartCubit extends Cubit<StartState> {
-  StartCubit() : super(StartState.initial());
+  StartCubit(this._checkLoggedInUsecase) : super(StartState.initial());
 
-  void checkIfUserLoggedIn() async {
-    emit(state.copyWith(isLoggedIn: await HiveDatabase().isSignedIn()));
+  final CheckLoggedInUsecase _checkLoggedInUsecase;
+
+  void setLoggedIn() {
+    emit(state.copyWith(status: StartStatus.loggedIn));
+  }
+
+  void checkLoggedIn() async {
+    if (await _checkLoggedInUsecase(NoParams())) {
+      emit(state.copyWith(status: StartStatus.loggedIn));
+    }
   }
 }

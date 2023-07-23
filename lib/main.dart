@@ -10,6 +10,8 @@ import 'package:lingui_quest/start/di.dart';
 import 'package:lingui_quest/start/gallery_option.dart';
 import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/start/start_page.dart';
+import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
+import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 import 'package:lingui_quest/view/sign_in_page/sign_in_page.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
@@ -22,7 +24,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   init();
-  HiveDatabase().openBox();
+  HiveDatabase.openBox();
   runApp(const MyApp());
 }
 
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<SignInCubit>(create: (_) => serviceLocator<SignInCubit>()),
         BlocProvider<SignUpCubit>(create: (_) => serviceLocator<SignUpCubit>()),
         BlocProvider<StartCubit>(create: (_) => serviceLocator<StartCubit>()),
+        BlocProvider<CreateTaskCubit>(create: (_) => serviceLocator<CreateTaskCubit>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),
@@ -65,6 +68,7 @@ class MyApp extends StatelessWidget {
           ),
       AppRoutes.signIn: (context) => const SignInPage(),
       AppRoutes.signUp: (context) => const SignUpPage(),
+      AppRoutes.createTestTask: (context) => const CreateTestTaskPopup(),
     };
   }
 }
