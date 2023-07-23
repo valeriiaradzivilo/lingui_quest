@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
-import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
+import 'package:lingui_quest/start/components/tab_bar.dart';
 import 'package:lingui_quest/start/components/user_widget.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 
@@ -26,8 +26,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    tabController = TabController(
-        initialIndex: 0, length: TabBarOption.values.length, vsync: this);
+    tabController = TabController(initialIndex: 0, length: TabBarOption.values.length, vsync: this);
   }
 
   void goTo(TabBarOption option) {
@@ -37,7 +36,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final isDesktop = MediaQuery.of(context).size.width > 900;
+    final size = MediaQuery.of(context).size;
     final StartCubit bloc = BlocProvider.of<StartCubit>(context);
     return BlocBuilder<StartCubit, StartState>(
         bloc: bloc..checkIfUserLoggedIn(),
@@ -53,8 +52,8 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                   child: SvgPicture.asset(
                     allowDrawingOutsideViewBox: true,
                     "assets/logo/logo.svg",
-                    width: kIsWeb ? 100 : 50,
-                    height: kIsWeb ? 100 : 50,
+                    width: kIsWeb ? 200 : 50,
+                    height: kIsWeb ? 200 : 50,
                   ),
                 ),
               ),
@@ -72,40 +71,26 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                 //TODO: Add languages here
               ],
             ),
-            body: Center(
-              child: Column(
-                children: [
-                  if (kIsWeb)
-                    Container(
-                      constraints: BoxConstraints(
-                          minWidth: MediaQuery.of(context).size.width),
-                      padding: EdgeInsets.all(PaddingConst.medium),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Wrap(
-                        spacing:
-                            isDesktop ? PaddingConst.large : PaddingConst.small,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        direction: Axis.horizontal,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          for (TabBarOption tab in TabBarOption.values)
-                            _buildTabButton(tab),
-                          const UserAvatarWidget()
-                        ],
+            body: SafeArea(
+              minimum: EdgeInsets.all(PaddingConst.medium),
+              child: Center(
+                child: Row(
+                  children: [
+                    if (kIsWeb)
+                      PreferredSize(
+                        preferredSize: Size.fromHeight(size.height - 100),
+                        child: RotatedBox(
+                            quarterTurns: 3,
+                            child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
+                      ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: tabController,
+                        children: _buildTabViews(),
                       ),
                     ),
-                  Expanded(
-                    child: TabBarView(
-                      controller: tabController,
-                      children: <Widget>[
-                        for (TabBarOption option in TabBarOption.values)
-                          _buildCurrentTab(option)
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             bottomNavigationBar: !kIsWeb
@@ -114,8 +99,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        for (TabBarOption tab in TabBarOption.values)
-                          _buildTabButton(tab),
+                        for (TabBarOption tab in TabBarOption.values) _buildTabButton(tab),
                         const UserAvatarWidget()
                       ],
                     ),
@@ -123,6 +107,14 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                 : null,
           );
         });
+  }
+
+  List<Widget> _buildTabViews() {
+    final List<Widget> list = [];
+    for (TabBarOption i in TabBarOption.values) {
+      list.add(_buildCurrentTab(i));
+    }
+    return list;
   }
 
   Widget _buildCurrentTab(TabBarOption tab) {
@@ -143,40 +135,54 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
     }
   }
 
+  List<Widget> _buildListTabButtons() {
+    final List<Widget> list = [];
+    for (TabBarOption i in TabBarOption.values) {
+      list.add(Padding(
+        padding: EdgeInsets.all(PaddingConst.medium),
+        child: _buildTabButton(i),
+      ));
+    }
+    return list;
+  }
+
   Widget _buildTabButton(TabBarOption tab) {
+    ThemeData theme = Theme.of(context);
+    final isDesktop = MediaQuery.of(context).size.width > 900;
     switch (tab) {
       case TabBarOption.roadmap:
-        return LinMainButton(
-          icon: FeatherIcons.map,
-          label: context.loc.roadmap.toUpperCase(),
-          onTap: () {
-            goTo(tab);
-          },
+        return RallyTab(
+          theme: theme,
+          iconData: FeatherIcons.map,
+          tabIndex: tab.index,
+          title: context.loc.roadmap.toUpperCase(),
+          isVertical: isDesktop,
+          tabController: tabController,
         );
       case TabBarOption.planner:
-        return LinMainButton(
-          icon: FeatherIcons.calendar,
-          label: context.loc.planner.toUpperCase(),
-          onTap: () {
-            goTo(tab);
-          },
-        );
+        return RallyTab(
+            theme: theme,
+            iconData: FeatherIcons.calendar,
+            title: context.loc.planner.toUpperCase(),
+            tabIndex: tab.index,
+            tabController: tabController,
+            isVertical: isDesktop);
       case TabBarOption.games:
-        return LinMainButton(
-          icon: FeatherIcons.target,
-          label: context.loc.games.toUpperCase(),
-          onTap: () {
-            goTo(tab);
-          },
-        );
+        return RallyTab(
+            theme: theme,
+            iconData: FeatherIcons.target,
+            title: context.loc.games.toUpperCase(),
+            tabIndex: tab.index,
+            tabController: tabController,
+            isVertical: isDesktop);
       case TabBarOption.level:
-        return LinMainButton(
-          icon: FeatherIcons.star,
-          label: context.loc.levelTest.toUpperCase(),
-          onTap: () {
-            goTo(tab);
-          },
-        );
+        return RallyTab(
+            theme: theme,
+            iconData: FeatherIcons.star,
+            title: context.loc.levelTest.toUpperCase(),
+            tabIndex: tab.index,
+            tabController: tabController,
+            isVertical: isDesktop);
 
       default:
         return const SizedBox();
