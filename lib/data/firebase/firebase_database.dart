@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingui_quest/core/extentions/custom_exceptions.dart';
 import 'package:lingui_quest/data/local_storage/hive_database.dart';
+import 'package:lingui_quest/data/models/test_task_model.dart';
+import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:simple_logger/simple_logger.dart';
 
 class FirebaseDatabaseImpl {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> createUserWithEmailAndPassword(String email, String password) async {
     try {
@@ -59,6 +63,26 @@ class FirebaseDatabaseImpl {
     try {
       await _firebaseAuth.signOut();
       HiveDatabase.cleanUserId();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  UserModel getCurrentUser() {
+    try {
+      if (_firebaseAuth.currentUser == null) {
+        throw 'Not signed in';
+      }
+      return UserModel(_firebaseAuth.currentUser!.uid, '', _firebaseAuth.currentUser?.email, '', '');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> crateNewTestTask(TestTaskModel task) async {
+    try {
+      CollectionReference testTasks = firestore.collection('testTasks');
+      testTasks.add(task.toJson()).then((value) => print('User added')).catchError((error) => throw error);
     } catch (e) {
       rethrow;
     }

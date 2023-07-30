@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:lingui_quest/data/firebase/firebase_database.dart';
 import 'package:lingui_quest/data/repository/remote_repository.dart';
+import 'package:lingui_quest/data/usecase/add_test_task_usecase.dart';
 import 'package:lingui_quest/data/usecase/check_logged_in.dart';
+import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
@@ -31,7 +33,7 @@ Future<void> init() async {
     ),
   );
   serviceLocator.registerFactory(
-    () => CreateTaskCubit(),
+    () => CreateTaskCubit(serviceLocator<AddTestTaskUsecase>(), serviceLocator<GetCurrentUserUsecase>()),
   );
 
   //usecases
@@ -43,6 +45,12 @@ Future<void> init() async {
   );
   serviceLocator.registerLazySingleton<CheckLoggedInUsecase>(
     () => CheckLoggedInUsecase(),
+  );
+  serviceLocator.registerLazySingleton<AddTestTaskUsecase>(
+    () => AddTestTaskUsecase(repository: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<GetCurrentUserUsecase>(
+    () => GetCurrentUserUsecase(repository: serviceLocator()),
   );
   //datasources
   serviceLocator.registerLazySingleton<RemoteRepository>(

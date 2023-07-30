@@ -41,9 +41,18 @@ class CreateTestTaskPopupState extends State<CreateTestTaskPopup> {
                     _optionsControllers.length,
                     (index) => ListTile(
                       leading: InkWell(
-                        onTap: () => cubit.setCorrectAnswer(index),
+                        onTap: () {
+                          List<int> chosenOptions = [...state.chosenOption];
+                          if (chosenOptions.contains(index)) {
+                            chosenOptions.remove(index);
+                          } else {
+                            chosenOptions.add(index);
+                          }
+                          cubit.setCorrectAnswer(chosenOptions);
+                        },
                         child: CircleAvatar(
-                          backgroundColor: state.chosenOption == index ? theme.highlightColor : theme.canvasColor,
+                          backgroundColor:
+                              state.chosenOption.contains(index) ? theme.highlightColor : theme.canvasColor,
                           child: Text((index + 1).toString()),
                         ),
                       ),
