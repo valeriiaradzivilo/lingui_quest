@@ -1,3 +1,4 @@
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,36 +18,46 @@ class UserAvatarWidget extends StatefulWidget {
 }
 
 class _UserAvatarWidgetState extends State<UserAvatarWidget> {
-  bool _clikedOnAvatar = false;
+  bool _clickedOnAvatar = false;
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     final StartCubit bloc = BlocProvider.of<StartCubit>(context);
     return BlocBuilder<StartCubit, StartState>(builder: (context, state) {
       return PortalTarget(
-        visible: _clikedOnAvatar,
-        anchor: const Aligned(
-          follower: kIsWeb ? Alignment.topCenter : Alignment.bottomCenter,
-          target: kIsWeb ? Alignment.bottomCenter : Alignment.topLeft,
-        ),
-        portalFollower: Container(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceVariant,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: _child(state.status == StartStatus.loggedIn)),
-        child: LinRoundPhoto(
-          key: ValueKey(KeyConstants.avatarPortal),
-          radius: kIsWeb ? 50 : 20,
-          onTap: () {
-            bloc.checkLoggedIn();
-            setState(() {
-              _clikedOnAvatar = !_clikedOnAvatar;
-            });
-          },
-        ),
-      );
+          visible: _clickedOnAvatar,
+          anchor: const Aligned(
+            follower: kIsWeb ? Alignment.topCenter : Alignment.bottomCenter,
+            target: kIsWeb ? Alignment.bottomCenter : Alignment.topLeft,
+          ),
+          portalFollower: Container(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceVariant,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: _child(state.isLoggedIn)),
+          child: _icon(state.isLoggedIn, state.currentUser.email, bloc));
     });
+  }
+
+  Widget _icon(bool isLoggedIn, String? initials, StartCubit bloc) {
+    final ThemeData theme = Theme.of(context);
+    return LinRoundPhoto(
+      key: ValueKey(KeyConstants.avatarPortal),
+      radius: kIsWeb ? 50 : 20,
+      onTap: () {
+        bloc.checkLoggedIn();
+        setState(() {
+          _clickedOnAvatar = !_clickedOnAvatar;
+        });
+      },
+      child: !isLoggedIn || initials == null || initials.isEmpty
+          ? const Icon(FeatherIcons.user)
+          : Text(
+              initials.substring(0, 1).toUpperCase(),
+              style: theme.textTheme.displayMedium,
+            ),
+    );
   }
 
   Widget _child(bool isLoggedIn) {

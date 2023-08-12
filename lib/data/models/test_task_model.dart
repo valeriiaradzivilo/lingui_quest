@@ -12,7 +12,12 @@ class TestTaskModel {
   final List<String> options;
   final List<int> correctAnswerIds;
   final String level;
-  TestTaskModel(this.creatorId, this.question, this.options, this.correctAnswerIds, this.level);
+  TestTaskModel(
+      {required this.creatorId,
+      required this.question,
+      required this.options,
+      required this.correctAnswerIds,
+      required this.level});
   factory TestTaskModel.fromJson(Json json) => _$TestTaskModelFromJson(json);
   Json toJson() => _$TestTaskModelToJson(this);
 }

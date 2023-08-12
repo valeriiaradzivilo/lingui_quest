@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingui_quest/shared/constants/padding_constants.dart';
 
 const int tabCount = 5;
 const int turnsToRotateRight = 1;
@@ -51,11 +52,11 @@ class RallyTab extends StatelessWidget {
         quarterTurns: 1,
         child: Column(
           children: [
-            const SizedBox(height: 18),
             icon,
-            const SizedBox(height: 12),
+            SizedBox(
+              height: PaddingConst.medium,
+            ),
             titleText,
-            const SizedBox(height: 18),
           ],
         ),
       );

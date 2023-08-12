@@ -30,6 +30,7 @@ Future<void> init() async {
   serviceLocator.registerFactory(
     () => StartCubit(
       serviceLocator<CheckLoggedInUsecase>(),
+      serviceLocator<GetCurrentUserUsecase>(),
     ),
   );
   serviceLocator.registerFactory(

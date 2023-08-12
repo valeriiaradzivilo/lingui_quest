@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/base/failure.dart';
-import 'package:lingui_quest/core/usecase/usercase.dart';
+import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/test_task_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/add_test_task_usecase.dart';
@@ -19,10 +19,10 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
 
   void init() async {
     final Either<Failure, UserModel> getMyUser = await _currentUserUsecase(NoParams());
-    getMyUser.fold(
-        (l) => emit(state.copyWith(status: CreateTaskStatus.error)),
-        (r) => emit(state.copyWith(
-            status: CreateTaskStatus.initial, creatorId: getMyUser.foldRight('', (r, previous) => r.userId))));
+    getMyUser.fold((l) => emit(state.copyWith(status: CreateTaskStatus.error)), (r) {
+      emit(state.copyWith(
+          status: CreateTaskStatus.initial, creatorId: getMyUser.foldRight('', (r, previous) => r.userId)));
+    });
   }
 
   void setLevel(EnglishLevel level) {
@@ -42,15 +42,22 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
   }
 
   Future confirmAndAddTestTask() async {
-    Either<Failure, void> addTestTaskResult = await _addTestTaskUsecase(
-        TestTaskModel(state.creatorId, state.question, state.options, state.chosenOption, state.level.name));
+    Either<Failure, void> addTestTaskResult = await _addTestTaskUsecase(TestTaskModel(
+        creatorId: state.creatorId,
+        question: state.question,
+        options: state.options,
+        correctAnswerIds: state.chosenOption,
+        level: state.level.name));
 
     addTestTaskResult.fold((l) => emit(state.copyWith(status: CreateTaskStatus.error, errorMessage: l.failureMessage)),
         (r) => emit(state.copyWith(status: CreateTaskStatus.success)));
   }
 
   void validate() async {
-    if (state.chosenOption.isNotEmpty && state.options.isNotEmpty && state.question.isNotEmpty) {
+    if (state.chosenOption.isNotEmpty &&
+        state.creatorId.isNotEmpty &&
+        state.options.isNotEmpty &&
+        state.question.isNotEmpty) {
       emit(state.copyWith(validationStatus: ValidationStatus.success));
     } else {
       emit(state.copyWith(validationStatus: ValidationStatus.error, validationError: 'Check all fields'));

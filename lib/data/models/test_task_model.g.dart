@@ -8,11 +8,14 @@ part of 'test_task_model.dart';
 
 TestTaskModel _$TestTaskModelFromJson(Map<String, dynamic> json) =>
     TestTaskModel(
-      json['creatorId'] as String,
-      json['question'] as String,
-      (json['options'] as List<dynamic>).map((e) => e as String).toList(),
-      (json['correctAnswerIds'] as List<dynamic>).map((e) => e as int).toList(),
-      json['level'] as String,
+      creatorId: json['creatorId'] as String,
+      question: json['question'] as String,
+      options:
+          (json['options'] as List<dynamic>).map((e) => e as String).toList(),
+      correctAnswerIds: (json['correctAnswerIds'] as List<dynamic>)
+          .map((e) => e as int)
+          .toList(),
+      level: json['level'] as String,
     );
 
 Map<String, dynamic> _$TestTaskModelToJson(TestTaskModel instance) =>

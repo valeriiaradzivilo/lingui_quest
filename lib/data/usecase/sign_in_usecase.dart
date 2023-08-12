@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:lingui_quest/core/base/failure.dart';
-import 'package:lingui_quest/core/usecase/usercase.dart';
+import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/repository/remote_repository.dart';
 
 class SignInUsecase extends UseCaseFutureEither<void, SignInParams> {

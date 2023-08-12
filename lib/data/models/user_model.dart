@@ -12,7 +12,14 @@ class UserModel {
   final String? email;
   final String? firstName;
   final String? lastName;
-  UserModel(this.userId, this.username, this.email, this.firstName, this.lastName);
+  UserModel(
+      {required this.userId,
+      required this.username,
+      required this.email,
+      required this.firstName,
+      required this.lastName});
   factory UserModel.fromJson(Json json) => _$UserModelFromJson(json);
   Json toJson() => _$UserModelToJson(this);
+
+  factory UserModel.empty() => UserModel(userId: '', username: '', email: '', firstName: '', lastName: '');
 }

@@ -73,7 +73,12 @@ class FirebaseDatabaseImpl {
       if (_firebaseAuth.currentUser == null) {
         throw 'Not signed in';
       }
-      return UserModel(_firebaseAuth.currentUser!.uid, '', _firebaseAuth.currentUser?.email, '', '');
+      return UserModel(
+          userId: _firebaseAuth.currentUser!.uid,
+          username: '',
+          email: _firebaseAuth.currentUser?.email,
+          firstName: '',
+          lastName: '');
     } catch (e) {
       rethrow;
     }
@@ -81,8 +86,9 @@ class FirebaseDatabaseImpl {
 
   Future<void> crateNewTestTask(TestTaskModel task) async {
     try {
-      CollectionReference testTasks = firestore.collection('testTasks');
-      await testTasks.add(task.toJson()).then((value) => print('Task added')).catchError((error) => throw error);
+      final CollectionReference testTasks = firestore.collection('testTasks');
+      await testTasks.add(task.toJson());
+      print('Task added');
     } catch (e) {
       rethrow;
     }

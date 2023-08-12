@@ -1,9 +1,11 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
+import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/components/tab_bar.dart';
 import 'package:lingui_quest/start/components/user_widget.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
@@ -36,6 +38,9 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
+    final StartCubit bloc = BlocProvider.of<StartCubit>(context);
+    final isDesktop = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -73,22 +78,50 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
       body: SafeArea(
         minimum: EdgeInsets.all(PaddingConst.medium),
         child: Center(
-          child: Row(
-            children: [
-              if (kIsWeb)
-                PreferredSize(
-                  preferredSize: Size.fromHeight(size.height - 100),
-                  child: RotatedBox(
-                      quarterTurns: 3, child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
-                ),
-              Expanded(
-                child: TabBarView(
-                  controller: tabController,
-                  children: _buildTabViews(),
-                ),
-              ),
-            ],
-          ),
+          child: BlocConsumer<StartCubit, StartState>(
+              bloc: bloc..init(),
+              listener: (context, state) {},
+              builder: (context, state) {
+                if (state.status == StartStatus.initial) {
+                  if (kIsWeb && isDesktop) {
+                    return Row(
+                      children: [
+                        PreferredSize(
+                          preferredSize: Size.fromHeight(size.height - 100),
+                          child: RotatedBox(
+                              quarterTurns: 3,
+                              child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            controller: tabController,
+                            children: _buildTabViews(),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: TabBarView(
+                            controller: tabController,
+                            children: _buildTabViews(),
+                          ),
+                        ),
+                        PreferredSize(
+                          preferredSize: Size.fromHeight(size.width - 100),
+                          child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController),
+                        ),
+                      ],
+                    );
+                  }
+                } else if (state.status == StartStatus.error) {
+                  return const Text('Error');
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              }),
         ),
       ),
       bottomNavigationBar: !kIsWeb
@@ -145,7 +178,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
 
   Widget _buildTabButton(TabBarOption tab) {
     ThemeData theme = Theme.of(context);
-    final isDesktop = MediaQuery.of(context).size.width > 900;
+    final isDesktop = MediaQuery.of(context).size.width > 600;
     switch (tab) {
       case TabBarOption.roadmap:
         return RallyTab(
