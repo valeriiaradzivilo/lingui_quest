@@ -33,11 +33,27 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
     emit(state.copyWith(chosenOption: index));
   }
 
-  void confirmAndAddTestTask() async {
+  void setQuestion(String question) {
+    emit(state.copyWith(question: question));
+  }
+
+  void setAnswers(List<String> optionControllers) {
+    emit(state.copyWith(options: optionControllers));
+  }
+
+  Future confirmAndAddTestTask() async {
     Either<Failure, void> addTestTaskResult = await _addTestTaskUsecase(
         TestTaskModel(state.creatorId, state.question, state.options, state.chosenOption, state.level.name));
 
     addTestTaskResult.fold((l) => emit(state.copyWith(status: CreateTaskStatus.error, errorMessage: l.failureMessage)),
         (r) => emit(state.copyWith(status: CreateTaskStatus.success)));
+  }
+
+  void validate() async {
+    if (state.chosenOption.isNotEmpty && state.options.isNotEmpty && state.question.isNotEmpty) {
+      emit(state.copyWith(validationStatus: ValidationStatus.success));
+    } else {
+      emit(state.copyWith(validationStatus: ValidationStatus.error, validationError: 'Check all fields'));
+    }
   }
 }

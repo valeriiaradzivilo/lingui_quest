@@ -1,14 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 
 class LinMainButton extends StatelessWidget {
-  const LinMainButton(
-      {super.key,
-      this.icon,
-      required this.label,
-      required this.onTap,
-      this.isEnabled = true});
+  const LinMainButton({super.key, this.icon, required this.label, required this.onTap, this.isEnabled = true});
   final String label;
   final Function() onTap;
   final bool isEnabled;
@@ -21,7 +15,7 @@ class LinMainButton extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Container(
-          padding: EdgeInsets.all(PaddingConst.small),
+          padding: EdgeInsets.all(PaddingConst.medium),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondaryContainer,
           ),
@@ -31,8 +25,13 @@ class LinMainButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (!kIsWeb) Icon(icon),
-                if (kIsWeb || icon == null) Text(label),
+                if (icon != null) ...[
+                  Icon(icon),
+                  SizedBox(
+                    width: PaddingConst.medium,
+                  )
+                ],
+                Text(label),
               ],
             ),
           ),

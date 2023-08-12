@@ -82,7 +82,7 @@ class FirebaseDatabaseImpl {
   Future<void> crateNewTestTask(TestTaskModel task) async {
     try {
       CollectionReference testTasks = firestore.collection('testTasks');
-      testTasks.add(task.toJson()).then((value) => print('User added')).catchError((error) => throw error);
+      await testTasks.add(task.toJson()).then((value) => print('Task added')).catchError((error) => throw error);
     } catch (e) {
       rethrow;
     }
