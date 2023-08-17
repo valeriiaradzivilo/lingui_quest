@@ -46,4 +46,13 @@ class RemoteRepository {
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
+
+  Future<Either<Failure, Stream<List<TestTaskModel>>>> getAllTestTasks() async {
+    try {
+      final res = await _database.readTasks();
+      return Right(res);
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
 }

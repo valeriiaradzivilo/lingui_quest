@@ -41,7 +41,8 @@ class CreateTaskState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, _time, level, chosenOption, creatorId, options, question];
+  List<Object?> get props =>
+      [status, _time, level, chosenOption, creatorId, options, question, validationStatus, validationError];
 
   CreateTaskState copyWith(
       {CreateTaskStatus? status,

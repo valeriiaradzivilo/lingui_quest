@@ -93,4 +93,15 @@ class FirebaseDatabaseImpl {
       rethrow;
     }
   }
+
+  Future<Stream<List<TestTaskModel>>> readTasks() async {
+    try {
+      return firestore
+          .collection('testTasks')
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((doc) => TestTaskModel.fromJson(doc.data())).toList());
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

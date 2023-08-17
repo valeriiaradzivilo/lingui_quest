@@ -58,7 +58,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
         state.creatorId.isNotEmpty &&
         state.options.isNotEmpty &&
         state.question.isNotEmpty) {
-      emit(state.copyWith(validationStatus: ValidationStatus.success));
+      emit(state.copyWith(validationStatus: ValidationStatus.success, validationError: ''));
     } else {
       emit(state.copyWith(validationStatus: ValidationStatus.error, validationError: 'Check all fields'));
     }

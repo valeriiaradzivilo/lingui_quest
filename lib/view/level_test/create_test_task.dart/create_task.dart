@@ -131,8 +131,7 @@ class CreateTestTaskPopupState extends State<CreateTestTaskPopup> {
                                 }
                               }
                             },
-                            isEnabled: (_formKey.currentState?.validate() ?? false) &&
-                                state.validationStatus == ValidationStatus.success,
+                            isEnabled: (_formKey.currentState?.validate() ?? false),
                             label: 'Create task',
                           ),
                         ],

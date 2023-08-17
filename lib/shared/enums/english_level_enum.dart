@@ -4,7 +4,15 @@ enum EnglishLevel {
   b1,
   b2,
   c1,
-  c2,
+  c2;
+
+  factory EnglishLevel.levelFromString(String level) {
+    try {
+      return EnglishLevel.values.firstWhere((element) => element.name.toLowerCase() == level.toLowerCase());
+    } catch (e) {
+      return EnglishLevel.a1;
+    }
+  }
 }
 
 extension EnglishLevelExtension on EnglishLevel {
@@ -25,5 +33,13 @@ extension EnglishLevelExtension on EnglishLevel {
       default:
         return '';
     }
+  }
+
+  EnglishLevel? get nextLevel {
+    return index + 1 < EnglishLevel.values.length ? EnglishLevel.values.elementAt(index + 1) : null;
+  }
+
+  EnglishLevel? get previousLevel {
+    return index - 1 >= 0 ? EnglishLevel.values.elementAt(index - 1) : null;
   }
 }
