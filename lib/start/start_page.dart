@@ -9,7 +9,7 @@ import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/components/tab_bar.dart';
 import 'package:lingui_quest/start/components/user_widget.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
-import 'package:lingui_quest/view/level_test/level_test_screen.dart';
+import 'package:lingui_quest/view/level_test/main_screen/level_test_screen.dart';
 
 enum TabBarOption { logo, roadmap, games, planner, level }
 

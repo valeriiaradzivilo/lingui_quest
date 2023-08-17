@@ -53,5 +53,8 @@
 
   "noProfileYet":"no profile yet, sign up",
   "enterValidEmail":"Enter valid email",
-  "passwordMinLength":"Password must have at least 8 characters"
+  "passwordMinLength":"Password must have at least 8 characters",
+
+
+  "startTest":"Start test"
 }

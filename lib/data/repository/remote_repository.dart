@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/data/firebase/firebase_database.dart';
+import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
 import 'package:lingui_quest/data/models/test_task_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
@@ -51,6 +52,15 @@ class RemoteRepository {
     try {
       final res = await _database.readTasks();
       return Right(res);
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Node>> createTestTaskTree(List<TestTaskModel> allTasks) async {
+    try {
+      final LevelTestTasksTree myTree = LevelTestTasksTree();
+      return Right(await myTree.startTree(allTasks));
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }
