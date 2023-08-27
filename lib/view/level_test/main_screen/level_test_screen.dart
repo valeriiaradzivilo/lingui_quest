@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
+import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
@@ -18,7 +19,7 @@ class LevelTestScreen extends StatelessWidget {
           if (state.status == LevelTestStatus.initial) {
             return Column(
               children: [
-                LinMainButton(
+                LinButton(
                     label: context.loc.createTestTask,
                     onTap: () => Navigator.of(context).pushNamed(AppRoutes.createTestTask)),
                 // StreamBuilder(

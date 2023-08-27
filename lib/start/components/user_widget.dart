@@ -63,6 +63,7 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
   Widget _child(bool isLoggedIn) {
     if (!isLoggedIn) {
       return LinButton(
+        isTransparentBack: true,
         key: ValueKey(KeyConstants.signInButton),
         label: context.loc.signIn,
         onTap: () => Navigator.of(context).pushNamed(AppRoutes.signIn),

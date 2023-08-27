@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
-import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
@@ -47,11 +47,10 @@ class _SignInPageState extends State<SignUpPage> {
                           label: context.loc.password,
                           option: TextFieldOption.password,
                         ),
-                        LinMainButton(
+                        LinButton(
                           key: ValueKey(KeyConstants.signUpButton),
                           label: context.loc.signUp,
-                          onTap: () => bloc.signUp(
-                              emailController.text, passwordController.text),
+                          onTap: () => bloc.signUp(emailController.text, passwordController.text),
                           isEnabled: _formKey.currentState?.validate() ?? false,
                         ),
                       ],

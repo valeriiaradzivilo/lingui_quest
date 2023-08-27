@@ -2,35 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 
 class LinMainButton extends StatelessWidget {
-  const LinMainButton({super.key, this.icon, required this.label, required this.onTap, this.isEnabled = true});
-  final String label;
-  final Function() onTap;
-  final bool isEnabled;
+  const LinMainButton({super.key, this.icon, required this.label, required this.onTap});
   final IconData? icon;
+  final String label;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(PaddingConst.small),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          padding: EdgeInsets.all(PaddingConst.medium),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-          ),
+      child: Container(
+        padding: EdgeInsets.all(PaddingConst.medium),
+        decoration: BoxDecoration(
+          color: onTap == null ? Colors.transparent : Theme.of(context).colorScheme.secondaryContainer,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Theme.of(context).colorScheme.secondaryContainer),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              spreadRadius: PaddingConst.extraSmall,
+              blurRadius: PaddingConst.extraSmall,
+              offset: const Offset(3, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: IntrinsicWidth(
           child: InkWell(
             onTap: onTap,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (icon != null) ...[
-                  Icon(icon),
-                  SizedBox(
-                    width: PaddingConst.medium,
-                  )
-                ],
+                if (icon != null) Icon(icon),
                 Text(label),
               ],
             ),

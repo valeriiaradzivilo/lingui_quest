@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/test_task_model.dart';
+import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_question.dart';
 import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
 
 class TestScreen extends StatefulWidget {
@@ -56,24 +59,27 @@ class _TestScreenState extends State<TestScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: BlocBuilder<TestCubit, TestState>(
+        child: BlocConsumer<TestCubit, TestState>(
             bloc: bloc..init(),
+            listener: (context, state) {},
             builder: (context, state) {
               if (state.status == TestStatus.success) {
                 return StreamBuilder(
                     stream: state.testsData,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        bloc.makeTree(snapshot.data);
+                        if (state.tasksTree == null) {
+                          bloc.makeTree(snapshot.data);
+                        }
                         if (state.tasksTree != null) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  _currentTask.question,
-                                  style: const TextStyle(fontSize: 20),
+                                child: LinQuestionText(
+                                  textTask: _currentTask.question,
+                                  insertedText: [for (final i in _selectedAnswers) _currentTask.options.elementAt(i)],
                                 ),
                               ),
                               Column(
@@ -97,9 +103,9 @@ class _TestScreenState extends State<TestScreen> {
                               ),
                               const SizedBox(height: 20),
                               Center(
-                                child: ElevatedButton(
-                                  onPressed: _isNextButtonActive ? _loadNextTask : null,
-                                  child: const Text('Next'),
+                                child: LinMainButton(
+                                  onTap: _isNextButtonActive ? _loadNextTask : null,
+                                  label: context.loc.next,
                                 ),
                               ),
                               const SizedBox(height: 20),
@@ -114,6 +120,10 @@ class _TestScreenState extends State<TestScreen> {
                       }
                       return const SizedBox();
                     });
+              } else if (state.status == TestStatus.error) {
+                return const Text('Error');
+              } else if (state.status == TestStatus.notLoggedIn) {
+                return const Text('You need to log in first to complete the test');
               } else {
                 return const CircularProgressIndicator();
               }

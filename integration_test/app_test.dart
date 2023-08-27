@@ -6,7 +6,7 @@ import 'package:lingui_quest/data/firebase/firebase_options.dart';
 import 'package:lingui_quest/data/local_storage/hive_database.dart';
 import 'package:lingui_quest/main.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
-import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/start/di.dart';
 
 void main() {
@@ -33,7 +33,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byKey(ValueKey(KeyConstants.passwordSignUpField)), 'test');
       await tester.pumpAndSettle();
-      expect(tester.widget<LinMainButton>(find.byKey(ValueKey(KeyConstants.signUpButton))).isEnabled, isFalse);
+      expect(tester.widget<LinButton>(find.byKey(ValueKey(KeyConstants.signUpButton))).isEnabled, isFalse);
     });
   });
 }

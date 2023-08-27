@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
-import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 
@@ -86,7 +85,7 @@ class CreateTestTaskPopupState extends State<CreateTestTaskPopup> {
                                   _optionsControllers.removeLast();
                                 });
                               }),
-                          LinMainButton(
+                          LinButton(
                             label: 'Add option',
                             onTap: () {
                               setState(() {
@@ -122,7 +121,7 @@ class CreateTestTaskPopupState extends State<CreateTestTaskPopup> {
                             },
                             label: 'Delete',
                           ),
-                          LinMainButton(
+                          LinButton(
                             onTap: () async {
                               if (_formKey.currentState?.validate() ?? false) {
                                 if (state.validationStatus == ValidationStatus.success) {
