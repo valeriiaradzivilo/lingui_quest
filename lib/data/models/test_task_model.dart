@@ -20,4 +20,8 @@ class TestTaskModel {
       required this.level});
   factory TestTaskModel.fromJson(Json json) => _$TestTaskModelFromJson(json);
   Json toJson() => _$TestTaskModelToJson(this);
+
+  factory TestTaskModel.empty() {
+    return TestTaskModel(creatorId: '', question: '', options: [], correctAnswerIds: [], level: '');
+  }
 }

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
@@ -26,9 +29,10 @@ class TestCubit extends Cubit<TestState> {
     if (myUser.isRight()) {
       final allTests = await _getAllTestTasksUsecase(NoParams());
       if (allTests.isRight()) {
+        final Stream<List<TestTaskModel>> allTestResult = allTests.foldRight(const Stream.empty(), (r, previous) => r);
         emit(state.copyWith(
-            status: TestStatus.success,
-            testsData: allTests.foldRight(const Stream.empty(), (r, previous) => r),
+            status: TestStatus.progress,
+            testsData: allTestResult,
             currentUser: myUser.foldRight(UserModel.empty(), (r, previous) => r)));
       } else {
         emit(state.copyWith(status: TestStatus.error));
@@ -43,10 +47,65 @@ class TestCubit extends Cubit<TestState> {
       emit(state.copyWith(status: TestStatus.progress));
       final createTreeRes = await _createTestTaskTreeUsecase(tasks);
       if (createTreeRes.isRight()) {
-        emit(state.copyWith(status: TestStatus.success, tasksTree: createTreeRes.foldRight(null, (r, previous) => r)));
+        final Node? tree = createTreeRes.foldRight(null, (r, previous) => r);
+        startTimer();
+        emit(state.copyWith(status: TestStatus.success, tasksTree: tree, currentTest: tree));
       } else {
         emit(state.copyWith(status: TestStatus.error));
       }
     }
+  }
+
+  void startTimer() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (state.remainingTime > 0) {
+        emit(state.copyWith(remainingTime: state.remainingTime - 1));
+      } else {
+        timer.cancel();
+        // Calculate and show the test result
+      }
+    });
+  }
+
+  void selectOrDeselectAnswer(int answerId) {
+    if (state.selectedAnswers.contains(answerId)) {
+      final List<int> newAnswers = [...state.selectedAnswers];
+      newAnswers.remove(answerId);
+      emit(state.copyWith(selectedAnswers: newAnswers));
+    } else {
+      final List<int> newAnswers = [...state.selectedAnswers];
+      newAnswers.add(answerId);
+      emit(state.copyWith(selectedAnswers: newAnswers));
+    }
+  }
+
+  void loadNextTask() {
+    Function deepEq = const ListEquality().equals;
+    if (deepEq(state.selectedAnswers, state.currentTest?.testTask.correctAnswerIds)) {
+// correct answer
+      if (state.currentTest?.rightChild != null) {
+        if (!state.currentTest!.rightChild!.isFinalNode) {
+          emit(state.copyWith(
+              currentTest: state.currentTest?.rightChild, selectedAnswers: [], currentLevel: state.currentTest?.level));
+          return;
+        } else {
+          emit(state.copyWith(status: TestStatus.result));
+          return;
+        }
+      }
+    } else {
+      if (state.currentTest?.leftChild != null) {
+        if (!state.currentTest!.leftChild!.isFinalNode) {
+          emit(state.copyWith(
+              currentTest: state.currentTest?.leftChild, selectedAnswers: [], currentLevel: state.currentTest?.level));
+          return;
+        } else {
+          emit(state.copyWith(status: TestStatus.result));
+          return;
+        }
+      }
+    }
+    emit(state.copyWith(status: TestStatus.result));
+    return;
   }
 }

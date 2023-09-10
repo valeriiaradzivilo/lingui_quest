@@ -11,7 +11,7 @@ import 'package:lingui_quest/start/components/user_widget.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 import 'package:lingui_quest/view/level_test/main_screen/level_test_screen.dart';
 
-enum TabBarOption { logo, roadmap, games, planner, level }
+enum TabBarOption { roadmap, games, planner, level }
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key, required this.changeTheme});
@@ -27,7 +27,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    tabController = TabController(initialIndex: 0, length: TabBarOption.values.length, vsync: this);
+    tabController = TabController(initialIndex: 0, length: TabBarOption.values.length + 1, vsync: this);
   }
 
   void goTo(TabBarOption option) {
@@ -48,7 +48,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
         leading: Padding(
           padding: EdgeInsets.all(PaddingConst.small),
           child: InkWell(
-            onTap: () => goTo(TabBarOption.logo),
+            onTap: () => tabController.animateTo(TabBarOption.values.length),
             child: SvgPicture.asset(
               allowDrawingOutsideViewBox: true,
               "assets/logo/logo.svg",
@@ -144,6 +144,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
     for (TabBarOption i in TabBarOption.values) {
       list.add(_buildCurrentTab(i));
     }
+    list.add(const HomePage());
     return list;
   }
 
@@ -157,11 +158,6 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
         return const Placeholder();
       case TabBarOption.roadmap:
         return const Placeholder();
-      case TabBarOption.logo:
-        return const HomePage();
-
-      default:
-        return const Placeholder();
     }
   }
 
@@ -173,6 +169,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
         child: _buildTabButton(i),
       ));
     }
+    list.add(SizedBox());
     return list;
   }
 

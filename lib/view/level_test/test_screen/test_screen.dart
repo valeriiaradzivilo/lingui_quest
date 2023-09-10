@@ -1,57 +1,13 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
-import 'package:lingui_quest/data/models/test_task_model.dart';
+import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_question.dart';
 import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
 
-class TestScreen extends StatefulWidget {
+class TestScreen extends StatelessWidget {
   const TestScreen({super.key});
-
-  @override
-  _TestScreenState createState() => _TestScreenState();
-}
-
-class _TestScreenState extends State<TestScreen> {
-  late TestTaskModel _currentTask;
-  final List<int> _selectedAnswers = [];
-  bool _isNextButtonActive = false;
-  late Timer _timer;
-  int _remainingTime = 3600;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadNextTask();
-    _startTimer();
-  }
-
-  void _loadNextTask() {
-    // Load the next test task
-    _currentTask = TestTaskModel(
-      creatorId: '',
-      level: 'Intermediate',
-      question: 'I ____ you',
-      options: ['love', 'hate', 'miss'],
-      correctAnswerIds: [0],
-    );
-  }
-
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_remainingTime > 0) {
-          _remainingTime--;
-        } else {
-          _timer.cancel();
-          // Calculate and show the test result
-        }
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +19,7 @@ class _TestScreenState extends State<TestScreen> {
             bloc: bloc..init(),
             listener: (context, state) {},
             builder: (context, state) {
-              if (state.status == TestStatus.success) {
+              if (state.status == TestStatus.progress || state.status == TestStatus.success) {
                 return StreamBuilder(
                     stream: state.testsData,
                     builder: (context, snapshot) {
@@ -71,47 +27,41 @@ class _TestScreenState extends State<TestScreen> {
                         if (state.tasksTree == null) {
                           bloc.makeTree(snapshot.data);
                         }
-                        if (state.tasksTree != null) {
+                        if (state.tasksTree != null && state.currentTest != null) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: LinQuestionText(
-                                  textTask: _currentTask.question,
-                                  insertedText: [for (final i in _selectedAnswers) _currentTask.options.elementAt(i)],
+                                  textTask: state.currentTest!.testTask.question,
                                 ),
                               ),
-                              Column(
-                                children: _currentTask.options.map((option) {
-                                  final index = _currentTask.options.indexOf(option);
-                                  return CheckboxListTile(
-                                    title: Text(option),
-                                    value: _selectedAnswers.contains(index),
-                                    onChanged: (selected) {
-                                      setState(() {
-                                        if (selected!) {
-                                          _selectedAnswers.add(index);
-                                        } else {
-                                          _selectedAnswers.remove(index);
-                                        }
-                                        _isNextButtonActive = _selectedAnswers.isNotEmpty;
-                                      });
-                                    },
-                                  );
-                                }).toList(),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  if (state.currentTest!.testTask.options[index].isNotEmpty) {
+                                    return CheckboxListTile(
+                                      title: Text(state.currentTest!.testTask.options[index]),
+                                      value: state.selectedAnswers.contains(index),
+                                      onChanged: (selected) => bloc.selectOrDeselectAnswer(index),
+                                    );
+                                  }
+                                  return null;
+                                },
+                                itemCount: state.currentTest!.testTask.options.map((e) => e.isNotEmpty).length,
                               ),
                               const SizedBox(height: 20),
                               Center(
                                 child: LinMainButton(
-                                  onTap: _isNextButtonActive ? _loadNextTask : null,
+                                  onTap: state.selectedAnswers.isNotEmpty ? bloc.loadNextTask : null,
                                   label: context.loc.next,
                                 ),
                               ),
                               const SizedBox(height: 20),
                               Center(
                                 child: Text(
-                                    'Time Remaining: ${_remainingTime ~/ 60}:${(_remainingTime % 60).toString().padLeft(2, '0')}'),
+                                    'Time Remaining: ${state.remainingTime ~/ 60}:${(state.remainingTime % 60).toString().padLeft(2, '0')}'),
                               ),
                             ],
                           );
@@ -124,6 +74,10 @@ class _TestScreenState extends State<TestScreen> {
                 return const Text('Error');
               } else if (state.status == TestStatus.notLoggedIn) {
                 return const Text('You need to log in first to complete the test');
+              } else if (state.status == TestStatus.result) {
+                return Center(
+                  child: Text('Your level is : ${state.currentLevel.levelName} (${state.currentLevel.name})'),
+                );
               } else {
                 return const CircularProgressIndicator();
               }

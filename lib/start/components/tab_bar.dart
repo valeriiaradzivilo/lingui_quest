@@ -73,10 +73,6 @@ class RallyTab extends StatelessWidget {
               width: unitWidth,
               child: icon,
             ),
-            SizedBox(
-              width: unitWidth * expandedTitleWidthMultiplier,
-              child: titleText,
-            ),
           ],
         ),
       );

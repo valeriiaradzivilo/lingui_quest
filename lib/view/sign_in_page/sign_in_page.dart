@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
+import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
@@ -30,39 +31,42 @@ class _SignInPageState extends State<SignInPage> {
         }
       }, builder: (context, state) {
         if (state.status == SignInStatus.initial) {
-          return Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Form(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    LinTextField(
-                      controller: emailController,
-                      label: context.loc.email,
-                      option: TextFieldOption.email,
-                    ),
-                    LinTextField(
-                      controller: passwordController,
-                      label: context.loc.password,
-                      option: TextFieldOption.password,
-                    ),
-                    LinMainButton(
-                        label: context.loc.signIn,
-                        onTap: () async {
-                          await bloc.login(emailController.text, passwordController.text);
-                        }),
-                    InkWell(
-                        key: ValueKey(KeyConstants.noProfileYet),
-                        onTap: () {
-                          Navigator.of(context).pushNamed(AppRoutes.signUp);
-                        },
-                        child: Text(
-                          context.loc.noProfileYet,
-                          style: const TextStyle(decoration: TextDecoration.underline),
-                        ))
-                  ],
+          return Padding(
+            padding: EdgeInsets.all(PaddingConst.large),
+            child: Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Form(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      LinTextField(
+                        controller: emailController,
+                        label: context.loc.email,
+                        option: TextFieldOption.email,
+                      ),
+                      LinTextField(
+                        controller: passwordController,
+                        label: context.loc.password,
+                        option: TextFieldOption.password,
+                      ),
+                      LinMainButton(
+                          label: context.loc.signIn,
+                          onTap: () async {
+                            await bloc.login(emailController.text, passwordController.text);
+                          }),
+                      InkWell(
+                          key: ValueKey(KeyConstants.noProfileYet),
+                          onTap: () {
+                            Navigator.of(context).pushNamed(AppRoutes.signUp);
+                          },
+                          child: Text(
+                            context.loc.noProfileYet,
+                            style: const TextStyle(decoration: TextDecoration.underline),
+                          ))
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -7,7 +7,13 @@ class Node {
   final int correctlyGuessedThisLevel;
   Node? leftChild; // incorrect
   Node? rightChild; //correct
-  Node(this.level, this.correctlyGuessedThisLevel, this.testTask, this.leftChild, this.rightChild);
+  bool isFinalNode;
+  Node(this.level, this.correctlyGuessedThisLevel, this.testTask, this.leftChild, this.rightChild,
+      {this.isFinalNode = false});
+
+  factory Node.finalNode(Node previousNode) =>
+      Node(previousNode.level, previousNode.correctlyGuessedThisLevel, TestTaskModel.empty(), null, null,
+          isFinalNode: true);
 }
 
 class LevelTestTasksTree {
@@ -52,10 +58,14 @@ class LevelTestTasksTree {
       if (startNode.rightChild != null) {
         pastTasks.add(rightTestTask);
         buildATree(allTasks, pastTasks, startNode.rightChild!);
+      } else {
+        startNode.rightChild ??= Node.finalNode(startNode);
       }
       if (startNode.leftChild != null) {
         pastTasks.add(leftTestTask);
         buildATree(allTasks, pastTasks, startNode.leftChild!);
+      } else {
+        startNode.leftChild ??= Node.finalNode(startNode);
       }
     } catch (e) {
       //didn't find the task

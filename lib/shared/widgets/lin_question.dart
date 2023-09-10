@@ -1,27 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:lingui_quest/shared/constants/padding_constants.dart';
 
 class LinQuestionText extends StatelessWidget {
-  const LinQuestionText({super.key, required this.textTask, required this.insertedText});
+  const LinQuestionText({super.key, required this.textTask});
   final String textTask;
-  final List<String>? insertedText;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    if (insertedText != null && (insertedText?.isNotEmpty ?? false)) {
-      return Column(
-        children: [
-          for (final answer in insertedText!)
-            Padding(
-              padding: EdgeInsets.all(PaddingConst.small),
-              child: TextTaskType.getType(textTask).getWidget(textTask, answer, theme),
-            ),
-        ],
-      );
-    } else {
-      return TextTaskType.getType(textTask).getWidget(textTask, null, theme);
-    }
+    return TextTaskType.getType(textTask).getWidget(textTask, null, theme);
   }
 }
 
@@ -44,14 +30,20 @@ class MissedTextBox extends StatelessWidget {
 enum TextTaskType {
   regularText, // just text 'Choose the correct option'
   missedText, // I ___ like your head.
+  missedDottedText, // This ... great
+  // multiMissedText, // I ___ out, when she ____ me
   colonText; //'Fill in the gap : I ___ you.
 
   factory TextTaskType.getType(String text) {
     if (!text.contains(RegExp('[_"\']'))) {
       return TextTaskType.regularText;
-    } else if (text.contains('___')) {
-      if (text.contains(':') && !text.contains(RegExp('["\']'))) {
+    } else if (text.contains('__') || text.contains('..')) {
+      if (text.contains('..')) {
+        return TextTaskType.missedDottedText;
+      } else if (text.contains(':') && !text.contains(RegExp('["\']'))) {
         return TextTaskType.colonText;
+      } else if (text.contains(RegExp('_+.+?_+'))) {
+        return TextTaskType.regularText;
       } else {
         return TextTaskType.missedText;
       }
@@ -79,6 +71,22 @@ enum TextTaskType {
             Text(textAfter),
           ],
         );
+      case TextTaskType.missedDottedText:
+        final String textBefore = textTask.substring(0, textTask.indexOf('..'));
+        final String textAfter = textTask.substring(textTask.lastIndexOf('..') + 2);
+
+        return Wrap(
+          direction: Axis.horizontal,
+          alignment: WrapAlignment.start,
+          children: [
+            Text(textBefore),
+            MissedTextBox(
+              insertedText: answer,
+            ),
+            Text(textAfter),
+          ],
+        );
+
       case TextTaskType.colonText:
         final String textBeforeColon = textTask.substring(0, textTask.indexOf(':') + 1);
         final String textAfterColon = textTask.substring(textTask.indexOf(':') + 1).trim();
