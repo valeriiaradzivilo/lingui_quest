@@ -16,6 +16,7 @@ TestTaskModel _$TestTaskModelFromJson(Map<String, dynamic> json) =>
           .map((e) => e as int)
           .toList(),
       level: json['level'] as String,
+      isVerified: json['isVerified'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$TestTaskModelToJson(TestTaskModel instance) =>
@@ -25,4 +26,5 @@ Map<String, dynamic> _$TestTaskModelToJson(TestTaskModel instance) =>
       'options': instance.options,
       'correctAnswerIds': instance.correctAnswerIds,
       'level': instance.level,
+      'isVerified': instance.isVerified,
     };

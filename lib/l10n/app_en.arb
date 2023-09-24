@@ -35,6 +35,8 @@
   "noResults": "No Results Found",
   "retry": "Retry",
   "loading": "Loading...",
+  "firstName": "First name",
+  "lastName": "Last name",
   "emptyStateMessage": "No items to display",
   "itemCount": "{count, plural, =0{No items} =1{1 item} other{{count} items}}",
 
@@ -43,7 +45,8 @@
   "games":"Games",
   "planner":"Planner",
   "levelTest":"Level test",
-  "mainDesription":"",
+  "mainDescription":"",
+  "searchTutor":"Search tutor",
 
   "signedInSuccessfully":"You signed in successfully. Return to home page to continue your journey.",
   "goToMainPage":"Go back",

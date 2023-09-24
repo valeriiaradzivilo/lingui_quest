@@ -10,8 +10,9 @@ import 'package:lingui_quest/start/components/tab_bar.dart';
 import 'package:lingui_quest/start/components/user_widget.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 import 'package:lingui_quest/view/level_test/main_screen/level_test_screen.dart';
+import 'package:lingui_quest/view/search_tutor/tutor_search_page.dart';
 
-enum TabBarOption { roadmap, games, planner, level }
+enum TabBarOption { roadmap, games, planner, level, searchTutor }
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key, required this.changeTheme});
@@ -100,7 +101,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                         ),
                       ],
                     );
-                  } else {
+                  } else if (kIsWeb) {
                     return Column(
                       children: [
                         Expanded(
@@ -115,6 +116,11 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                         ),
                       ],
                     );
+                  } else {
+                    return TabBarView(
+                      controller: tabController,
+                      children: _buildTabViews(),
+                    );
                   }
                 } else if (state.status == StartStatus.error) {
                   return const Text('Error');
@@ -126,6 +132,8 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
       ),
       bottomNavigationBar: !kIsWeb
           ? BottomAppBar(
+              elevation: PaddingConst.immense,
+              color: Theme.of(context).cardColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,6 +166,8 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
         return const Placeholder();
       case TabBarOption.roadmap:
         return const Placeholder();
+      case TabBarOption.searchTutor:
+        return const TutorSearch();
     }
   }
 
@@ -169,7 +179,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
         child: _buildTabButton(i),
       ));
     }
-    list.add(SizedBox());
+    list.add(const SizedBox());
     return list;
   }
 
@@ -211,8 +221,14 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
             tabController: tabController,
             isVertical: isDesktop);
 
-      default:
-        return const SizedBox();
+      case TabBarOption.searchTutor:
+        return RallyTab(
+            theme: theme,
+            iconData: FeatherIcons.search,
+            title: context.loc.searchTutor.toUpperCase(),
+            tabIndex: tab.index,
+            tabController: tabController,
+            isVertical: isDesktop);
     }
   }
 }

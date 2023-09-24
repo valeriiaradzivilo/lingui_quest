@@ -4,4 +4,5 @@ class AppRoutes {
   static const String signUp = '/sign-up';
   static const String createTestTask = '/create-test-task';
   static const String test = '/test';
+  static const String profile = '/profile';
 }

@@ -39,4 +39,6 @@ class StartCubit extends Cubit<StartState> {
       emit(state.copyWith(currentUser: currentUser.foldRight(UserModel.empty(), (r, previous) => r)));
     }
   }
+
+  void signOut() {}
 }

@@ -15,6 +15,8 @@ import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.d
 import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
 import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
 import 'package:lingui_quest/view/level_test/test_screen/test_screen.dart';
+import 'package:lingui_quest/view/profile_page/full_profile_page.dart';
+import 'package:lingui_quest/view/search_tutor/bloc/tutors_bloc.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 import 'package:lingui_quest/view/sign_in_page/sign_in_page.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
@@ -44,6 +46,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<CreateTaskCubit>(create: (_) => serviceLocator<CreateTaskCubit>()),
         BlocProvider<LevelTestBloc>(create: (_) => serviceLocator<LevelTestBloc>()),
         BlocProvider<TestCubit>(create: (_) => serviceLocator<TestCubit>()),
+        BlocProvider<TutorsSearchBloc>(create: (_) => serviceLocator<TutorsSearchBloc>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),
@@ -75,6 +78,7 @@ class MyApp extends StatelessWidget {
       AppRoutes.signUp: (context) => const SignUpPage(),
       AppRoutes.createTestTask: (context) => const CreateTestTaskPopup(),
       AppRoutes.test: (context) => const TestScreen(),
+      AppRoutes.profile: (context) => const FullProfilePage(),
     };
   }
 }

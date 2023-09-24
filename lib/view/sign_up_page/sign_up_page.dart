@@ -4,7 +4,6 @@ import 'package:lingui_quest/core/extentions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
-import 'package:lingui_quest/view/home_page/home_page.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -17,24 +16,37 @@ class SignUpPage extends StatefulWidget {
 class _SignInPageState extends State<SignUpPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final SignUpCubit bloc = BlocProvider.of<SignUpCubit>(context);
-    return Scaffold(
-      body: BlocBuilder<SignUpCubit, SignUpState>(
+    return AlertDialog(
+      title: Text(context.loc.signUp),
+      content: BlocBuilder<SignUpCubit, SignUpState>(
           bloc: bloc,
           builder: (context, state) {
             if (state.status == SignUpStatus.initial) {
               return Center(
                 child: Container(
-                  constraints: const BoxConstraints(maxWidth: 600),
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width, minWidth: 600),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        LinTextField(
+                          controller: firstNameController,
+                          label: context.loc.firstName,
+                          option: TextFieldOption.email,
+                        ),
+                        LinTextField(
+                          controller: lastNameController,
+                          label: context.loc.lastName,
+                          option: TextFieldOption.email,
+                        ),
                         LinTextField(
                           key: ValueKey(KeyConstants.emailSignUpField),
                           controller: emailController,
@@ -50,7 +62,13 @@ class _SignInPageState extends State<SignUpPage> {
                         LinButton(
                           key: ValueKey(KeyConstants.signUpButton),
                           label: context.loc.signUp,
-                          onTap: () => bloc.signUp(emailController.text, passwordController.text),
+                          onTap: () async {
+                            final res = await bloc.signUp(firstNameController.text, lastNameController.text,
+                                emailController.text, passwordController.text);
+                            if (res) {
+                              Navigator.of(context).maybePop();
+                            }
+                          },
                           isEnabled: _formKey.currentState?.validate() ?? false,
                         ),
                       ],
@@ -58,8 +76,6 @@ class _SignInPageState extends State<SignUpPage> {
                   ),
                 ),
               );
-            } else if (state.status == SignUpStatus.success) {
-              return const HomePage();
             } else {
               return const Center(child: CircularProgressIndicator());
             }

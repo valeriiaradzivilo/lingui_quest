@@ -13,13 +13,16 @@ class SignUpCubit extends Cubit<SignUpState> {
     this._signUpWithEmailUsecase,
   ) : super(SignUpState.initial());
 
-  void signUp(String email, String password) async {
-    final Either<Failure, void> result = await _signUpWithEmailUsecase(SignUpParams(email, password));
+  Future<bool> signUp(String firstName, String lastName, String email, String password) async {
+    final Either<Failure, void> result =
+        await _signUpWithEmailUsecase(SignUpParams(email, password, firstName, lastName));
 
     result.fold((l) {
       emit(state.copyWith(status: SignUpStatus.error, errorMessage: l.failureMessage));
+      return false;
     }, (r) {
-      emit(state.copyWith(status: SignUpStatus.success));
+      return true;
     });
+    return false;
   }
 }

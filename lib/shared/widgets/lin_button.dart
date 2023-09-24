@@ -41,7 +41,10 @@ class LinButton extends StatelessWidget {
                   ],
                   Text(
                     label,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.black),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: !isTransparentBack ? Colors.black : Colors.white),
                   ),
                 ],
               ),

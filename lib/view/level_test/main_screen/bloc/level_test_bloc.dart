@@ -1,35 +1,24 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../data/models/test_task_model.dart';
+import 'package:lingui_quest/core/usecase/usecase.dart';
+import 'package:lingui_quest/data/models/test_task_model.dart';
+import 'package:lingui_quest/data/models/user_model.dart';
+import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 
 part 'level_test_state.dart';
 
-sealed class CounterEvent {}
+class LevelTestBloc extends Cubit<LevelTestState> {
+  LevelTestBloc(this._getCurrentUserUsecase) : super(LevelTestState.initial());
 
-final class AddedNewTask extends CounterEvent {}
+  final GetCurrentUserUsecase _getCurrentUserUsecase;
 
-final class ReadAllTasks extends CounterEvent {}
-
-class LevelTestBloc extends Bloc<CounterEvent, LevelTestState> {
-  LevelTestBloc() : super(LevelTestState.initial()) {
-    on<AddedNewTask>((event, emit) => emit(state));
-    on<ReadAllTasks>(
-      (event, emit) async {
-        // final allTests = await _getAllTestTasksUsecase(NoParams());
-        // if (allTests.isRight()) {
-        //   emit(state.copyWith(
-        //       status: LevelTestStatus.initial,
-        //       testsData: allTests.foldRight(const Stream.empty(), (r, previous) => r)));
-        // } else {
-        //   emit(state.copyWith(status: LevelTestStatus.error));
-        // }
-        emit(state.copyWith(
-          status: LevelTestStatus.initial,
-        ));
-      },
-    );
+  void getCurrentUser() async {
+    final user = await _getCurrentUserUsecase(NoParams());
+    if (user.isRight()) {
+      emit(state.copyWith(
+          status: LevelTestStatus.initial, currentUser: user.foldRight(UserModel.empty(), (r, previous) => r)));
+    } else {
+      emit(state.copyWith(status: LevelTestStatus.notSignedIn));
+    }
   }
-
-  // final GetAllTestTasksUsecase _getAllTestTasksUsecase;
 }

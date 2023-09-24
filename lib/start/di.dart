@@ -7,6 +7,7 @@ import 'package:lingui_quest/data/usecase/add_test_task_usecase.dart';
 import 'package:lingui_quest/data/usecase/check_logged_in.dart';
 import 'package:lingui_quest/data/usecase/create_test_tasks_tree.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
+import 'package:lingui_quest/data/usecase/get_all_tutors_usecase.dart.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
@@ -14,6 +15,7 @@ import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
 import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
+import 'package:lingui_quest/view/search_tutor/bloc/tutors_bloc.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
 
@@ -41,13 +43,18 @@ Future<void> init() async {
     () => CreateTaskCubit(serviceLocator<AddTestTaskUsecase>(), serviceLocator<GetCurrentUserUsecase>()),
   );
   serviceLocator.registerFactory(
-    () => LevelTestBloc(),
+    () => LevelTestBloc(serviceLocator<GetCurrentUserUsecase>()),
   );
   serviceLocator.registerFactory(
     () => TestCubit(
       serviceLocator<GetCurrentUserUsecase>(),
       serviceLocator<CreateTestTaskTreeUsecase>(),
       serviceLocator<GetAllTestTasksUsecase>(),
+    ),
+  );
+  serviceLocator.registerFactory(
+    () => TutorsSearchBloc(
+      serviceLocator<GetAllTutorsUsecase>(),
     ),
   );
 
@@ -62,7 +69,7 @@ Future<void> init() async {
     () => CheckLoggedInUsecase(),
   );
   serviceLocator.registerLazySingleton<AddTestTaskUsecase>(
-    () => AddTestTaskUsecase(repository: serviceLocator()),
+    () => AddTestTaskUsecase(repository: serviceLocator<RemoteRepository>()),
   );
   serviceLocator.registerLazySingleton<GetCurrentUserUsecase>(
     () => GetCurrentUserUsecase(repository: serviceLocator()),
@@ -72,6 +79,9 @@ Future<void> init() async {
   );
   serviceLocator.registerLazySingleton<CreateTestTaskTreeUsecase>(
     () => CreateTestTaskTreeUsecase(repository: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<GetAllTutorsUsecase>(
+    () => GetAllTutorsUsecase(repository: serviceLocator()),
   );
 
   //datasources

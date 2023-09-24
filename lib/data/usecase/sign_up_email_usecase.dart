@@ -15,8 +15,10 @@ class SignUpWithEmailUsecase extends UseCaseFutureEither<void, SignUpParams> {
 }
 
 class SignUpParams {
+  final String firstName;
+  final String lastName;
   final String email;
   final String password;
 
-  SignUpParams(this.email, this.password);
+  SignUpParams(this.email, this.password, this.firstName, this.lastName);
 }

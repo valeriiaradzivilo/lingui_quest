@@ -22,6 +22,9 @@ class LinTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       initialValue: initialValue,
+      obscureText: option == TextFieldOption.password ? true : false,
+      enableSuggestions: option == TextFieldOption.password ? false : true,
+      autocorrect: option == TextFieldOption.password ? false : true,
       validator: (value) {
         if (value?.isEmpty ?? isRequired) {
           return 'This field must not be empty';

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:lingui_quest/core/extentions/app_localization_context.dart';
+import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_round_photo.dart';
@@ -35,32 +36,32 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
                 color: theme.colorScheme.surfaceVariant,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: _child(state.isLoggedIn)),
-          child: _icon(state.isLoggedIn, state.currentUser.email, bloc));
+              child: _child(state.isLoggedIn, bloc)),
+          child: _icon(state.currentUser != UserModel.empty(), state, bloc));
     });
   }
 
-  Widget _icon(bool isLoggedIn, String? initials, StartCubit bloc) {
+  Widget _icon(bool isLoggedIn, StartState state, StartCubit bloc) {
     final ThemeData theme = Theme.of(context);
     return LinRoundPhoto(
       key: ValueKey(KeyConstants.avatarPortal),
-      radius: kIsWeb ? 50 : 20,
       onTap: () {
         bloc.checkLoggedIn();
         setState(() {
           _clickedOnAvatar = !_clickedOnAvatar;
         });
       },
-      child: !isLoggedIn || initials == null || initials.isEmpty
+      child: !isLoggedIn
           ? const Icon(FeatherIcons.user)
           : Text(
-              initials.substring(0, 1).toUpperCase(),
+              state.currentUser.firstName.substring(0, 1).toUpperCase() +
+                  state.currentUser.lastName.substring(0, 1).toUpperCase(),
               style: theme.textTheme.displayMedium,
             ),
     );
   }
 
-  Widget _child(bool isLoggedIn) {
+  Widget _child(bool isLoggedIn, StartCubit bloc) {
     if (!isLoggedIn) {
       return LinButton(
         isTransparentBack: true,
@@ -69,20 +70,23 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
         onTap: () => Navigator.of(context).pushNamed(AppRoutes.signIn),
       );
     } else {
-      return Container(
-        constraints: const BoxConstraints(maxHeight: 200, maxWidth: 200),
-        child: Column(
-          children: [
-            LinButton(
-              label: context.loc.profile,
-              onTap: () {},
-            ),
-            const Divider(),
-            LinButton(
-              label: context.loc.signOut,
-              onTap: () {},
-            ),
-          ],
+      return IntrinsicWidth(
+        child: IntrinsicHeight(
+          child: Column(
+            children: [
+              LinButton(
+                label: context.loc.profile,
+                onTap: () => Navigator.of(context).pushNamed(AppRoutes.profile),
+                isTransparentBack: true,
+              ),
+              const Divider(),
+              LinButton(
+                label: context.loc.signOut,
+                onTap: () => bloc.signOut(),
+                isTransparentBack: true,
+              ),
+            ],
+          ),
         ),
       );
     }
