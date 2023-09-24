@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lingui_quest/core/extentions/custom_exceptions.dart';
+import 'package:lingui_quest/core/extensions/custom_exceptions.dart';
 import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/data/local_storage/hive_database.dart';
 import 'package:lingui_quest/data/models/test_task_model.dart';
@@ -116,32 +116,84 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  Future<Stream<List<UserModel>>> getAllUserDataTeachers() async {
+    try {
+      return firestore.collection('userData').snapshots().map((event) => event.docs
+          .map((e) {
+            if (e.data()['isTeacher']) {
+              return UserModel.fromJson(e.data());
+            }
+          })
+          .whereType<UserModel>()
+          .toList());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Stream<List<TutorModel>>> getAllTutors() async {
     try {
-      final Stream<List<UserModel?>> usersData =
-          firestore.collection('userData').snapshots().map((event) => event.docs.map((e) {
-                if (e.data()['isTeacher']) {
-                  return UserModel.fromJson(e.data());
-                }
-              }).toList());
+      final Stream<List<UserModel>> usersData = await getAllUserDataTeachers();
       final Stream<List<Json>> tutorsData =
           firestore.collection('tutorInfo').snapshots().map((event) => event.docs.map((e) => e.data()).toList());
 
-      return Rx.combineLatest2(usersData, tutorsData, (users, tutors) {
-        return tutors
-            .map((tutorData) {
-              if (users.any((element) => element?.userId == tutorData['userId']) && tutorData['userId'] != null) {
-                final userData = users.firstWhere((element) => element?.userId == tutorData['userId']);
-                if (userData != null) {
-                  final data = {...userData.toJson(), ...tutorData};
-                  return TutorModel.fromJson(data);
-                }
-              }
-              return null; // Return null for cases where no match is found
-            })
-            .whereType<TutorModel>()
-            .toList();
-      }).asBroadcastStream().startWith([]);
+      // final res = Rx.combineLatest2(usersData, tutorsData, (users, tutors) {
+      //   return tutors
+      //       .map((tutorData) {
+      //         if (users.any((element) => element.userId == tutorData['userId']) && tutorData['userId'] != null) {
+      //           final userData = users.firstWhere((element) => element.userId == tutorData['userId'],
+      //               orElse: () => UserModel.empty());
+      //           if (userData != UserModel.empty()) {
+      //             final data = {...userData.toJson(), ...tutorData};
+      //             return TutorModel.fromJson(data);
+      //           }
+      //         }
+      //         return null; // Return null for cases where no match is found
+      //       })
+      //       .whereType<TutorModel>()
+      //       .toList();
+      // }).asBroadcastStream();
+      // res.forEach((element) {
+      //   print(element.first.about);
+      // });
+      // Stream<List<TutorModel>> stream() async* {
+      //   final data = await tutorsData.last;
+      //   final users = await usersData.last;
+
+      //   final List<TutorModel> answer = [];
+      //   for (final tutor in data) {
+      //     final thisUser = users.firstWhere((element) => element.userId == tutor['userId'], orElse: UserModel.empty);
+      //     if (thisUser != UserModel.empty()) {
+      //       final allData = {...thisUser.toJson(), ...tutor};
+      //       answer.add(TutorModel.fromJson(allData));
+      //     }
+
+      //     yield answer;
+      //   }
+      // }
+
+      // final res = stream().asBroadcastStream();
+      return Rx.combineLatest2(
+        usersData,
+        tutorsData,
+        (List<UserModel> users, List<Map<String, dynamic>> tutors) {
+          final Map<String, UserModel> usersMap = Map.fromEntries(users.map((user) => MapEntry(user.userId, user)));
+
+          final List<TutorModel> combinedData = [];
+          for (final tutor in tutors) {
+            final userId = tutor['userId'] as String;
+            final user = usersMap[userId];
+            if (user != null) {
+              final Map<String, dynamic> allData = {'user': user.toJson(), ...tutor};
+              print(allData);
+              final model = TutorModel.fromJson(allData);
+              combinedData.add(model);
+            }
+          }
+
+          return combinedData;
+        },
+      ).asBroadcastStream();
     } catch (e) {
       rethrow;
     }

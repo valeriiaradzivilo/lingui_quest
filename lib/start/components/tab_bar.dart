@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
+import 'package:lingui_quest/start/bloc/start_cubit.dart';
+import 'package:lingui_quest/start/start_page.dart';
 
 const int tabCount = 5;
 const int turnsToRotateRight = 1;
@@ -13,6 +16,7 @@ class RallyTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.of<StartCubit>(context);
     return TabBar(
       // Setting isScrollable to true prevents the tabs from being
       // wrapped in [Expanded] widgets, which allows for more
@@ -23,6 +27,9 @@ class RallyTabBar extends StatelessWidget {
       controller: tabController,
       // This hides the tab indicator.
       indicatorColor: Colors.transparent,
+      onTap: (value) {
+        bloc.setTabOption(TabBarOption.values[value]);
+      },
     );
   }
 }

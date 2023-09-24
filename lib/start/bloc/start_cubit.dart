@@ -6,6 +6,7 @@ import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/check_logged_in.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:lingui_quest/start/start_page.dart';
 
 part 'start_state.dart';
 
@@ -41,4 +42,8 @@ class StartCubit extends Cubit<StartState> {
   }
 
   void signOut() {}
+
+  void setTabOption(TabBarOption option) {
+    emit(state.copyWith(currentTab: option));
+  }
 }

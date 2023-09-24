@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
+import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_round_photo.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
+import 'package:lingui_quest/view/profile_page/become_tutor/alert_tutor.dart';
 
 class FullProfilePage extends StatelessWidget {
   const FullProfilePage({super.key});
@@ -34,6 +37,9 @@ class FullProfilePage extends StatelessWidget {
                     Text('Username: ${state.currentUser.username}'),
                     Text('Email: ${state.currentUser.email}'),
                     Text('Level: ${state.currentUser.level.levelName} (${state.currentUser.level.name})'),
+                    if (!state.currentUser.isTeacher)
+                      LinButton(
+                          label: context.loc.becomeTutor, onTap: () => _becomeTutor(context, user: state.currentUser))
                   ],
                 ),
               ),
@@ -45,4 +51,15 @@ class FullProfilePage extends StatelessWidget {
       ),
     );
   }
+}
+
+void _becomeTutor(BuildContext context, {required UserModel user}) {
+  showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertTutor(
+          user: user,
+        );
+      });
 }

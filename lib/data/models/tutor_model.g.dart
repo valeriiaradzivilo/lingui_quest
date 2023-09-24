@@ -12,9 +12,7 @@ TutorModel _$TutorModelFromJson(Map<String, dynamic> json) => TutorModel(
       contacts: Map<String, String>.from(json['contacts'] as Map),
       currency: json['currency'] as String,
       preferences: json['preferences'] as String,
-      price: (json['price'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(k, (e as num).toDouble()),
-      ),
+      price: Map<String, String>.from(json['price'] as Map),
     );
 
 Map<String, dynamic> _$TutorModelToJson(TutorModel instance) =>

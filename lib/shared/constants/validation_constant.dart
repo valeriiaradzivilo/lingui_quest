@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingui_quest/core/extentions/app_localization_context.dart';
+import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 
 class ValidationConstant {
   static String? email(String? email, BuildContext context) {

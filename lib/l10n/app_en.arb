@@ -14,7 +14,9 @@
   "resetPassword": "Reset Password",
   "send": "Send",
   "back": "Back",
-  "next": "Next",
+  "next": "Next", 
+  "yes": "Yes",
+  "no": "No",
   "finish": "Finish",
   "cancel": "Cancel",
   "save": "Save",
@@ -59,5 +61,9 @@
   "passwordMinLength":"Password must have at least 8 characters",
 
 
-  "startTest":"Start test"
+  "startTest":"Start test",
+  "becomeTutor":"I want to become tutor",
+  "howToBecomeTutor":"If you want to become a tutor, you must have at least B2 level verified on the platform. This will give you an ability to post and be visible to students in search of tutor. You will need to fill in short form before you become one. Are you ready?",
+  "lowLevelMessage":"You do not have required level"
 }
+

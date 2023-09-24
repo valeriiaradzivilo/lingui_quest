@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
-import 'package:lingui_quest/core/extentions/app_localization_context.dart';
+import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
@@ -36,7 +36,7 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
                 color: theme.colorScheme.surfaceVariant,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: _child(state.isLoggedIn, bloc)),
+              child: _child(state.currentUser != UserModel.empty(), bloc)),
           child: _icon(state.currentUser != UserModel.empty(), state, bloc));
     });
   }

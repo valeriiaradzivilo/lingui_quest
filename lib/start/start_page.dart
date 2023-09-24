@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lingui_quest/core/extentions/app_localization_context.dart';
+import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/components/tab_bar.dart';
@@ -27,12 +27,8 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    super.initState();
     tabController = TabController(initialIndex: 0, length: TabBarOption.values.length + 1, vsync: this);
-  }
-
-  void goTo(TabBarOption option) {
-    tabController.animateTo(option.index);
+    super.initState();
   }
 
   @override
@@ -81,7 +77,11 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
         child: Center(
           child: BlocConsumer<StartCubit, StartState>(
               bloc: bloc..init(),
-              listener: (context, state) {},
+              listener: (context, state) {
+                if (state.status == StartStatus.initial) {
+                  tabController.animateTo(state.currentTab.index);
+                }
+              },
               builder: (context, state) {
                 if (state.status == StartStatus.initial) {
                   if (kIsWeb && isDesktop) {

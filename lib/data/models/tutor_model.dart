@@ -13,7 +13,7 @@ class TutorModel {
   final Map<String, String> contacts;
   final String currency;
   final String preferences;
-  final Map<String, double> price;
+  final Map<String, String> price;
   TutorModel({
     required this.user,
     required this.about,

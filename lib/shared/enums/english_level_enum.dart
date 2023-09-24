@@ -13,6 +13,10 @@ enum EnglishLevel {
       return EnglishLevel.a1;
     }
   }
+
+  static List<EnglishLevel> englishLevelForTutors() {
+    return [EnglishLevel.b2, EnglishLevel.c1, EnglishLevel.c2];
+  }
 }
 
 extension EnglishLevelExtension on EnglishLevel {
