@@ -13,6 +13,7 @@ class LevelTestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LevelTestBloc bloc = BlocProvider.of<LevelTestBloc>(context);
+    final theme = Theme.of(context);
     return Center(
       child: Padding(
         padding: EdgeInsets.all(PaddingConst.medium),
@@ -23,6 +24,7 @@ class LevelTestScreen extends StatelessWidget {
               if (state.status == LevelTestStatus.initial) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     if (state.currentUser.isTeacher) ...[
                       LinButton(
@@ -33,11 +35,20 @@ class LevelTestScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                       )
                     ],
-                    Padding(
-                      padding: EdgeInsets.all(PaddingConst.large),
-                      child: LinMainButton(
-                          label: context.loc.startTest, onTap: () => Navigator.of(context).pushNamed(AppRoutes.test)),
-                    )
+                    Text(context.loc.levelTestInfo),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(PaddingConst.large),
+                        child: LinMainButton(
+                            label: context.loc.startTest, onTap: () => Navigator.of(context).pushNamed(AppRoutes.test)),
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                          text: context.loc.note,
+                          style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+                          children: [TextSpan(text: context.loc.levelTestNote, style: theme.textTheme.labelMedium)]),
+                    ),
                   ],
                 );
               } else if (state.status == LevelTestStatus.error) {

@@ -21,7 +21,7 @@ class StartState extends Equatable {
         status: StartStatus.progress,
         currentUser: UserModel.empty(),
         isLoggedIn: false,
-        currentTab: TabBarOption.searchTutor);
+        currentTab: TabBarOption.level);
   }
 
   @override

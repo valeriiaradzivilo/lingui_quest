@@ -8,11 +8,17 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/components/tab_bar.dart';
 import 'package:lingui_quest/start/components/user_widget.dart';
+import 'package:lingui_quest/view/games_page/games_list/games_list.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 import 'package:lingui_quest/view/level_test/main_screen/level_test_screen.dart';
-import 'package:lingui_quest/view/search_tutor/tutor_search_page.dart';
 
-enum TabBarOption { roadmap, games, planner, level, searchTutor }
+enum TabBarOption {
+  // roadmap,
+  games,
+  planner,
+  level,
+  // searchTutor,
+}
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key, required this.changeTheme});
@@ -101,22 +107,24 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                         ),
                       ],
                     );
-                  } else if (kIsWeb) {
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: TabBarView(
-                            controller: tabController,
-                            children: _buildTabViews(),
-                          ),
-                        ),
-                        PreferredSize(
-                          preferredSize: Size.fromHeight(size.width - 100),
-                          child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController),
-                        ),
-                      ],
-                    );
-                  } else {
+                  }
+                  // else if (kIsWeb) {
+                  //   return Column(
+                  //     children: [
+                  //       Expanded(
+                  //         child: TabBarView(
+                  //           controller: tabController,
+                  //           children: _buildTabViews(),
+                  //         ),
+                  //       ),
+                  //       PreferredSize(
+                  //         preferredSize: Size.fromHeight(size.width - 100),
+                  //         child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController),
+                  //       ),
+                  //     ],
+                  //   );
+                  // }
+                  else {
                     return TabBarView(
                       controller: tabController,
                       children: _buildTabViews(),
@@ -130,7 +138,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
               }),
         ),
       ),
-      bottomNavigationBar: !kIsWeb
+      bottomNavigationBar: !isDesktop
           ? BottomAppBar(
               elevation: PaddingConst.immense,
               color: Theme.of(context).cardColor,
@@ -138,8 +146,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  for (TabBarOption tab in TabBarOption.values) _buildTabButton(tab),
-                  const UserAvatarWidget()
+                  RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController),
                 ],
               ),
             )
@@ -159,15 +166,15 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
   Widget _buildCurrentTab(TabBarOption tab) {
     switch (tab) {
       case TabBarOption.games:
-        return const Placeholder();
+        return const GamesListScreen();
       case TabBarOption.level:
         return const LevelTestScreen();
       case TabBarOption.planner:
         return const Placeholder();
-      case TabBarOption.roadmap:
-        return const Placeholder();
-      case TabBarOption.searchTutor:
-        return const TutorSearch();
+      // case TabBarOption.roadmap:
+      //   return const Placeholder();
+      // case TabBarOption.searchTutor:
+      //   return const TutorSearch();
     }
   }
 
@@ -187,15 +194,15 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
     ThemeData theme = Theme.of(context);
     final isDesktop = MediaQuery.of(context).size.width > 600;
     switch (tab) {
-      case TabBarOption.roadmap:
-        return RallyTab(
-          theme: theme,
-          iconData: FeatherIcons.map,
-          tabIndex: tab.index,
-          title: context.loc.roadmap.toUpperCase(),
-          isVertical: isDesktop,
-          tabController: tabController,
-        );
+      // case TabBarOption.roadmap:
+      //   return RallyTab(
+      //     theme: theme,
+      //     iconData: FeatherIcons.map,
+      //     tabIndex: tab.index,
+      //     title: context.loc.roadmap.toUpperCase(),
+      //     isVertical: isDesktop,
+      //     tabController: tabController,
+      //   );
       case TabBarOption.planner:
         return RallyTab(
             theme: theme,
@@ -221,14 +228,14 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
             tabController: tabController,
             isVertical: isDesktop);
 
-      case TabBarOption.searchTutor:
-        return RallyTab(
-            theme: theme,
-            iconData: FeatherIcons.search,
-            title: context.loc.searchTutor.toUpperCase(),
-            tabIndex: tab.index,
-            tabController: tabController,
-            isVertical: isDesktop);
+      // case TabBarOption.searchTutor:
+      //   return RallyTab(
+      //       theme: theme,
+      //       iconData: FeatherIcons.search,
+      //       title: context.loc.searchTutor.toUpperCase(),
+      //       tabIndex: tab.index,
+      //       tabController: tabController,
+      //       isVertical: isDesktop);
     }
   }
 }

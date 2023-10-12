@@ -12,6 +12,7 @@ import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
+import 'package:lingui_quest/view/games_page/games_list/bloc/games_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
 import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
@@ -55,6 +56,11 @@ Future<void> init() async {
   serviceLocator.registerFactory(
     () => TutorsSearchBloc(
       serviceLocator<GetAllTutorsUsecase>(),
+    ),
+  );
+  serviceLocator.registerFactory(
+    () => GameBloc(
+      serviceLocator<GetCurrentUserUsecase>(),
     ),
   );
 

@@ -7,9 +7,10 @@ import 'package:lingui_quest/data/firebase/firebase_options.dart';
 import 'package:lingui_quest/data/local_storage/hive_database.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/di.dart';
-import 'package:lingui_quest/start/gallery_option.dart';
+import 'package:lingui_quest/start/gallery_option_theme.dart';
 import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/start/start_page.dart';
+import 'package:lingui_quest/view/games_page/games_list/bloc/games_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.dart';
 import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<LevelTestBloc>(create: (_) => serviceLocator<LevelTestBloc>()),
         BlocProvider<TestCubit>(create: (_) => serviceLocator<TestCubit>()),
         BlocProvider<TutorsSearchBloc>(create: (_) => serviceLocator<TutorsSearchBloc>()),
+        BlocProvider<GameBloc>(create: (_) => serviceLocator<GameBloc>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),

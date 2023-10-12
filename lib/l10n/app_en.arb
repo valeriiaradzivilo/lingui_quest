@@ -61,6 +61,13 @@
   "passwordMinLength":"Password must have at least 8 characters",
 
 
+  "levelTestInfo":"Welcome to the English Proficiency Test! This test is designed to help you understand and assess your current level of English proficiency. Whether you're learning English for academic purposes, professional development, or personal enrichment, this test will provide insights into your language skills.",
+  "levelTestNote":"This test is not a formal certification but a self-assessment tool. For official certifications, consider standardized English proficiency exams like TOEFL, IELTS, or Cambridge exams.",
+  "note":"Note: ",
+  
+  
+  "createGame":"Create a game",
+
   "startTest":"Start test",
   "becomeTutor":"I want to become tutor",
   "howToBecomeTutor":"If you want to become a tutor, you must have at least B2 level verified on the platform. This will give you an ability to post and be visible to students in search of tutor. You will need to fill in short form before you become one. Are you ready?",
