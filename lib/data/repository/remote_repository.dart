@@ -31,6 +31,15 @@ class RemoteRepository {
     }
   }
 
+  Future<Either<Failure, void>> signOut() async {
+    try {
+      await _database.signOut();
+      return const Right(null);
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
   Future<Either<Failure, UserModel>> getCurrentUser() async {
     try {
       final UserModel currentUser = await _database.getCurrentUserData();

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:lingui_quest/data/firebase/firebase_options.dart';
-import 'package:lingui_quest/data/local_storage/hive_database.dart';
 import 'package:lingui_quest/main.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
@@ -16,7 +15,7 @@ void main() {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     init();
-    HiveDatabase.openBox();
+    // HiveDatabase.openBox();
   });
 
   group('test-sign-up', () {

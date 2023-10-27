@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 
 class LinMainButton extends StatelessWidget {
-  const LinMainButton({super.key, this.icon, required this.label, required this.onTap});
+  const LinMainButton({super.key, this.icon, required this.label, required this.onTap, this.isEnabled = true});
   final IconData? icon;
   final String label;
   final Function()? onTap;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class LinMainButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(PaddingConst.medium),
         decoration: BoxDecoration(
-          color: onTap == null ? Colors.transparent : Theme.of(context).colorScheme.secondaryContainer,
+          color: isEnabled && onTap == null ? Colors.transparent : Theme.of(context).colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Theme.of(context).colorScheme.secondaryContainer),
           boxShadow: [
@@ -28,7 +29,7 @@ class LinMainButton extends StatelessWidget {
         ),
         child: IntrinsicWidth(
           child: InkWell(
-            onTap: onTap,
+            onTap: isEnabled ? onTap : null,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

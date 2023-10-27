@@ -17,12 +17,27 @@ class SignUpCubit extends Cubit<SignUpState> {
     final Either<Failure, void> result =
         await _signUpWithEmailUsecase(SignUpParams(email, password, firstName, lastName));
 
-    result.fold((l) {
+    return result.fold((l) {
       emit(state.copyWith(status: SignUpStatus.error, errorMessage: l.failureMessage));
       return false;
     }, (r) {
       return true;
     });
-    return false;
+  }
+
+  void setFirstName(String name) {
+    emit(state.copyWith(firstName: name));
+  }
+
+  void setLastName(String name) {
+    emit(state.copyWith(lastName: name));
+  }
+
+  void setEmail(String email) {
+    emit(state.copyWith(email: email));
+  }
+
+  void setPassword(String password) {
+    emit(state.copyWith(password: password));
   }
 }

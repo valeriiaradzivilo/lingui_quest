@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
-import 'package:lingui_quest/start/start_page.dart';
+import 'package:lingui_quest/start/page/start_page.dart';
 
 const int tabCount = 5;
 const int turnsToRotateRight = 1;

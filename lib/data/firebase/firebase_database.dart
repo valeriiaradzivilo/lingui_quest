@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingui_quest/core/extensions/custom_exceptions.dart';
 import 'package:lingui_quest/core/helper/serializable_interface.dart';
-import 'package:lingui_quest/data/local_storage/hive_database.dart';
 import 'package:lingui_quest/data/models/test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -35,20 +34,20 @@ class FirebaseDatabaseImpl {
         } catch (e) {
           rethrow;
         }
-        HiveDatabase.addUserIdToBox(user.uid);
-        SimpleLogger().info('Created an account for $params.email');
+        // HiveDatabase.addUserIdToBox(user.uid);
+        SimpleLogger().info('Created an account for ${params.email}');
       } else {
         throw Exception();
       }
     } on FirebaseAuthException catch (e) {
-      SimpleLogger().shout('Could not create an account for $params.email');
+      SimpleLogger().shout('Could not create an account for ${params.email}');
       if (e.code == 'weak-password') {
         throw WeakPasswordException();
       } else if (e.code == 'email-already-in-use') {
         throw AccountAlreadyExistsException();
       }
     } catch (e) {
-      SimpleLogger().shout('Could not create an account for $params.email');
+      SimpleLogger().shout('Could not create an account for ${params.email}');
       rethrow;
     }
   }
@@ -69,7 +68,7 @@ class FirebaseDatabaseImpl {
       SimpleLogger().info('Signed user $email in');
       final User? user = _firebaseAuth.currentUser;
       if (user != null) {
-        HiveDatabase.addUserIdToBox(user.uid);
+        // HiveDatabase.addUserIdToBox(user.uid);
         SimpleLogger().info('Created an account for $email');
       } else {
         throw Exception();
@@ -89,7 +88,8 @@ class FirebaseDatabaseImpl {
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
-      HiveDatabase.cleanUserId();
+
+      // HiveDatabase.cleanUserId();
     } catch (e) {
       rethrow;
     }
@@ -201,12 +201,16 @@ class FirebaseDatabaseImpl {
 
   Future<UserModel> getCurrentUserData() async {
     try {
-      final data = await firestore
-          .collection('userData')
-          .where('userId', isEqualTo: _firebaseAuth.currentUser?.uid)
-          .limit(1)
-          .get();
-      return UserModel.fromJson(data.docs.first.data());
+      if (_firebaseAuth.currentUser != null) {
+        final data = await firestore
+            .collection('userData')
+            .where('userId', isEqualTo: _firebaseAuth.currentUser?.uid)
+            .limit(1)
+            .get();
+        return UserModel.fromJson(data.docs.first.data());
+      } else {
+        return UserModel.empty();
+      }
     } catch (e) {
       rethrow;
     }

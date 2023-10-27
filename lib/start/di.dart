@@ -4,12 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:lingui_quest/data/firebase/firebase_database.dart';
 import 'package:lingui_quest/data/repository/remote_repository.dart';
 import 'package:lingui_quest/data/usecase/add_test_task_usecase.dart';
-import 'package:lingui_quest/data/usecase/check_logged_in.dart';
 import 'package:lingui_quest/data/usecase/create_test_tasks_tree.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
 import 'package:lingui_quest/data/usecase/get_all_tutors_usecase.dart.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
+import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_bloc.dart';
@@ -36,8 +36,9 @@ Future<void> init() async {
   );
   serviceLocator.registerFactory(
     () => StartCubit(
-      serviceLocator<CheckLoggedInUsecase>(),
+      // serviceLocator<CheckLoggedInUsecase>(),
       serviceLocator<GetCurrentUserUsecase>(),
+      serviceLocator<SignOutUsecase>(),
     ),
   );
   serviceLocator.registerFactory(
@@ -68,12 +69,15 @@ Future<void> init() async {
   serviceLocator.registerLazySingleton<SignInUsecase>(
     () => SignInUsecase(repository: serviceLocator()),
   );
+  serviceLocator.registerLazySingleton<SignOutUsecase>(
+    () => SignOutUsecase(repository: serviceLocator()),
+  );
   serviceLocator.registerLazySingleton<SignUpWithEmailUsecase>(
     () => SignUpWithEmailUsecase(repository: serviceLocator()),
   );
-  serviceLocator.registerLazySingleton<CheckLoggedInUsecase>(
-    () => CheckLoggedInUsecase(),
-  );
+  // serviceLocator.registerLazySingleton<CheckLoggedInUsecase>(
+  //   () => CheckLoggedInUsecase(),
+  // );
   serviceLocator.registerLazySingleton<AddTestTaskUsecase>(
     () => AddTestTaskUsecase(repository: serviceLocator<RemoteRepository>()),
   );

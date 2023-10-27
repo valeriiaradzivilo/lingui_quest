@@ -4,12 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:lingui_quest/data/firebase/firebase_options.dart';
-import 'package:lingui_quest/data/local_storage/hive_database.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/di.dart';
 import 'package:lingui_quest/start/gallery_option_theme.dart';
+import 'package:lingui_quest/start/page/start_page.dart';
 import 'package:lingui_quest/start/routes.dart';
-import 'package:lingui_quest/start/start_page.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.dart';
@@ -30,7 +29,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   init();
-  HiveDatabase.openBox();
+  // HiveDatabase.openBox();
   runApp(const MyApp());
 }
 

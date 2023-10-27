@@ -4,17 +4,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
-import 'package:lingui_quest/data/usecase/check_logged_in.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
-import 'package:lingui_quest/start/start_page.dart';
+import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
+import 'package:lingui_quest/start/page/start_page.dart';
 
 part 'start_state.dart';
 
 class StartCubit extends Cubit<StartState> {
-  StartCubit(this._checkLoggedInUsecase, this._getCurrentUserUsecase) : super(StartState.initial());
+  StartCubit(
+      // this._checkLoggedInUsecase,
+      this._getCurrentUserUsecase,
+      this._signOutUsecase)
+      : super(StartState.initial());
 
-  final CheckLoggedInUsecase _checkLoggedInUsecase;
+  // final CheckLoggedInUsecase _checkLoggedInUsecase;
   final GetCurrentUserUsecase _getCurrentUserUsecase;
+  final SignOutUsecase _signOutUsecase;
 
   void init() async {
     await checkLoggedIn();
@@ -27,11 +32,7 @@ class StartCubit extends Cubit<StartState> {
   }
 
   Future<void> checkLoggedIn() async {
-    if (await _checkLoggedInUsecase(NoParams())) {
-      emit(state.copyWith(isLoggedIn: true));
-    } else {
-      emit(state.copyWith(isLoggedIn: false));
-    }
+    emit(state.copyWith(isLoggedIn: state.currentUser != UserModel.empty()));
   }
 
   Future<void> getInitials() async {
@@ -41,7 +42,15 @@ class StartCubit extends Cubit<StartState> {
     }
   }
 
-  void signOut() {}
+  void signOut() async {
+    emit(state.copyWith(status: StartStatus.progress));
+    Either<Failure, void> currentUser = await _signOutUsecase(NoParams());
+    if (currentUser.isRight()) {
+      emit(state.copyWith(status: StartStatus.initial, currentUser: UserModel.empty()));
+    } else {
+      emit(state.copyWith(status: StartStatus.error, currentUser: UserModel.empty()));
+    }
+  }
 
   void setTabOption(TabBarOption option) {
     emit(state.copyWith(currentTab: option));
