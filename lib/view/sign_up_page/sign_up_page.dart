@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
@@ -67,7 +68,7 @@ class _SignInPageState extends State<SignUpPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: PaddingConst.large),
+                        Gap(PaddingConst.large),
                         Wrap(
                           spacing: PaddingConst.large,
                           runSpacing: PaddingConst.medium,
@@ -106,7 +107,7 @@ class _SignInPageState extends State<SignUpPage> {
                           option: TextFieldOption.password,
                           textToMatch: _passwordController.text,
                         ),
-                        SizedBox(height: PaddingConst.large),
+                        Gap(PaddingConst.large),
                         LinMainButton(
                           key: ValueKey(KeyConstants.signUpButton),
                           label: context.loc.signUp,

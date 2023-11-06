@@ -80,7 +80,21 @@
 
   "startTest":"Start test",
   "becomeTutor":"I want to become tutor",
-  "howToBecomeTutor":"If you want to become a tutor, you must have at least B2 level verified on the platform. This will give you an ability to post and be visible to students in search of tutor. You will need to fill in short form before you become one. Are you ready?",
-  "lowLevelMessage":"You do not have required level"
+  "howToBecomeTutor":"If you want to become a tutor, you must have at least B2 level verified on the platform. This will give you an ability to post and be visible to students in search of tutor. You will need to fill in short form before you become one.",
+  "areYouReady":"Are you ready?",
+  "lowLevelMessage":"You do not have required level",
+  "tutorFormTitle":"You are about to become tutor. Fill in the form.",
+  "aboutTutor":"About",
+  "aboutTutorInfo":"Let's start with getting to know you. Write at least 2 sentences about yourself. Why students should choose you over another tutor? What wakes you up everyday?",
+  "contactsTutor":"Contacts",
+  "contactsType":"Type(e.g. Telegram)",
+  "contactsLink":"Link",
+  "currencyTutor":"Currency",
+  "tapToChangeCurrency":"Tap to change currency",
+  "priceTutor":"Price",
+  "lessonType":"Lesson Type",
+  "price":"Price",
+  "preferencesTutor":"Preferences",
+  "preferencesTutorInfo":"Now tell which kind of students do you prefer? An interesting story can go here as well"
 }
 

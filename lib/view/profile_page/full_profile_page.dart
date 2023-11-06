@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
@@ -34,9 +35,13 @@ class FullProfilePage extends StatelessWidget {
                           state.currentUser.firstName.substring(0, 1).toUpperCase() +
                               state.currentUser.lastName.substring(0, 1).toUpperCase(),
                         )),
+                    Gap(PaddingConst.medium),
                     Text('Username: ${state.currentUser.username}'),
+                    Gap(PaddingConst.small),
                     Text('Email: ${state.currentUser.email}'),
+                    Gap(PaddingConst.small),
                     Text('Level: ${state.currentUser.level.levelName} (${state.currentUser.level.name})'),
+                    Gap(PaddingConst.small),
                     if (!state.currentUser.isTeacher)
                       LinButton(
                           label: context.loc.becomeTutor, onTap: () => _becomeTutor(context, user: state.currentUser))

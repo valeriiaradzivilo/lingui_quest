@@ -19,16 +19,16 @@ class LinButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(PaddingConst.small),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Container(
-          padding: EdgeInsets.all(PaddingConst.small),
-          decoration: BoxDecoration(
-            color: isTransparentBack ? Colors.transparent : Theme.of(context).colorScheme.primary,
-          ),
-          child: IntrinsicWidth(
-            child: InkWell(
-              onTap: onTap,
+      child: InkWell(
+        onTap: onTap,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            padding: EdgeInsets.all(PaddingConst.small),
+            decoration: BoxDecoration(
+              color: isTransparentBack ? Colors.transparent : Theme.of(context).colorScheme.primary,
+            ),
+            child: IntrinsicWidth(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

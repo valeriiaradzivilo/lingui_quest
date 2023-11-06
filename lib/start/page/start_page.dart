@@ -15,7 +15,7 @@ import 'package:lingui_quest/view/level_test/main_screen/level_test_screen.dart'
 enum TabBarOption {
   // roadmap,
   games,
-  planner,
+  groups,
   level,
   // searchTutor,
 }
@@ -169,7 +169,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
         return const GamesListScreen();
       case TabBarOption.level:
         return const LevelTestScreen();
-      case TabBarOption.planner:
+      case TabBarOption.groups:
         return const Placeholder();
       // case TabBarOption.roadmap:
       //   return const Placeholder();
@@ -203,10 +203,10 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
       //     isVertical: isDesktop,
       //     tabController: tabController,
       //   );
-      case TabBarOption.planner:
+      case TabBarOption.groups:
         return RallyTab(
             theme: theme,
-            iconData: FeatherIcons.calendar,
+            iconData: FeatherIcons.users,
             title: context.loc.planner.toUpperCase(),
             tabIndex: tab.index,
             tabController: tabController,
