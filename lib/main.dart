@@ -15,6 +15,7 @@ import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.d
 import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
 import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
 import 'package:lingui_quest/view/level_test/test_screen/test_screen.dart';
+import 'package:lingui_quest/view/profile_page/become_tutor/bloc/become_tutor_cubit.dart';
 import 'package:lingui_quest/view/profile_page/full_profile_page.dart';
 import 'package:lingui_quest/view/search_tutor/bloc/tutors_bloc.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<TestCubit>(create: (_) => serviceLocator<TestCubit>()),
         BlocProvider<TutorsSearchBloc>(create: (_) => serviceLocator<TutorsSearchBloc>()),
         BlocProvider<GameBloc>(create: (_) => serviceLocator<GameBloc>()),
+        BlocProvider<BecomeTutorCubit>(create: (_) => serviceLocator<BecomeTutorCubit>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),

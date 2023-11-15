@@ -4,13 +4,13 @@ import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/repository/remote_repository.dart';
 
-class GetAllTutorsUsecase extends UseCaseFutureEither<void, NoParams> {
+class CreateNewTutorUsecase extends UseCaseFutureEither<void, TutorModel> {
   final RemoteRepository repository;
 
-  GetAllTutorsUsecase({required this.repository});
+  CreateNewTutorUsecase({required this.repository});
 
   @override
-  Future<Either<Failure, Stream<List<TutorModel>>>> call(NoParams params) async {
-    return await repository.getAllTutors();
+  Future<Either<Failure, void>> call(TutorModel params) async {
+    return await repository.createTutor(params);
   }
 }

@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingui_quest/core/extensions/custom_exceptions.dart';
-import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/data/models/test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:simple_logger/simple_logger.dart';
 
 class FirebaseDatabaseImpl {
@@ -131,73 +129,37 @@ class FirebaseDatabaseImpl {
     }
   }
 
-  Future<Stream<List<TutorModel>>> getAllTutors() async {
-    try {
-      final Stream<List<UserModel>> usersData = await getAllUserDataTeachers();
-      final Stream<List<Json>> tutorsData =
-          firestore.collection('tutorInfo').snapshots().map((event) => event.docs.map((e) => e.data()).toList());
+  // Future<Stream<List<TutorModel>>> getAllTutors() async {
+  //   try {
+  //     final Stream<List<UserModel>> usersData = await getAllUserDataTeachers();
+  //     final Stream<List<Json>> tutorsData =
+  //         firestore.collection('tutorInfo').snapshots().map((event) => event.docs.map((e) => e.data()).toList());
 
-      // final res = Rx.combineLatest2(usersData, tutorsData, (users, tutors) {
-      //   return tutors
-      //       .map((tutorData) {
-      //         if (users.any((element) => element.userId == tutorData['userId']) && tutorData['userId'] != null) {
-      //           final userData = users.firstWhere((element) => element.userId == tutorData['userId'],
-      //               orElse: () => UserModel.empty());
-      //           if (userData != UserModel.empty()) {
-      //             final data = {...userData.toJson(), ...tutorData};
-      //             return TutorModel.fromJson(data);
-      //           }
-      //         }
-      //         return null; // Return null for cases where no match is found
-      //       })
-      //       .whereType<TutorModel>()
-      //       .toList();
-      // }).asBroadcastStream();
-      // res.forEach((element) {
-      //   print(element.first.about);
-      // });
-      // Stream<List<TutorModel>> stream() async* {
-      //   final data = await tutorsData.last;
-      //   final users = await usersData.last;
+  //     return Rx.combineLatest2(
+  //       usersData,
+  //       tutorsData,
+  //       (List<UserModel> users, List<Map<String, dynamic>> tutors) {
+  //         final Map<String, UserModel> usersMap = Map.fromEntries(users.map((user) => MapEntry(user.userId, user)));
 
-      //   final List<TutorModel> answer = [];
-      //   for (final tutor in data) {
-      //     final thisUser = users.firstWhere((element) => element.userId == tutor['userId'], orElse: UserModel.empty);
-      //     if (thisUser != UserModel.empty()) {
-      //       final allData = {...thisUser.toJson(), ...tutor};
-      //       answer.add(TutorModel.fromJson(allData));
-      //     }
+  //         final List<TutorModel> combinedData = [];
+  //         for (final tutor in tutors) {
+  //           final userId = tutor['userId'] as String;
+  //           final user = usersMap[userId];
+  //           if (user != null) {
+  //             final Map<String, dynamic> allData = {'user': user.toJson(), ...tutor};
+  //             print(allData);
+  //             final model = TutorModel.fromJson(allData);
+  //             combinedData.add(model);
+  //           }
+  //         }
 
-      //     yield answer;
-      //   }
-      // }
-
-      // final res = stream().asBroadcastStream();
-      return Rx.combineLatest2(
-        usersData,
-        tutorsData,
-        (List<UserModel> users, List<Map<String, dynamic>> tutors) {
-          final Map<String, UserModel> usersMap = Map.fromEntries(users.map((user) => MapEntry(user.userId, user)));
-
-          final List<TutorModel> combinedData = [];
-          for (final tutor in tutors) {
-            final userId = tutor['userId'] as String;
-            final user = usersMap[userId];
-            if (user != null) {
-              final Map<String, dynamic> allData = {'user': user.toJson(), ...tutor};
-              print(allData);
-              final model = TutorModel.fromJson(allData);
-              combinedData.add(model);
-            }
-          }
-
-          return combinedData;
-        },
-      ).asBroadcastStream();
-    } catch (e) {
-      rethrow;
-    }
-  }
+  //         return combinedData;
+  //       },
+  //     ).asBroadcastStream();
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 
   Future<UserModel> getCurrentUserData() async {
     try {
@@ -211,6 +173,16 @@ class FirebaseDatabaseImpl {
       } else {
         return UserModel.empty();
       }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> createNewTutor(TutorModel tutor) async {
+    try {
+      final CollectionReference tutorInfoTable = firestore.collection('tutorInfo');
+      await tutorInfoTable.add(tutor.toJson());
+      print('Tutor added');
     } catch (e) {
       rethrow;
     }

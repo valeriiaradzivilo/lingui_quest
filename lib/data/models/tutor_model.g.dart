@@ -7,17 +7,19 @@ part of 'tutor_model.dart';
 // **************************************************************************
 
 TutorModel _$TutorModelFromJson(Map<String, dynamic> json) => TutorModel(
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
+      userId: json['userId'] as String,
       about: json['about'] as String,
       contacts: Map<String, String>.from(json['contacts'] as Map),
       currency: json['currency'] as String,
       preferences: json['preferences'] as String,
-      price: Map<String, String>.from(json['price'] as Map),
+      price: (json['price'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(k, (e as num).toDouble()),
+      ),
     );
 
 Map<String, dynamic> _$TutorModelToJson(TutorModel instance) =>
     <String, dynamic>{
-      'user': instance.user,
+      'userId': instance.userId,
       'about': instance.about,
       'contacts': instance.contacts,
       'currency': instance.currency,

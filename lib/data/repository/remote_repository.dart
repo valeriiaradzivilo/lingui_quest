@@ -76,9 +76,17 @@ class RemoteRepository {
     }
   }
 
-  Future<Either<Failure, Stream<List<TutorModel>>>> getAllTutors() async {
+  // Future<Either<Failure, Stream<List<TutorModel>>>> getAllTutors() async {
+  //   try {
+  //     return Right(await _database.getAllTutors());
+  //   } catch (e) {
+  //     return Left(UndefinedFailure(message: e.toString()));
+  //   }
+  // }
+
+  Future<Either<Failure, void>> createTutor(TutorModel tutor) async {
     try {
-      return Right(await _database.getAllTutors());
+      return Right(await _database.createNewTutor(tutor));
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }

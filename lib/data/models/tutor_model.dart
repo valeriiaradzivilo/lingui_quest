@@ -2,20 +2,19 @@
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lingui_quest/core/helper/serializable_interface.dart';
-import 'package:lingui_quest/data/models/user_model.dart';
 
 part 'tutor_model.g.dart';
 
 @JsonSerializable()
 class TutorModel {
-  final UserModel user;
+  final String userId;
   final String about;
   final Map<String, String> contacts;
   final String currency;
   final String preferences;
-  final Map<String, String> price;
+  final Map<String, double> price;
   TutorModel({
-    required this.user,
+    required this.userId,
     required this.about,
     required this.contacts,
     required this.currency,
@@ -26,11 +25,11 @@ class TutorModel {
   Json toJson() => _$TutorModelToJson(this);
 
   factory TutorModel.empty() =>
-      TutorModel(user: UserModel.empty(), about: '', contacts: {}, currency: '', preferences: '', price: {});
+      TutorModel(userId: '', about: '', contacts: {}, currency: '', preferences: '', price: {});
   @override
   bool operator ==(other) =>
       other is TutorModel &&
-      user == other.user &&
+      userId == other.userId &&
       about == other.about &&
       contacts == other.contacts &&
       currency == other.currency &&
