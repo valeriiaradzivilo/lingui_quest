@@ -44,9 +44,8 @@
   "itemCount": "{count, plural, =0{No items} =1{1 item} other{{count} items}}",
 
 
-  "roadmap":"Roadmap",
   "games":"Games",
-  "planner":"Planner",
+  "groups":"Groups",
   "levelTest":"Level test",
   "mainDescription":"",
   "searchTutor":"Search tutor",
@@ -97,6 +96,10 @@
   "preferencesTutor":"Preferences",
   "preferencesTutorInfo":"Now tell which kind of students do you prefer? An interesting story can go here as well",
   "youAreTutorNow":"Congratulations! You are a tutor now.",
-  "tryAgainTutor":"There was an error creating your user. Try again later!"
+  "tryAgainTutor":"There was an error creating your user. Try again later!",
+
+
+  "myGroups":"My Groups",
+  "joinGroup":"Join Group"
 }
 

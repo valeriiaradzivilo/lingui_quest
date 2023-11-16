@@ -39,12 +39,16 @@ class LinButton extends StatelessWidget {
                       width: PaddingConst.medium,
                     )
                   ],
-                  Text(
-                    label,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: !isTransparentBack ? Colors.black : Colors.white),
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: !isTransparentBack ? Colors.black : Colors.white),
+                      overflow: TextOverflow.visible,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),
