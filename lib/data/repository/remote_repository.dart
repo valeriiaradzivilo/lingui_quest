@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/data/firebase/firebase_database.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
-import 'package:lingui_quest/data/models/test_task_model.dart';
+import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
@@ -49,7 +49,7 @@ class RemoteRepository {
     }
   }
 
-  Future<Either<Failure, void>> addTestTask(TestTaskModel task) async {
+  Future<Either<Failure, void>> addTestTask(LevelTestTaskModel task) async {
     try {
       await _database.crateNewTestTask(task);
       return const Right(null);
@@ -58,7 +58,7 @@ class RemoteRepository {
     }
   }
 
-  Future<Either<Failure, Stream<List<TestTaskModel>>>> getAllTestTasks() async {
+  Future<Either<Failure, Stream<List<LevelTestTaskModel>>>> getAllTestTasks() async {
     try {
       final res = await _database.readTasks();
       return Right(res);
@@ -67,7 +67,7 @@ class RemoteRepository {
     }
   }
 
-  Future<Either<Failure, Node>> createTestTaskTree(List<TestTaskModel> allTasks) async {
+  Future<Either<Failure, Node>> createTestTaskTree(List<LevelTestTaskModel> allTasks) async {
     try {
       final LevelTestTasksTree myTree = LevelTestTasksTree();
       return Right(await myTree.startTree(allTasks));

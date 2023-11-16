@@ -1,9 +1,9 @@
-import 'package:lingui_quest/data/models/test_task_model.dart';
+import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 
 class Node {
   final EnglishLevel level;
-  final TestTaskModel testTask;
+  final LevelTestTaskModel testTask;
   final int correctlyGuessedThisLevel;
   Node? leftChild; // incorrect
   Node? rightChild; //correct
@@ -12,21 +12,21 @@ class Node {
       {this.isFinalNode = false});
 
   factory Node.finalNode(Node previousNode) =>
-      Node(previousNode.level, previousNode.correctlyGuessedThisLevel, TestTaskModel.empty(), null, null,
+      Node(previousNode.level, previousNode.correctlyGuessedThisLevel, LevelTestTaskModel.empty(), null, null,
           isFinalNode: true);
 }
 
 class LevelTestTasksTree {
-  Node addChild(TestTaskModel testTask, int correctlyGuessedAtThisLevel) {
+  Node addChild(LevelTestTaskModel testTask, int correctlyGuessedAtThisLevel) {
     return Node(EnglishLevel.levelFromString(testTask.level), correctlyGuessedAtThisLevel, testTask, null, null);
   }
 
-  Future<void> buildATree(List<TestTaskModel> allTasks, List<TestTaskModel> pastTasks, Node startNode) async {
+  Future<void> buildATree(List<LevelTestTaskModel> allTasks, List<LevelTestTaskModel> pastTasks, Node startNode) async {
     try {
       final level = startNode.level;
       final correctlyGuessedAtThisPoint = startNode.correctlyGuessedThisLevel;
 
-      late final TestTaskModel rightTestTask;
+      late final LevelTestTaskModel rightTestTask;
 
       if (correctlyGuessedAtThisPoint < 3) {
         rightTestTask = allTasks.firstWhere(
@@ -36,7 +36,7 @@ class LevelTestTasksTree {
             element.level.toLowerCase() == level.nextLevel?.name.toLowerCase() && !pastTasks.contains(element));
       }
 
-      late final TestTaskModel leftTestTask;
+      late final LevelTestTaskModel leftTestTask;
       if (correctlyGuessedAtThisPoint >= -3 - level.index && level == EnglishLevel.a1) {
         leftTestTask = allTasks.firstWhere(
             (element) => element.level.toLowerCase() == level.name.toLowerCase() && !pastTasks.contains(element));
@@ -73,10 +73,10 @@ class LevelTestTasksTree {
     }
   }
 
-  Future<Node> startTree(List<TestTaskModel> allTasks) async {
-    final TestTaskModel firstTask = allTasks.firstWhere((element) => element.level == EnglishLevel.a1.name);
+  Future<Node> startTree(List<LevelTestTaskModel> allTasks) async {
+    final LevelTestTaskModel firstTask = allTasks.firstWhere((element) => element.level == EnglishLevel.a1.name);
     final Node node = Node(EnglishLevel.a1, 0, firstTask, null, null);
-    final List<TestTaskModel> pastTasks = [firstTask];
+    final List<LevelTestTaskModel> pastTasks = [firstTask];
     await buildATree(allTasks, pastTasks, node);
     return node;
   }

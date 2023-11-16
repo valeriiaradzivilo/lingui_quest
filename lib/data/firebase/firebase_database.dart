@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingui_quest/core/extensions/custom_exceptions.dart';
-import 'package:lingui_quest/data/models/test_task_model.dart';
+import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
@@ -93,7 +93,7 @@ class FirebaseDatabaseImpl {
     }
   }
 
-  Future<void> crateNewTestTask(TestTaskModel task) async {
+  Future<void> crateNewTestTask(LevelTestTaskModel task) async {
     try {
       final CollectionReference testTasks = firestore.collection('testTasks');
       await testTasks.add(task.toJson());
@@ -103,12 +103,12 @@ class FirebaseDatabaseImpl {
     }
   }
 
-  Future<Stream<List<TestTaskModel>>> readTasks() async {
+  Future<Stream<List<LevelTestTaskModel>>> readTasks() async {
     try {
       return firestore
           .collection('testTasks')
           .snapshots()
-          .map((snapshot) => snapshot.docs.map((doc) => TestTaskModel.fromJson(doc.data())).toList());
+          .map((snapshot) => snapshot.docs.map((doc) => LevelTestTaskModel.fromJson(doc.data())).toList());
     } catch (e) {
       rethrow;
     }

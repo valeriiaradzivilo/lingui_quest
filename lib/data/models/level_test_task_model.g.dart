@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'test_task_model.dart';
+part of 'level_test_task_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TestTaskModel _$TestTaskModelFromJson(Map<String, dynamic> json) =>
-    TestTaskModel(
+LevelTestTaskModel _$LevelTestTaskModelFromJson(Map<String, dynamic> json) =>
+    LevelTestTaskModel(
       creatorId: json['creatorId'] as String,
       question: json['question'] as String,
       options:
@@ -19,7 +19,7 @@ TestTaskModel _$TestTaskModelFromJson(Map<String, dynamic> json) =>
       isVerified: json['isVerified'] as bool? ?? true,
     );
 
-Map<String, dynamic> _$TestTaskModelToJson(TestTaskModel instance) =>
+Map<String, dynamic> _$LevelTestTaskModelToJson(LevelTestTaskModel instance) =>
     <String, dynamic>{
       'creatorId': instance.creatorId,
       'question': instance.question,

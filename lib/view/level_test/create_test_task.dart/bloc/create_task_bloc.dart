@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
-import 'package:lingui_quest/data/models/test_task_model.dart';
+import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/add_test_task_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
@@ -42,7 +42,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
   }
 
   Future confirmAndAddTestTask() async {
-    Either<Failure, void> addTestTaskResult = await _addTestTaskUsecase(TestTaskModel(
+    Either<Failure, void> addTestTaskResult = await _addTestTaskUsecase(LevelTestTaskModel(
         creatorId: state.creatorId,
         question: state.question,
         options: state.options,

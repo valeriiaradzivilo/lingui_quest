@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
-import 'package:lingui_quest/data/models/test_task_model.dart';
+import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/create_test_tasks_tree.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
@@ -29,7 +29,8 @@ class TestCubit extends Cubit<TestState> {
     if (myUser.isRight()) {
       final allTests = await _getAllTestTasksUsecase(NoParams());
       if (allTests.isRight()) {
-        final Stream<List<TestTaskModel>> allTestResult = allTests.foldRight(const Stream.empty(), (r, previous) => r);
+        final Stream<List<LevelTestTaskModel>> allTestResult =
+            allTests.foldRight(const Stream.empty(), (r, previous) => r);
         emit(state.copyWith(
             status: TestStatus.progress,
             testsData: allTestResult,
@@ -42,7 +43,7 @@ class TestCubit extends Cubit<TestState> {
     }
   }
 
-  void makeTree(List<TestTaskModel>? tasks) async {
+  void makeTree(List<LevelTestTaskModel>? tasks) async {
     if (tasks != null) {
       emit(state.copyWith(status: TestStatus.progress));
       final createTreeRes = await _createTestTaskTreeUsecase(tasks);

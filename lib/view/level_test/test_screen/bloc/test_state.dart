@@ -7,7 +7,7 @@ class TestState extends Equatable {
   final String? errorMessage;
   final Node? tasksTree;
   final EnglishLevel currentLevel;
-  final Stream<List<TestTaskModel>> testsData;
+  final Stream<List<LevelTestTaskModel>> testsData;
   final UserModel currentUser;
   final int remainingTime;
   final Node? currentTest;
@@ -46,7 +46,7 @@ class TestState extends Equatable {
     String? errorMessage,
     EnglishLevel? currentLevel,
     Node? tasksTree,
-    Stream<List<TestTaskModel>>? testsData,
+    Stream<List<LevelTestTaskModel>>? testsData,
     UserModel? currentUser,
     int? remainingTime,
     Node? currentTest,

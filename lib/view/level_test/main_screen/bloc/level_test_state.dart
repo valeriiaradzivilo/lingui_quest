@@ -23,7 +23,7 @@ class LevelTestState extends Equatable {
   LevelTestState copyWith({
     LevelTestStatus? status,
     String? errorMessage,
-    Stream<List<TestTaskModel>>? testsData,
+    Stream<List<LevelTestTaskModel>>? testsData,
     UserModel? currentUser,
   }) {
     return LevelTestState(
