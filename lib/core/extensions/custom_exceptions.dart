@@ -13,6 +13,7 @@ class NoUserFoundException implements Exception {
   NoUserFoundException({this.message});
 }
 
+//TODO: DELETE IT LATER
 class WrongPasswordException implements Exception {
   final String? message;
   WrongPasswordException({this.message});

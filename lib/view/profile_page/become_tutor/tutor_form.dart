@@ -33,6 +33,7 @@ class _TutorFormState extends State<TutorForm> {
   @override
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<BecomeTutorCubit>(context);
+    final theme = Theme.of(context);
     return AlertDialog(
       title: Text(context.loc.tutorFormTitle),
       actions: [
@@ -44,7 +45,7 @@ class _TutorFormState extends State<TutorForm> {
         ),
         LinButton(
           label: context.loc.save,
-          onTap: () {
+          onTap: () async {
             final formValidation = _formKey.currentState?.validate() ?? false;
             if (formValidation) {
               final validate = _validate;
@@ -52,12 +53,27 @@ class _TutorFormState extends State<TutorForm> {
                 final Map<String, String> contacts = _contacts.map((key, value) => MapEntry(key.text, value.text));
                 final Map<String, double> prices =
                     _price.map((key, value) => MapEntry(key.text, double.parse(value.text)));
-                bloc.create(
+                final res = await bloc.create(
                     about: _aboutController.text,
                     preferences: _preferencesController.text,
                     currency: _currency!,
                     contacts: contacts,
                     price: prices);
+                if (res) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(context.loc.youAreTutorNow),
+                      backgroundColor: theme.colorScheme.primary,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(context.loc.tryAgainTutor),
+                      backgroundColor: theme.colorScheme.error,
+                    ),
+                  );
+                }
               }
             }
           },

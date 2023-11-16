@@ -183,6 +183,15 @@ class FirebaseDatabaseImpl {
       final CollectionReference tutorInfoTable = firestore.collection('tutorInfo');
       await tutorInfoTable.add(tutor.toJson());
       print('Tutor added');
+      final userDataDocToEdit = await firestore
+          .collection('userData')
+          .where('userId', isEqualTo: _firebaseAuth.currentUser?.uid)
+          .limit(1)
+          .get();
+      final id = userDataDocToEdit.docs.first.id;
+
+      await firestore.collection('userData').doc(id).update({'isTeacher': true});
+      print('User was edited');
     } catch (e) {
       rethrow;
     }

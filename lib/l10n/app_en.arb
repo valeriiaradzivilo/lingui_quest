@@ -95,6 +95,8 @@
   "lessonType":"Lesson Type",
   "price":"Price",
   "preferencesTutor":"Preferences",
-  "preferencesTutorInfo":"Now tell which kind of students do you prefer? An interesting story can go here as well"
+  "preferencesTutorInfo":"Now tell which kind of students do you prefer? An interesting story can go here as well",
+  "youAreTutorNow":"Congratulations! You are a tutor now.",
+  "tryAgainTutor":"There was an error creating your user. Try again later!"
 }
 

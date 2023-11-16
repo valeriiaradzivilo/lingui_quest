@@ -71,6 +71,15 @@ class _SignInPageState extends State<SignInPage> {
               ),
             ),
           );
+        } else if (state.status == SignInStatus.error) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Error occured. Try again"),
+              Text(state.errorMessage ?? ''),
+            ],
+          );
         }
         // else if (state.status == SignInStatus.success) {
         //   return Center(

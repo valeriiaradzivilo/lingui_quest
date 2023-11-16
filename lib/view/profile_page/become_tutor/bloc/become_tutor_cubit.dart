@@ -27,7 +27,7 @@ class BecomeTutorCubit extends Cubit<BecomeTutorState> {
     });
   }
 
-  void create(
+  Future<bool> create(
       {required String about,
       required String preferences,
       required Currency currency,
@@ -41,8 +41,9 @@ class BecomeTutorCubit extends Cubit<BecomeTutorState> {
         preferences: preferences,
         price: price);
     final Either<Failure, void> createTutor = await _createNewTutorUsecase(tutor);
-    createTutor.fold(
-        (l) => emit(state.copyWith(status: BecomeTutorStatus.error, errorMessage: 'Could not create tutor')),
-        (r) => emit(state.copyWith(status: BecomeTutorStatus.success)));
+    return createTutor.fold(
+      (l) => false,
+      (r) => true,
+    );
   }
 }
