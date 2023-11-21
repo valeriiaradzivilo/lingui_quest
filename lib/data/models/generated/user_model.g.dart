@@ -1,29 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_model.dart';
+part of '../user_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
-      userId: json['userId'] as String,
+      userId: json['user_id'] as String,
       username: json['username'] as String,
       email: json['email'] as String,
-      firstName: json['firstName'] as String,
-      lastName: json['lastName'] as String,
+      firstName: json['first_name'] as String,
+      lastName: json['last_name'] as String,
       level: $enumDecode(_$EnglishLevelEnumMap, json['level']),
-      isTeacher: json['isTeacher'] as bool,
+      isTeacher: json['is_teacher'] as bool,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
-      'userId': instance.userId,
+      'user_id': instance.userId,
       'username': instance.username,
       'email': instance.email,
-      'firstName': instance.firstName,
-      'lastName': instance.lastName,
+      'first_name': instance.firstName,
+      'last_name': instance.lastName,
       'level': _$EnglishLevelEnumMap[instance.level]!,
-      'isTeacher': instance.isTeacher,
+      'is_teacher': instance.isTeacher,
     };
 
 const _$EnglishLevelEnumMap = {

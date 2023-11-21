@@ -1,21 +1,17 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lingui_quest/core/helper/serializable_interface.dart';
 
-part 'question_model.g.dart';
+part 'generated/question_model.freezed.dart';
+part 'generated/question_model.g.dart';
 
-@JsonSerializable()
-class QuestionModel {
-  final List<String> options;
-  final List<int> correctAnswers;
-  final String question;
-
-  QuestionModel({
-    required this.question,
-    required this.options,
-    required this.correctAnswers,
-  });
+@freezed
+class QuestionModel with _$QuestionModel {
+  const factory QuestionModel({
+    required String question,
+    required List<String> options,
+    required List<int> correctAnswers,
+  }) = _QuestionModel;
   factory QuestionModel.fromJson(Json json) => _$QuestionModelFromJson(json);
-  Json toJson() => _$QuestionModelToJson(this);
 
   factory QuestionModel.empty() {
     return QuestionModel(

@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tutor_model.dart';
+part of '../tutor_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
 TutorModel _$TutorModelFromJson(Map<String, dynamic> json) => TutorModel(
-      userId: json['userId'] as String,
+      userId: json['user_id'] as String,
       about: json['about'] as String,
       contacts: Map<String, String>.from(json['contacts'] as Map),
       currency: json['currency'] as String,
@@ -19,7 +19,7 @@ TutorModel _$TutorModelFromJson(Map<String, dynamic> json) => TutorModel(
 
 Map<String, dynamic> _$TutorModelToJson(TutorModel instance) =>
     <String, dynamic>{
-      'userId': instance.userId,
+      'user_id': instance.userId,
       'about': instance.about,
       'contacts': instance.contacts,
       'currency': instance.currency,

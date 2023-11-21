@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'question_model.dart';
+part of '../question_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-QuestionModel _$QuestionModelFromJson(Map<String, dynamic> json) =>
-    QuestionModel(
+_$QuestionModelImpl _$$QuestionModelImplFromJson(Map<String, dynamic> json) =>
+    _$QuestionModelImpl(
       question: json['question'] as String,
       options:
           (json['options'] as List<dynamic>).map((e) => e as String).toList(),
-      correctAnswers: (json['correctAnswers'] as List<dynamic>)
+      correctAnswers: (json['correct_answers'] as List<dynamic>)
           .map((e) => e as int)
           .toList(),
     );
 
-Map<String, dynamic> _$QuestionModelToJson(QuestionModel instance) =>
+Map<String, dynamic> _$$QuestionModelImplToJson(_$QuestionModelImpl instance) =>
     <String, dynamic>{
-      'options': instance.options,
-      'correctAnswers': instance.correctAnswers,
       'question': instance.question,
+      'options': instance.options,
+      'correct_answers': instance.correctAnswers,
     };

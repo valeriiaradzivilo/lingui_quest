@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 
-part 'user_model.g.dart';
+part 'generated/user_model.g.dart';
 
 @JsonSerializable()
 class UserModel {

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'game_model.dart';
+part of '../game_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,7 +8,7 @@ part of 'game_model.dart';
 
 _$GameModelImpl _$$GameModelImplFromJson(Map<String, dynamic> json) =>
     _$GameModelImpl(
-      creatorId: json['creatorId'] as String,
+      creatorId: json['creator_id'] as String,
       name: json['name'] as String,
       questions: (json['questions'] as List<dynamic>)
           .map((e) => QuestionModel.fromJson(e as Map<String, dynamic>))
@@ -20,9 +20,9 @@ _$GameModelImpl _$$GameModelImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$GameModelImplToJson(_$GameModelImpl instance) =>
     <String, dynamic>{
-      'creatorId': instance.creatorId,
+      'creator_id': instance.creatorId,
       'name': instance.name,
-      'questions': instance.questions,
+      'questions': instance.questions.map((e) => e.toJson()).toList(),
       'level': _$EnglishLevelEnumMap[instance.level]!,
       'theme': instance.theme,
       'description': instance.description,

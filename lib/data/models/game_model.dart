@@ -3,8 +3,8 @@ import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 
-part 'game_model.freezed.dart';
-part 'game_model.g.dart';
+part 'generated/game_model.freezed.dart';
+part 'generated/game_model.g.dart';
 
 @freezed
 class GameModel with _$GameModel {

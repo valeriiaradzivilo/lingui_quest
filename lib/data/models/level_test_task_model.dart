@@ -3,7 +3,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lingui_quest/core/helper/serializable_interface.dart';
 
-part 'level_test_task_model.g.dart';
+part 'generated/level_test_task_model.g.dart';
 
 @JsonSerializable()
 class LevelTestTaskModel {
