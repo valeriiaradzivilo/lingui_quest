@@ -1,0 +1,293 @@
+import 'package:feather_icons/feather_icons.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:lingui_quest/core/extensions/app_localization_context.dart';
+import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/shared/constants/padding_constants.dart';
+import 'package:lingui_quest/shared/enums/english_level_enum.dart';
+import 'package:lingui_quest/shared/enums/game_theme_enum.dart';
+import 'package:lingui_quest/shared/widgets/lin_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
+import 'package:lingui_quest/start/routes.dart';
+import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
+
+enum CreateGameMainParts {
+  name,
+  description,
+  theme;
+
+  Widget widget({TextEditingController? controller, required BuildContext context, required GameModel game}) =>
+      switch (this) {
+        name => _TopicNTextField(controller: controller!, topic: topic(context), label: label(context)),
+        description => _TopicNTextField(controller: controller!, topic: topic(context), label: label(context)),
+        theme => _ThemeWidget(
+            game: game,
+            themeController: controller!,
+            label: label(context),
+            topic: topic(context),
+          ),
+      };
+
+  String topic(BuildContext context) => switch (this) {
+        name => context.loc.gameName,
+        description => context.loc.gameDescription,
+        theme => context.loc.gameTheme,
+      };
+  String label(BuildContext context) => switch (this) {
+        name => context.loc.gameNameLabel,
+        description => context.loc.gameDescriptionLabel,
+        theme => context.loc.gameTheme
+      };
+}
+
+class CreateGamePage extends StatefulWidget {
+  const CreateGamePage({super.key});
+
+  @override
+  State<CreateGamePage> createState() => _CreateGamePageState();
+}
+
+class _CreateGamePageState extends State<CreateGamePage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _themeController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    final GameCreationCubit bloc = BlocProvider.of<GameCreationCubit>(context);
+    final formKey = GlobalKey<FormState>();
+    final theme = Theme.of(context);
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: BlocBuilder<GameCreationCubit, GameCreationState>(
+            builder: (_, state) => Form(
+              key: formKey,
+              onChanged: () {
+                if (formKey.currentState?.validate() ?? false) {
+                  bloc.setName(_nameController.text);
+                  bloc.setDescription(_descriptionController.text);
+                  if (state.game.theme.isEmpty) {
+                    bloc.setTheme(_themeController.text);
+                  }
+                }
+              },
+              child: Padding(
+                padding: EdgeInsets.all(PaddingConst.large),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    for (final part in CreateGameMainParts.values) ...[
+                      part.widget(controller: _correctController(part), context: context, game: state.game),
+                      Gap(PaddingConst.large),
+                    ],
+                    _ChooseLevel(
+                      value: state.game.level,
+                      onChanged: bloc.setLevel,
+                    ),
+                    Gap(PaddingConst.medium),
+                    _TopicText(context.loc.gameQuestions),
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: theme.colorScheme.onBackground)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          if (state.game.questions.isNotEmpty)
+                            Container(
+                              height: 300,
+                              child: ListView.builder(
+                                itemBuilder: (_, index) => _QuestionTile(state.game.questions[index].question),
+                                itemCount: state.game.questions.length,
+                              ),
+                            ),
+                          LinMainButton(
+                            label: context.loc.gameAddQuestion,
+                            onTap: () {},
+                            icon: FeatherIcons.plusCircle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Gap(PaddingConst.medium),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        LinButton(
+                          label: context.loc.cancel,
+                          onTap: () => Navigator.pushNamed(context, AppRoutes.initial),
+                          isTransparentBack: true,
+                        ),
+                        LinButton(
+                            label: context.loc.createGame,
+                            isEnabled: formKey.currentState?.validate() ?? false,
+                            onTap: () => Navigator.pushNamed(context, AppRoutes.initial)),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  TextEditingController? _correctController(CreateGameMainParts part) => switch (part) {
+        CreateGameMainParts.name => _nameController,
+        CreateGameMainParts.description => _descriptionController,
+        CreateGameMainParts.theme => _themeController,
+      };
+}
+
+class _QuestionTile extends StatelessWidget {
+  const _QuestionTile(this.title);
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListTile(
+      title: Text(
+        title,
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(FeatherIcons.edit2),
+          Gap(PaddingConst.small),
+          Icon(
+            FeatherIcons.trash2,
+            color: theme.colorScheme.error,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TopicNTextField extends StatelessWidget {
+  const _TopicNTextField({required this.controller, required this.topic, required this.label});
+  final TextEditingController controller;
+  final String topic;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _TopicText(topic),
+        LinTextField(
+          controller: controller,
+          option: TextFieldOption.name,
+          label: label,
+        ),
+      ],
+    );
+  }
+}
+
+class _TopicText extends StatelessWidget {
+  const _TopicText(this.text);
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Text(
+      text,
+      style: theme.textTheme.headlineMedium,
+    );
+  }
+}
+
+class _ThemeWidget extends StatefulWidget {
+  const _ThemeWidget({required this.topic, required this.label, required this.game, required this.themeController});
+  final String topic;
+  final String label;
+  final GameModel game;
+  final TextEditingController themeController;
+  @override
+  State<_ThemeWidget> createState() => _ThemeWidgetState();
+}
+
+class _ThemeWidgetState extends State<_ThemeWidget> {
+  bool _showThemeTextField = true;
+  @override
+  Widget build(BuildContext context) {
+    final GameCreationCubit bloc = BlocProvider.of<GameCreationCubit>(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _TopicText(widget.topic),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            DropdownButton<String>(
+              value: (widget.game.theme.isNotEmpty && GameTheme.values.map((e) => e.label).contains(widget.game.theme))
+                  ? widget.game.theme
+                  : GameTheme.custom.label,
+              items: GameTheme.values.map((theme) {
+                return DropdownMenuItem<String>(
+                  value: theme.label,
+                  child: Text(theme.label),
+                );
+              }).toList(),
+              onChanged: (val) {
+                bloc.setThemeDropdown(val);
+                setState(() => _showThemeTextField = val == GameTheme.custom.label);
+              },
+            ),
+            if (_showThemeTextField) ...[
+              SizedBox(width: PaddingConst.medium),
+              Expanded(
+                child: LinTextField(
+                  controller: widget.themeController,
+                  option: TextFieldOption.name,
+                  label: context.loc.gameTheme,
+                ),
+              ),
+            ]
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ChooseLevel extends StatelessWidget {
+  const _ChooseLevel({this.value, this.onChanged});
+  final EnglishLevel? value;
+  final void Function(EnglishLevel?)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _TopicText(context.loc.difficultyLevel),
+          DropdownButton<EnglishLevel>(
+            value: value,
+            items: EnglishLevel.values.map((level) {
+              return DropdownMenuItem<EnglishLevel>(
+                value: level,
+                child: Text('${level.levelName} (${level.name})'),
+              );
+            }).toList(),
+            onChanged: onChanged,
+          )
+        ],
+      ),
+    );
+  }
+}

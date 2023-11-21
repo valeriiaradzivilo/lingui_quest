@@ -12,13 +12,13 @@ final class AddNewGame extends CounterEvent {}
 
 final class FindAllGames extends CounterEvent {}
 
-final class CreateNewGame extends CounterEvent {}
+final class GameListBloc extends CounterEvent {}
 
 class GameBloc extends Bloc<CounterEvent, GamesState> {
   final GetCurrentUserUsecase _getCurrentUserUsecase;
   GameBloc(this._getCurrentUserUsecase) : super(GamesState.initial()) {
     on<AddNewGame>((event, emit) async {
-      Response response = await Dio().get("http://192.168.2.5:5000/create_test");
+      Response response = await Dio().get('http://192.168.2.5:5000/create_test');
       print(response);
     });
     on<FindAllGames>((event, emit) {});

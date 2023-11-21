@@ -2,8 +2,8 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
+import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
-import 'package:lingui_quest/shared/widgets/lin_choose_level.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 
@@ -97,13 +97,21 @@ class CreateTestTaskPopupState extends State<CreateTestTaskPopup> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      LinChooseLevel(
-                          value: state.level,
-                          onChanged: (level) {
-                            if (level != null) {
-                              cubit.setLevel(level);
-                            }
-                          }),
+                      const Text('Difficulty Level'),
+                      DropdownButton<EnglishLevel>(
+                        value: state.level,
+                        items: EnglishLevel.values.map((level) {
+                          return DropdownMenuItem<EnglishLevel>(
+                            value: level,
+                            child: Text('${level.levelName} (${level.name})'),
+                          );
+                        }).toList(),
+                        onChanged: (level) {
+                          if (level != null) {
+                            cubit.setLevel(level);
+                          }
+                        },
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [

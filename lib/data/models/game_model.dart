@@ -1,28 +1,31 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/data/models/question_model.dart';
+import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 
+part 'game_model.freezed.dart';
 part 'game_model.g.dart';
 
-@JsonSerializable()
-class GameModel {
-  final String creatorId;
-  final String name;
-  final List<QuestionModel> questions;
-
-  GameModel({
-    required this.creatorId,
-    required this.name,
-    required this.questions,
-  });
+@freezed
+class GameModel with _$GameModel {
+  const factory GameModel({
+    required String creatorId,
+    required String name,
+    required List<QuestionModel> questions,
+    required EnglishLevel level,
+    required String theme,
+    required String description,
+  }) = _GameModel;
   factory GameModel.fromJson(Json json) => _$GameModelFromJson(json);
-  Json toJson() => _$GameModelToJson(this);
 
   factory GameModel.empty() {
     return GameModel(
       creatorId: '',
       name: '',
       questions: [],
+      level: EnglishLevel.a1,
+      theme: '',
+      description: '',
     );
   }
 }

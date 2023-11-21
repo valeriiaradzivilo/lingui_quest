@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingui_quest/core/extensions/custom_exceptions.dart';
+import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -192,6 +193,16 @@ class FirebaseDatabaseImpl {
 
       await firestore.collection('userData').doc(id).update({'isTeacher': true});
       print('User was edited');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> createNewGame(GameModel model) async {
+    try {
+      final CollectionReference gamesTable = firestore.collection('games');
+      await gamesTable.add(model.toJson());
+      print('Game added');
     } catch (e) {
       rethrow;
     }

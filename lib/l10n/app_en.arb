@@ -54,7 +54,9 @@
   "goToMainPage":"Go back",
 
   "profile":"Profile",
+
   "createTestTask":"Create test task",
+  "difficultyLevel":"Difficulty level",
 
   "noProfileYet":"no profile yet, sign up",
   "enterValidEmail":"Enter valid email",
@@ -75,7 +77,14 @@
   "note":"Note: ",
   
   
-  "createGame":"Create a game",
+  "createGame":"Create game",
+  "gameName":"Give a name to your game",
+  "gameNameLabel":"Name",
+  "gameDescription":"Describe your game",
+  "gameDescriptionLabel":"Description",
+  "gameTheme":"Theme",
+  "gameQuestions":"Questions",
+  "gameAddQuestion":"Add",
 
   "startTest":"Start test",
   "becomeTutor":"I want to become tutor",

@@ -9,6 +9,8 @@ import 'package:lingui_quest/start/di.dart';
 import 'package:lingui_quest/start/gallery_option_theme.dart';
 import 'package:lingui_quest/start/page/start_page.dart';
 import 'package:lingui_quest/start/routes.dart';
+import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
+import 'package:lingui_quest/view/games_page/create_game/create_game.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.dart';
@@ -35,7 +37,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<TutorsSearchBloc>(create: (_) => serviceLocator<TutorsSearchBloc>()),
         BlocProvider<GameBloc>(create: (_) => serviceLocator<GameBloc>()),
         BlocProvider<BecomeTutorCubit>(create: (_) => serviceLocator<BecomeTutorCubit>()),
+        BlocProvider<GameCreationCubit>(create: (_) => serviceLocator<GameCreationCubit>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),
@@ -82,6 +85,7 @@ class MyApp extends StatelessWidget {
       AppRoutes.createTestTask: (context) => const CreateTestTaskPopup(),
       AppRoutes.test: (context) => const TestScreen(),
       AppRoutes.profile: (context) => const FullProfilePage(),
+      AppRoutes.createGame: (context) => const CreateGamePage(),
     };
   }
 }

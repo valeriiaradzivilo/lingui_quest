@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 
 class LinMainButton extends StatelessWidget {
@@ -34,7 +35,7 @@ class LinMainButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (icon != null) Icon(icon),
+                if (icon != null) ...[Icon(icon), Gap(PaddingConst.extraSmall)],
                 Text(label),
               ],
             ),

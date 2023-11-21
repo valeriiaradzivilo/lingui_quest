@@ -43,6 +43,7 @@ dependencies:
   dio: ^5.3.3
   currency_picker: ^2.0.19
   gap: ^3.0.1
+  freezed: ^2.4.5
 
 dev_dependencies:
   flutter_test:

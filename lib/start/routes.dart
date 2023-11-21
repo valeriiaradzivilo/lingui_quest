@@ -5,4 +5,5 @@ class AppRoutes {
   static const String createTestTask = '/create-test-task';
   static const String test = '/test';
   static const String profile = '/profile';
+  static const String createGame = '/create-game';
 }
