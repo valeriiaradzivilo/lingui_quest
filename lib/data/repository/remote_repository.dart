@@ -100,4 +100,12 @@ class RemoteRepository {
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
+
+  Future<Either<Failure, Stream<List<GameModel>>>> getAllGames(int page) async {
+    try {
+      return Right(await _database.getAllGames(page));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
 }

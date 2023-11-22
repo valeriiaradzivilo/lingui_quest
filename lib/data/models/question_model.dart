@@ -20,4 +20,8 @@ class QuestionModel with _$QuestionModel {
       correctAnswers: [],
     );
   }
+
+  const QuestionModel._();
+
+  bool get validate => question.isNotEmpty && options.isNotEmpty && correctAnswers.isNotEmpty;
 }

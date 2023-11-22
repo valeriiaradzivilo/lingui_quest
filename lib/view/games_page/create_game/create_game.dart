@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/enums/game_theme_enum.dart';
@@ -12,6 +13,7 @@ import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
+import 'package:lingui_quest/view/games_page/create_game/create_question/create_question.dart';
 
 enum CreateGameMainParts {
   name,
@@ -101,13 +103,17 @@ class _CreateGamePageState extends State<CreateGamePage> {
                             Container(
                               height: 300,
                               child: ListView.builder(
-                                itemBuilder: (_, index) => _QuestionTile(state.game.questions[index].question),
+                                itemBuilder: (_, index) => _QuestionTile(state.game.questions[index]),
                                 itemCount: state.game.questions.length,
                               ),
                             ),
                           LinMainButton(
                             label: context.loc.gameAddQuestion,
-                            onTap: () {},
+                            onTap: () async {
+                              final newQuestion = await showDialog<QuestionModel>(
+                                  context: context, builder: (_) => CreateQuestionPage());
+                              if (newQuestion != null) bloc.addQuestion(newQuestion);
+                            },
                             icon: FeatherIcons.plusCircle,
                           ),
                         ],
@@ -146,21 +152,28 @@ class _CreateGamePageState extends State<CreateGamePage> {
 }
 
 class _QuestionTile extends StatelessWidget {
-  const _QuestionTile(this.title);
-  final String title;
+  const _QuestionTile(this.question);
+  final QuestionModel question;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ListTile(
       title: Text(
-        title,
+        question.question,
         overflow: TextOverflow.ellipsis,
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(FeatherIcons.edit2),
+          IconButton(
+            icon: Icon(FeatherIcons.edit2),
+            onPressed: () => showDialog(
+                context: context,
+                builder: (_) => CreateQuestionPage(
+                      questionToEdit: question,
+                    )),
+          ),
           Gap(PaddingConst.small),
           Icon(
             FeatherIcons.trash2,

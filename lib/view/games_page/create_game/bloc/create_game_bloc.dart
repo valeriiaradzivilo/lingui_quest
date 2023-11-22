@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/enums/game_theme_enum.dart';
@@ -27,5 +28,10 @@ class GameCreationCubit extends Cubit<GameCreationState> {
     } else {
       setTheme(theme);
     }
+  }
+
+  void addQuestion(QuestionModel question) {
+    final newListOfQuestions = [...state.game.questions, question];
+    emit(state.copyWith(game: state.game.copyWith(questions: newListOfQuestions)));
   }
 }

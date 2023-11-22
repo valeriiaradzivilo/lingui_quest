@@ -1,148 +1,129 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lingui_quest/core/extensions/app_localization_context.dart';
+import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
-import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
-import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
+import 'package:lingui_quest/view/games_page/create_game/create_question/bloc/create_question_bloc.dart';
 
-class CreateTestTaskPopup extends StatefulWidget {
-  const CreateTestTaskPopup({super.key});
+class CreateQuestionPage extends StatefulWidget {
+  const CreateQuestionPage({super.key, this.questionToEdit});
+  final QuestionModel? questionToEdit;
 
   @override
-  CreateTestTaskPopupState createState() => CreateTestTaskPopupState();
+  CreateQuestionState createState() => CreateQuestionState();
 }
 
-class CreateTestTaskPopupState extends State<CreateTestTaskPopup> {
+class CreateQuestionState extends State<CreateQuestionPage> {
   final _questionController = TextEditingController();
   final _optionsControllers = List.generate(4, (index) => TextEditingController());
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final CreateTaskCubit cubit = BlocProvider.of<CreateTaskCubit>(context);
     final ThemeData theme = Theme.of(context);
+    final cubit = BlocProvider.of<QuestionCreationCubit>(context);
     return AlertDialog(
       title: const Text('Create Test Task'),
-      content: BlocConsumer<CreateTaskCubit, CreateTaskState>(
-        bloc: cubit..init(),
+      content: BlocConsumer<QuestionCreationCubit, QuestionCreationState>(
+        bloc: cubit..init(widget.questionToEdit),
         listener: (context, state) {
           // Implement any logic here when the task is created or canceled.
         },
         builder: (context, state) {
-          if (state.creatorId.isNotEmpty) {
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: PaddingConst.immense, vertical: PaddingConst.medium),
-              child: Container(
-                constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - PaddingConst.immense),
-                child: Form(
-                  key: _formKey,
-                  onChanged: () {
-                    cubit.setQuestion(_questionController.text);
-                    cubit.setAnswers(_optionsControllers.map((e) => e.text).toList());
-                    cubit.validate();
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Question'),
-                      LinTextField(controller: _questionController),
-                      const SizedBox(height: 16),
-                      const Text(
-                          'Options (to choose the correct option - click on number of option, click again to deselect)'),
-                      Column(
-                        children: List.generate(
-                          _optionsControllers.length,
-                          (index) => ListTile(
-                            leading: InkWell(
-                              onTap: () {
-                                List<int> chosenOptions = [...state.chosenOption];
-                                if (chosenOptions.contains(index)) {
-                                  chosenOptions.remove(index);
-                                } else {
-                                  chosenOptions.add(index);
-                                }
-                                cubit.setCorrectAnswer(chosenOptions);
-                              },
-                              child: CircleAvatar(
-                                backgroundColor:
-                                    state.chosenOption.contains(index) ? theme.highlightColor : theme.canvasColor,
-                                child: Text((index + 1).toString()),
-                              ),
+          return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: PaddingConst.immense, vertical: PaddingConst.medium),
+            child: Container(
+              constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - PaddingConst.immense),
+              child: Form(
+                key: _formKey,
+                onChanged: () {
+                  _formKey.currentState?.validate();
+                  cubit.setQuestion(_questionController.text);
+                  cubit.setOptions(_optionsControllers.map((e) => e.text).toList());
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Question'),
+                    LinTextField(controller: _questionController),
+                    const SizedBox(height: 16),
+                    const Text(
+                        'Options (to choose the correct option - click on number of option, click again to deselect)'),
+                    Column(
+                      children: List.generate(
+                        _optionsControllers.length,
+                        (index) => ListTile(
+                          leading: InkWell(
+                            onTap: () {
+                              List<int> chosenOptions = [...state.question.correctAnswers];
+                              if (chosenOptions.contains(index)) {
+                                chosenOptions.remove(index);
+                              } else {
+                                chosenOptions.add(index);
+                              }
+                              cubit.setCorrectAnswers(chosenOptions);
+                            },
+                            child: CircleAvatar(
+                              backgroundColor: state.question.correctAnswers.contains(index)
+                                  ? theme.highlightColor
+                                  : theme.canvasColor,
+                              child: Text((index + 1).toString()),
                             ),
-                            title: LinTextField(controller: _optionsControllers[index]),
                           ),
+                          title: LinTextField(controller: _optionsControllers[index]),
                         ),
                       ),
-                      Row(
-                        children: [
-                          LinButton(
-                              label: 'Delete option',
-                              onTap: () {
-                                setState(() {
-                                  _optionsControllers.removeLast();
-                                });
-                              }),
-                          LinButton(
-                            label: 'Add option',
+                    ),
+                    Row(
+                      children: [
+                        LinButton(
+                            label: 'Delete option',
                             onTap: () {
                               setState(() {
-                                _optionsControllers.add(TextEditingController());
+                                _optionsControllers.removeLast();
                               });
-                            },
-                            icon: FeatherIcons.plus,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      const Text('Difficulty Level'),
-                      DropdownButton<EnglishLevel>(
-                        value: state.level,
-                        items: EnglishLevel.values.map((level) {
-                          return DropdownMenuItem<EnglishLevel>(
-                            value: level,
-                            child: Text('${level.levelName} (${level.name})'),
-                          );
-                        }).toList(),
-                        onChanged: (level) {
-                          if (level != null) {
-                            cubit.setLevel(level);
-                          }
-                        },
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          LinButton(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            label: 'Delete',
-                          ),
-                          LinButton(
-                            onTap: () async {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                if (state.validationStatus == ValidationStatus.success) {
-                                  await cubit.confirmAndAddTestTask();
-                                  Navigator.of(context).pop();
-                                }
-                              }
-                            },
-                            isEnabled: (_formKey.currentState?.validate() ?? false),
-                            label: 'Create task',
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+                            }),
+                        LinButton(
+                          label: 'Add option',
+                          onTap: () {
+                            setState(() {
+                              _optionsControllers.add(TextEditingController());
+                            });
+                          },
+                          icon: FeatherIcons.plus,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        LinButton(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          label: context.loc.cancel,
+                        ),
+                        LinButton(
+                          onTap: () async {
+                            if ((_formKey.currentState?.validate() ?? false) && state.question.validate) {
+                              Navigator.of(context).pop(state.question);
+                            }
+                          },
+                          isEnabled: (_formKey.currentState?.validate() ?? false),
+                          label: context.loc.questionCreate,
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
-            );
-          } else {
-            return const Text('You are not logged in');
-          }
+            ),
+          );
         },
       ),
     );

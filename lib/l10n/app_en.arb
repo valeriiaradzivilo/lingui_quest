@@ -86,6 +86,8 @@
   "gameQuestions":"Questions",
   "gameAddQuestion":"Add",
 
+  "questionCreate":"Create new question",
+
   "startTest":"Start test",
   "becomeTutor":"I want to become tutor",
   "howToBecomeTutor":"If you want to become a tutor, you must have at least B2 level verified on the platform. This will give you an ability to post and be visible to students in search of tutor. You will need to fill in short form before you become one.",
@@ -106,6 +108,7 @@
   "preferencesTutorInfo":"Now tell which kind of students do you prefer? An interesting story can go here as well",
   "youAreTutorNow":"Congratulations! You are a tutor now.",
   "tryAgainTutor":"There was an error creating your user. Try again later!",
+  "tutorOnlyZone":"This is tutor only zone, you should not have access to it unless you are a tutor.",
 
 
   "myGroups":"My Groups",

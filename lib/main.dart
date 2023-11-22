@@ -11,6 +11,7 @@ import 'package:lingui_quest/start/page/start_page.dart';
 import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
 import 'package:lingui_quest/view/games_page/create_game/create_game.dart';
+import 'package:lingui_quest/view/games_page/create_game/create_question/bloc/create_question_bloc.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<GameBloc>(create: (_) => serviceLocator<GameBloc>()),
         BlocProvider<BecomeTutorCubit>(create: (_) => serviceLocator<BecomeTutorCubit>()),
         BlocProvider<GameCreationCubit>(create: (_) => serviceLocator<GameCreationCubit>()),
+        BlocProvider<QuestionCreationCubit>(create: (_) => serviceLocator<QuestionCreationCubit>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),

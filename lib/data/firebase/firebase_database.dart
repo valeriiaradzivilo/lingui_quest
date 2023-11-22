@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingui_quest/core/extensions/custom_exceptions.dart';
+import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
@@ -203,6 +204,18 @@ class FirebaseDatabaseImpl {
       final CollectionReference gamesTable = firestore.collection('games');
       await gamesTable.add(model.toJson());
       print('Game added');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Stream<List<GameModel>>> getAllGames(int page) async {
+    try {
+      final Stream<QuerySnapshot<Json>> resultStream =
+          firestore.collection('games').snapshots().skip(page * 10).take(10);
+      return resultStream.map((event) => event.docs.map((doc) {
+            return GameModel.fromJson(doc.data());
+          }).toList());
     } catch (e) {
       rethrow;
     }
