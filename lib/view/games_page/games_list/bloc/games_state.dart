@@ -1,8 +1,8 @@
-part of 'games_bloc.dart';
+part of 'games_list_bloc.dart';
 
 enum GamesUploadStatus { initial, progress, error }
 
-class GamesState extends Equatable {
+class GamesListState extends Equatable {
   final GamesUploadStatus status;
   final String? errorMessage;
   final UserModel currentUser;
@@ -11,29 +11,29 @@ class GamesState extends Equatable {
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
-  const GamesState({
+  const GamesListState({
     required this.status,
     this.errorMessage,
     required this.currentUser,
     required this.gamesList,
     required this.page,
   });
-  factory GamesState.initial() {
-    return GamesState(
+  factory GamesListState.initial() {
+    return GamesListState(
         status: GamesUploadStatus.progress, currentUser: UserModel.empty(), gamesList: Stream.empty(), page: 0);
   }
 
   @override
   List<Object?> get props => [status, _time, currentUser, gamesList];
 
-  GamesState copyWith({
+  GamesListState copyWith({
     GamesUploadStatus? status,
     String? errorMessage,
     UserModel? currentUser,
     Stream<List<GameModel>>? gamesList,
     int? page,
   }) {
-    return GamesState(
+    return GamesListState(
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
       currentUser: currentUser ?? this.currentUser,

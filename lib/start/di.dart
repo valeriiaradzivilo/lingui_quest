@@ -16,7 +16,7 @@ import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
 import 'package:lingui_quest/view/games_page/create_game/create_question/bloc/create_question_bloc.dart';
-import 'package:lingui_quest/view/games_page/games_list/bloc/games_bloc.dart';
+import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
 import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
@@ -63,9 +63,9 @@ Future<void> init() async {
     () => TutorsSearchBloc(),
   );
   serviceLocator.registerFactory(
-    () => GameBloc(
-      serviceLocator<GetCurrentUserUsecase>(),
+    () => GamesListBloc(
       serviceLocator<GetAllGamesUsecase>(),
+      serviceLocator<GetCurrentUserUsecase>(),
     ),
   );
   serviceLocator.registerFactory(
@@ -74,7 +74,9 @@ Future<void> init() async {
       serviceLocator<CreateNewTutorUsecase>(),
     ),
   );
-  serviceLocator.registerFactory(() => GameCreationCubit());
+  serviceLocator.registerFactory(() => GameCreationCubit(
+        serviceLocator<CreateNewGameUsecase>(),
+      ));
   serviceLocator.registerFactory(() => QuestionCreationCubit());
 
   //usecases

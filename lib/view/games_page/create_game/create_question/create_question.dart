@@ -5,6 +5,7 @@ import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/view/games_page/create_game/create_question/bloc/create_question_bloc.dart';
 
@@ -18,20 +19,33 @@ class CreateQuestionPage extends StatefulWidget {
 
 class CreateQuestionState extends State<CreateQuestionPage> {
   final _questionController = TextEditingController();
-  final _optionsControllers = List.generate(4, (index) => TextEditingController());
+  late final List<TextEditingController> _optionsControllers;
   final _formKey = GlobalKey<FormState>();
+  bool _forgotToChooseRightAnswer = false;
+
+  @override
+  void initState() {
+    _optionsControllers = List.generate(widget.questionToEdit?.options.length ?? 4, (index) => TextEditingController());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _questionController.dispose();
+    for (final element in _optionsControllers) {
+      element.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final cubit = BlocProvider.of<QuestionCreationCubit>(context);
     return AlertDialog(
-      title: const Text('Create Test Task'),
-      content: BlocConsumer<QuestionCreationCubit, QuestionCreationState>(
+      title: const Text('Create Question'),
+      content: BlocBuilder<QuestionCreationCubit, QuestionCreationState>(
         bloc: cubit..init(widget.questionToEdit),
-        listener: (context, state) {
-          // Implement any logic here when the task is created or canceled.
-        },
         builder: (context, state) {
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: PaddingConst.immense, vertical: PaddingConst.medium),
@@ -49,7 +63,10 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Question'),
-                    LinTextField(controller: _questionController),
+                    LinTextField(
+                      controller: _questionController,
+                      initialValue: widget.questionToEdit?.question,
+                    ),
                     const SizedBox(height: 16),
                     const Text(
                         'Options (to choose the correct option - click on number of option, click again to deselect)'),
@@ -66,6 +83,7 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                                 chosenOptions.add(index);
                               }
                               cubit.setCorrectAnswers(chosenOptions);
+                              setState(() => _forgotToChooseRightAnswer = chosenOptions.isEmpty);
                             },
                             child: CircleAvatar(
                               backgroundColor: state.question.correctAnswers.contains(index)
@@ -74,48 +92,73 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                               child: Text((index + 1).toString()),
                             ),
                           ),
-                          title: LinTextField(controller: _optionsControllers[index]),
+                          title: LinTextField(
+                            controller: _optionsControllers[index],
+                            initialValue: widget.questionToEdit != null
+                                ? widget.questionToEdit!.options.length > index
+                                    ? widget.questionToEdit?.options[index]
+                                    : null
+                                : null,
+                          ),
                         ),
                       ),
                     ),
                     Row(
                       children: [
-                        LinButton(
-                            label: 'Delete option',
+                        Flexible(
+                          child: LinButton(
+                            label: context.loc.deleteLastOption,
                             onTap: () {
-                              setState(() {
-                                _optionsControllers.removeLast();
-                              });
-                            }),
-                        LinButton(
-                          label: 'Add option',
-                          onTap: () {
-                            setState(() {
-                              _optionsControllers.add(TextEditingController());
-                            });
-                          },
-                          icon: FeatherIcons.plus,
+                              setState(() => _optionsControllers.removeLast());
+                              _formKey.currentState?.validate();
+                              cubit.setOptions(_optionsControllers.map((e) => e.text).toList());
+                            },
+                            isTransparentBack: true,
+                          ),
+                        ),
+                        Flexible(
+                          child: LinButton(
+                            label: context.loc.addOption,
+                            onTap: () {
+                              setState(() => _optionsControllers.add(TextEditingController()));
+                              cubit.setOptions(_optionsControllers.map((e) => e.text).toList());
+                            },
+                            icon: FeatherIcons.plus,
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
+                    if (_forgotToChooseRightAnswer)
+                      Flexible(
+                        child: Text(
+                          context.loc.forgotToChooseCorrectAnswer,
+                          style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
+                        ),
+                      ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        LinButton(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          label: context.loc.cancel,
+                        Flexible(
+                          child: LinButton(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            label: context.loc.cancel,
+                          ),
                         ),
-                        LinButton(
-                          onTap: () async {
-                            if ((_formKey.currentState?.validate() ?? false) && state.question.validate) {
-                              Navigator.of(context).pop(state.question);
-                            }
-                          },
-                          isEnabled: (_formKey.currentState?.validate() ?? false),
-                          label: context.loc.questionCreate,
+                        Flexible(
+                          child: LinMainButton(
+                            onTap: () async {
+                              setState(() => _forgotToChooseRightAnswer = state.question.correctAnswers.isEmpty);
+
+                              if ((_formKey.currentState?.validate() ?? false) && state.question.validate) {
+                                Navigator.of(context).pop(state.question);
+                                cubit.submitQuestion();
+                              }
+                            },
+                            label: context.loc.questionCreate,
+                          ),
                         ),
                       ],
                     )

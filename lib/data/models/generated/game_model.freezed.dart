@@ -162,7 +162,7 @@ class __$$GameModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$GameModelImpl implements _GameModel {
+class _$GameModelImpl extends _GameModel {
   const _$GameModelImpl(
       {required this.creatorId,
       required this.name,
@@ -170,7 +170,8 @@ class _$GameModelImpl implements _GameModel {
       required this.level,
       required this.theme,
       required this.description})
-      : _questions = questions;
+      : _questions = questions,
+        super._();
 
   factory _$GameModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$GameModelImplFromJson(json);
@@ -240,7 +241,7 @@ class _$GameModelImpl implements _GameModel {
   }
 }
 
-abstract class _GameModel implements GameModel {
+abstract class _GameModel extends GameModel {
   const factory _GameModel(
       {required final String creatorId,
       required final String name,
@@ -248,6 +249,7 @@ abstract class _GameModel implements GameModel {
       required final EnglishLevel level,
       required final String theme,
       required final String description}) = _$GameModelImpl;
+  const _GameModel._() : super._();
 
   factory _GameModel.fromJson(Map<String, dynamic> json) =
       _$GameModelImpl.fromJson;

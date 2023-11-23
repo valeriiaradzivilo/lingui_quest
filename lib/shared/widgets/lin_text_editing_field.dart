@@ -57,6 +57,12 @@ class _LinTextFieldState extends State<LinTextField> {
   }
 
   @override
+  void initState() {
+    if (widget.initialValue != null) widget.controller.text = widget.initialValue!;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(maxWidth: widget.option.maxFieldWidth ?? double.infinity),
@@ -65,7 +71,6 @@ class _LinTextFieldState extends State<LinTextField> {
           Expanded(
             child: TextFormField(
               controller: widget.controller,
-              initialValue: widget.initialValue,
               minLines: widget.option == TextFieldOption.password ? null : 1,
               maxLines: widget.option == TextFieldOption.password ? 1 : 100,
               obscureText: widget.option == TextFieldOption.password && obscureText,

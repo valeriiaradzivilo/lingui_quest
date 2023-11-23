@@ -34,7 +34,7 @@ class FirebaseDatabaseImpl {
         } catch (e) {
           rethrow;
         }
-        // HiveDatabase.addUserIdToBox(user.uid);
+
         SimpleLogger().info('Created an account for ${params.email}');
       } else {
         throw Exception();
@@ -66,13 +66,6 @@ class FirebaseDatabaseImpl {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       SimpleLogger().info('Signed user $email in');
-      final User? user = _firebaseAuth.currentUser;
-      if (user != null) {
-        // HiveDatabase.addUserIdToBox(user.uid);
-        SimpleLogger().info('Created an account for $email');
-      } else {
-        throw Exception();
-      }
     } on FirebaseAuthException catch (e) {
       SimpleLogger().shout('Could not sign in');
       if (e.code == 'user-not-found') {
@@ -202,7 +195,7 @@ class FirebaseDatabaseImpl {
   Future<void> createNewGame(GameModel model) async {
     try {
       final CollectionReference gamesTable = firestore.collection('games');
-      await gamesTable.add(model.toJson());
+      await gamesTable.add(model.copyWith(creatorId: _firebaseAuth.currentUser!.uid).toJson());
       print('Game added');
     } catch (e) {
       rethrow;

@@ -9,7 +9,7 @@ class QuestionCreationCubit extends Cubit<QuestionCreationState> {
   QuestionCreationCubit() : super(QuestionCreationState.initial());
 
   void init(QuestionModel? questionToEdit) {
-    emit(state.copyWith(question: questionToEdit));
+    emit(state.copyWith(status: QuestionCreationStatus.initial, question: questionToEdit));
   }
 
   void setQuestion(String text) => emit(state.copyWith(question: state.question.copyWith(question: text)));
@@ -17,4 +17,6 @@ class QuestionCreationCubit extends Cubit<QuestionCreationState> {
       emit(state.copyWith(question: state.question.copyWith(options: listOfOptions)));
   void setCorrectAnswers(List<int> listOfAnswers) =>
       emit(state.copyWith(question: state.question.copyWith(correctAnswers: listOfAnswers)));
+
+  void submitQuestion() => emit(QuestionCreationState.initial());
 }

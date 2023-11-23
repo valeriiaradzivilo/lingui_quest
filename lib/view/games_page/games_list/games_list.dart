@@ -8,7 +8,7 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_tutor_only_zone_container.dart';
 import 'package:lingui_quest/start/routes.dart';
-import 'package:lingui_quest/view/games_page/games_list/bloc/games_bloc.dart';
+import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
 import 'package:rx_widgets/rx_widgets.dart';
 
 class GamesListScreen extends StatelessWidget {
@@ -16,23 +16,26 @@ class GamesListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<GameBloc>(context);
-    return BlocBuilder<GameBloc, GamesState>(
-      bloc: bloc..add(FindAllGames()),
+    final bloc = BlocProvider.of<GamesListBloc>(context);
+    return BlocBuilder<GamesListBloc, GamesListState>(
+      bloc: bloc
+        ..add(FindCurrentUser())
+        ..add(FindAllGames()),
       builder: (_, state) => Column(
         children: [
-          LinTutorOnlyZoneContainer(
-            child: Row(
-              children: [
-                Expanded(child: Text(context.loc.tutorOnlyZone)),
-                Gap(PaddingConst.small),
-                LinMainButton(
-                  label: context.loc.createGame,
-                  onTap: () => Navigator.of(context).pushNamed(AppRoutes.createGame),
-                ),
-              ],
+          if (state.currentUser.isTeacher)
+            LinTutorOnlyZoneContainer(
+              child: Row(
+                children: [
+                  Expanded(child: Text(context.loc.tutorOnlyZone)),
+                  Gap(PaddingConst.small),
+                  LinMainButton(
+                    label: context.loc.createGame,
+                    onTap: () => Navigator.of(context).pushNamed(AppRoutes.createGame),
+                  ),
+                ],
+              ),
             ),
-          ),
           Expanded(
               child: ReactiveWidget(
             stream: state.gamesList,

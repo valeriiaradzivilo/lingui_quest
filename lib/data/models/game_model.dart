@@ -28,4 +28,9 @@ class GameModel with _$GameModel {
       description: '',
     );
   }
+
+  const GameModel._();
+
+  bool get validate =>
+      name.isNotEmpty && questions.every((e) => e.validate) && theme.isNotEmpty && description.isNotEmpty;
 }

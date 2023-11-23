@@ -7,6 +7,7 @@ class GameCreationState extends Equatable {
   final String? errorMessage;
   final UserModel currentUser;
   final GameModel game;
+  final bool customTheme;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
@@ -15,6 +16,7 @@ class GameCreationState extends Equatable {
     this.errorMessage,
     required this.currentUser,
     required this.game,
+    this.customTheme = true,
   });
   factory GameCreationState.initial() {
     return GameCreationState(
@@ -22,14 +24,21 @@ class GameCreationState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, _time, currentUser, game];
+  List<Object?> get props => [status, _time, currentUser, game, customTheme];
 
-  GameCreationState copyWith(
-      {GameCreationStatus? status, String? errorMessage, UserModel? currentUser, GameModel? game}) {
+  GameCreationState copyWith({
+    GameCreationStatus? status,
+    String? errorMessage,
+    UserModel? currentUser,
+    GameModel? game,
+    bool? customTheme,
+  }) {
     return GameCreationState(
-        status: status ?? this.status,
-        errorMessage: errorMessage ?? this.errorMessage,
-        currentUser: currentUser ?? this.currentUser,
-        game: game ?? this.game);
+      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
+      currentUser: currentUser ?? this.currentUser,
+      game: game ?? this.game,
+      customTheme: customTheme ?? this.customTheme,
+    );
   }
 }

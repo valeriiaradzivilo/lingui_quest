@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
-import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
@@ -20,15 +19,15 @@ enum CreateGameMainParts {
   description,
   theme;
 
-  Widget widget({TextEditingController? controller, required BuildContext context, required GameModel game}) =>
+  Widget widget({TextEditingController? controller, required BuildContext context, required GameCreationState state}) =>
       switch (this) {
         name => _TopicNTextField(controller: controller!, topic: topic(context), label: label(context)),
         description => _TopicNTextField(controller: controller!, topic: topic(context), label: label(context)),
         theme => _ThemeWidget(
-            game: game,
             themeController: controller!,
             label: label(context),
             topic: topic(context),
+            state: state,
           ),
       };
 
@@ -67,10 +66,11 @@ class _CreateGamePageState extends State<CreateGamePage> {
             builder: (_, state) => Form(
               key: formKey,
               onChanged: () {
-                if (formKey.currentState?.validate() ?? false) {
+                final validRes = formKey.currentState?.validate() ?? false;
+                if (validRes) {
                   bloc.setName(_nameController.text);
                   bloc.setDescription(_descriptionController.text);
-                  if (state.game.theme.isEmpty) {
+                  if (state.customTheme) {
                     bloc.setTheme(_themeController.text);
                   }
                 }
@@ -82,7 +82,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     for (final part in CreateGameMainParts.values) ...[
-                      part.widget(controller: _correctController(part), context: context, game: state.game),
+                      part.widget(controller: _correctController(part), context: context, state: state),
                       Gap(PaddingConst.large),
                     ],
                     _ChooseLevel(
@@ -103,7 +103,10 @@ class _CreateGamePageState extends State<CreateGamePage> {
                             Container(
                               height: 300,
                               child: ListView.builder(
-                                itemBuilder: (_, index) => _QuestionTile(state.game.questions[index]),
+                                itemBuilder: (_, index) => _QuestionTile(
+                                  question: state.game.questions[index],
+                                  index: index,
+                                ),
                                 itemCount: state.game.questions.length,
                               ),
                             ),
@@ -129,9 +132,20 @@ class _CreateGamePageState extends State<CreateGamePage> {
                           isTransparentBack: true,
                         ),
                         LinButton(
-                            label: context.loc.createGame,
-                            isEnabled: formKey.currentState?.validate() ?? false,
-                            onTap: () => Navigator.pushNamed(context, AppRoutes.initial)),
+                          label: context.loc.createGame,
+                          onTap: () async {
+                            if ((formKey.currentState?.validate() ?? false) && state.game.validate) {
+                              final isSuccessfullyCreated = await bloc.submitGame();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(isSuccessfullyCreated
+                                    ? context.loc.successfullyCreatedTheGame
+                                    : context.loc.couldNotCreateTheGame),
+                                backgroundColor: isSuccessfullyCreated ? Colors.green : theme.colorScheme.error,
+                              ));
+                              Navigator.pushNamed(context, AppRoutes.initial);
+                            }
+                          },
+                        ),
                       ],
                     )
                   ],
@@ -152,34 +166,51 @@ class _CreateGamePageState extends State<CreateGamePage> {
 }
 
 class _QuestionTile extends StatelessWidget {
-  const _QuestionTile(this.question);
+  const _QuestionTile({required this.question, required this.index});
   final QuestionModel question;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ListTile(
-      title: Text(
-        question.question,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: Icon(FeatherIcons.edit2),
-            onPressed: () => showDialog(
-                context: context,
-                builder: (_) => CreateQuestionPage(
-                      questionToEdit: question,
-                    )),
-          ),
-          Gap(PaddingConst.small),
-          Icon(
-            FeatherIcons.trash2,
-            color: theme.colorScheme.error,
-          ),
-        ],
+    final GameCreationCubit bloc = BlocProvider.of<GameCreationCubit>(context);
+    return Padding(
+      padding: EdgeInsets.all(PaddingConst.small),
+      child: ListTile(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(color: theme.highlightColor),
+        ),
+        title: Text(
+          question.question,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(FeatherIcons.edit2),
+              onPressed: () async {
+                final newQuestion = await showDialog<QuestionModel?>(
+                    context: context,
+                    builder: (_) => CreateQuestionPage(
+                          questionToEdit: question,
+                        ));
+                if (newQuestion != null) bloc.replaceQuestion(newQuestion, index);
+              },
+            ),
+            Gap(PaddingConst.small),
+            IconButton(
+              onPressed: () {
+                bloc.deleteQuestion(index);
+              },
+              icon: Icon(
+                FeatherIcons.trash2,
+                color: theme.colorScheme.error,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -199,7 +230,6 @@ class _TopicNTextField extends StatelessWidget {
         _TopicText(topic),
         LinTextField(
           controller: controller,
-          option: TextFieldOption.name,
           label: label,
         ),
       ],
@@ -220,32 +250,28 @@ class _TopicText extends StatelessWidget {
   }
 }
 
-class _ThemeWidget extends StatefulWidget {
-  const _ThemeWidget({required this.topic, required this.label, required this.game, required this.themeController});
+class _ThemeWidget extends StatelessWidget {
+  const _ThemeWidget({required this.topic, required this.label, required this.themeController, required this.state});
   final String topic;
   final String label;
-  final GameModel game;
   final TextEditingController themeController;
-  @override
-  State<_ThemeWidget> createState() => _ThemeWidgetState();
-}
-
-class _ThemeWidgetState extends State<_ThemeWidget> {
-  bool _showThemeTextField = true;
+  final GameCreationState state;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final GameCreationCubit bloc = BlocProvider.of<GameCreationCubit>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _TopicText(widget.topic),
+        _TopicText(topic),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             DropdownButton<String>(
-              value: (widget.game.theme.isNotEmpty && GameTheme.values.map((e) => e.label).contains(widget.game.theme))
-                  ? widget.game.theme
+              dropdownColor: theme.colorScheme.secondaryContainer,
+              value: (state.game.theme.isNotEmpty && GameTheme.values.map((e) => e.label).contains(state.game.theme))
+                  ? state.game.theme
                   : GameTheme.custom.label,
               items: GameTheme.values.map((theme) {
                 return DropdownMenuItem<String>(
@@ -255,15 +281,13 @@ class _ThemeWidgetState extends State<_ThemeWidget> {
               }).toList(),
               onChanged: (val) {
                 bloc.setThemeDropdown(val);
-                setState(() => _showThemeTextField = val == GameTheme.custom.label);
               },
             ),
-            if (_showThemeTextField) ...[
+            if (state.customTheme) ...[
               SizedBox(width: PaddingConst.medium),
               Expanded(
                 child: LinTextField(
-                  controller: widget.themeController,
-                  option: TextFieldOption.name,
+                  controller: themeController,
                   label: context.loc.gameTheme,
                 ),
               ),
@@ -282,6 +306,7 @@ class _ChooseLevel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
       child: Column(
@@ -290,6 +315,7 @@ class _ChooseLevel extends StatelessWidget {
         children: [
           _TopicText(context.loc.difficultyLevel),
           DropdownButton<EnglishLevel>(
+            dropdownColor: theme.colorScheme.secondaryContainer,
             value: value,
             items: EnglishLevel.values.map((level) {
               return DropdownMenuItem<EnglishLevel>(

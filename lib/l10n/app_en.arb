@@ -87,6 +87,12 @@
   "gameAddQuestion":"Add",
 
   "questionCreate":"Create new question",
+  "addOption":"Add option",
+  "deleteLastOption":"Delete last option",
+  "forgotToChooseCorrectAnswer":"Do not forget to choose the correct answer by tapping on the option number!",
+  
+  "successfullyCreatedTheGame":"Congrats! You have created a game!",
+  "couldNotCreateTheGame":"Unfortunately the game was not created. Try again!",
 
   "startTest":"Start test",
   "becomeTutor":"I want to become tutor",
