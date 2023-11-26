@@ -6,4 +6,5 @@ class AppRoutes {
   static const String test = '/test';
   static const String profile = '/profile';
   static const String createGame = '/create-game';
+  static const String game = '/game';
 }

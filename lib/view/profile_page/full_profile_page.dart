@@ -42,7 +42,7 @@ class FullProfilePage extends StatelessWidget {
                     Gap(PaddingConst.small),
                     Text('Level: ${state.currentUser.level.levelName} (${state.currentUser.level.name})'),
                     Gap(PaddingConst.small),
-                    if (!state.currentUser.isTeacher)
+                    if (!state.currentUser.isTutor)
                       LinButton(
                           label: context.loc.becomeTutor, onTap: () => _becomeTutor(context, user: state.currentUser))
                   ],

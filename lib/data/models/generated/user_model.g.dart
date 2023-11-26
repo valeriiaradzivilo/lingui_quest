@@ -13,7 +13,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       firstName: json['first_name'] as String,
       lastName: json['last_name'] as String,
       level: $enumDecode(_$EnglishLevelEnumMap, json['level']),
-      isTeacher: json['is_teacher'] as bool,
+      isTutor: json['is_tutor'] as bool,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -23,7 +23,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'first_name': instance.firstName,
       'last_name': instance.lastName,
       'level': _$EnglishLevelEnumMap[instance.level]!,
-      'is_teacher': instance.isTeacher,
+      'is_tutor': instance.isTutor,
     };
 
 const _$EnglishLevelEnumMap = {

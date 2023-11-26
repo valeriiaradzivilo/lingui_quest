@@ -86,6 +86,9 @@
   "gameQuestions":"Questions",
   "gameAddQuestion":"Add",
 
+  "gameDoesNotExist":"Such game does not exist. Maybe it was deleted by creator.",
+  "startGame":"Start this game",
+
   "questionCreate":"Create new question",
   "addOption":"Add option",
   "deleteLastOption":"Delete last option",

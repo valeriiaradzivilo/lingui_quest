@@ -27,7 +27,12 @@ class GamesListBloc extends Bloc<GameListEvent, GamesListState> {
     on<FindCurrentUser>(
       (event, emit) async {
         final getCurrentUserRes = await _getCurrentUserUsecase(NoParams());
-        getCurrentUserRes.fold((l) => null, (r) => state.copyWith(currentUser: r));
+        getCurrentUserRes.fold((l) => null, (r) => emit(state.copyWith(currentUser: r)));
+        final allGamesListResult = await _getAllGamesUsecase(state.page);
+        allGamesListResult.fold(
+            (_) =>
+                emit(state.copyWith(status: GamesUploadStatus.error, errorMessage: 'Error getting games. Try again!')),
+            (games) => emit(state.copyWith(gamesList: games)));
       },
     );
   }

@@ -43,7 +43,7 @@ class LevelTestScreen extends StatelessWidget {
                             children: [TextSpan(text: context.loc.levelTestNote, style: theme.textTheme.labelMedium)]),
                       ),
                       SizedBox(height: PaddingConst.large),
-                      if (state.currentUser.isTeacher) const _CreateTestTask(),
+                      if (state.currentUser.isTutor) const _CreateTestTask(),
                     ],
                   );
                 } else if (state.status == LevelTestStatus.error) {

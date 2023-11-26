@@ -20,6 +20,7 @@ GameModel _$GameModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$GameModel {
+  String get id => throw _privateConstructorUsedError;
   String get creatorId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   List<QuestionModel> get questions => throw _privateConstructorUsedError;
@@ -39,7 +40,8 @@ abstract class $GameModelCopyWith<$Res> {
       _$GameModelCopyWithImpl<$Res, GameModel>;
   @useResult
   $Res call(
-      {String creatorId,
+      {String id,
+      String creatorId,
       String name,
       List<QuestionModel> questions,
       EnglishLevel level,
@@ -60,6 +62,7 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? creatorId = null,
     Object? name = null,
     Object? questions = null,
@@ -68,6 +71,10 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
     Object? description = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       creatorId: null == creatorId
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
@@ -105,7 +112,8 @@ abstract class _$$GameModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String creatorId,
+      {String id,
+      String creatorId,
       String name,
       List<QuestionModel> questions,
       EnglishLevel level,
@@ -124,6 +132,7 @@ class __$$GameModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? creatorId = null,
     Object? name = null,
     Object? questions = null,
@@ -132,6 +141,10 @@ class __$$GameModelImplCopyWithImpl<$Res>
     Object? description = null,
   }) {
     return _then(_$GameModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       creatorId: null == creatorId
           ? _value.creatorId
           : creatorId // ignore: cast_nullable_to_non_nullable
@@ -164,7 +177,8 @@ class __$$GameModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GameModelImpl extends _GameModel {
   const _$GameModelImpl(
-      {required this.creatorId,
+      {required this.id,
+      required this.creatorId,
       required this.name,
       required final List<QuestionModel> questions,
       required this.level,
@@ -176,6 +190,8 @@ class _$GameModelImpl extends _GameModel {
   factory _$GameModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$GameModelImplFromJson(json);
 
+  @override
+  final String id;
   @override
   final String creatorId;
   @override
@@ -197,7 +213,7 @@ class _$GameModelImpl extends _GameModel {
 
   @override
   String toString() {
-    return 'GameModel(creatorId: $creatorId, name: $name, questions: $questions, level: $level, theme: $theme, description: $description)';
+    return 'GameModel(id: $id, creatorId: $creatorId, name: $name, questions: $questions, level: $level, theme: $theme, description: $description)';
   }
 
   @override
@@ -205,6 +221,7 @@ class _$GameModelImpl extends _GameModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GameModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.creatorId, creatorId) ||
                 other.creatorId == creatorId) &&
             (identical(other.name, name) || other.name == name) &&
@@ -220,6 +237,7 @@ class _$GameModelImpl extends _GameModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      id,
       creatorId,
       name,
       const DeepCollectionEquality().hash(_questions),
@@ -243,7 +261,8 @@ class _$GameModelImpl extends _GameModel {
 
 abstract class _GameModel extends GameModel {
   const factory _GameModel(
-      {required final String creatorId,
+      {required final String id,
+      required final String creatorId,
       required final String name,
       required final List<QuestionModel> questions,
       required final EnglishLevel level,
@@ -254,6 +273,8 @@ abstract class _GameModel extends GameModel {
   factory _GameModel.fromJson(Map<String, dynamic> json) =
       _$GameModelImpl.fromJson;
 
+  @override
+  String get id;
   @override
   String get creatorId;
   @override

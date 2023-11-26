@@ -9,9 +9,12 @@ import 'package:lingui_quest/start/di.dart';
 import 'package:lingui_quest/start/gallery_option_theme.dart';
 import 'package:lingui_quest/start/page/start_page.dart';
 import 'package:lingui_quest/start/routes.dart';
+import 'package:lingui_quest/view/game_play_page/bloc/game_play_bloc.dart';
 import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
 import 'package:lingui_quest/view/games_page/create_game/create_game.dart';
 import 'package:lingui_quest/view/games_page/create_game/create_question/bloc/create_question_bloc.dart';
+import 'package:lingui_quest/view/games_page/game_preview/bloc/game_preview_cubit.dart';
+import 'package:lingui_quest/view/games_page/game_preview/game_preview_page.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.dart';
@@ -55,6 +58,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<BecomeTutorCubit>(create: (_) => serviceLocator<BecomeTutorCubit>()),
         BlocProvider<GameCreationCubit>(create: (_) => serviceLocator<GameCreationCubit>()),
         BlocProvider<QuestionCreationCubit>(create: (_) => serviceLocator<QuestionCreationCubit>()),
+        BlocProvider<GamePreviewCubit>(create: (_) => serviceLocator<GamePreviewCubit>()),
+        BlocProvider<GamePlayCubit>(create: (_) => serviceLocator<GamePlayCubit>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),
@@ -69,6 +74,12 @@ class MyApp extends StatelessWidget {
             supportedLocales: AppLocalizations.supportedLocales,
             initialRoute: '/',
             routes: _routes(model),
+            onGenerateRoute: (settings) {
+              if (settings.name != null && settings.name!.startsWith(AppRoutes.game)) {
+                return MaterialPageRoute(builder: (context) => GamePreviewPage(), settings: settings);
+              }
+              return null;
+            },
           ));
         }),
       ),

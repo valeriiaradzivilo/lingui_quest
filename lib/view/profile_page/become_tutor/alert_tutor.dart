@@ -43,7 +43,7 @@ class AlertTutor extends StatelessWidget {
           LinButton(
               label: context.loc.yes,
               onTap: () {
-                if (!user.isTeacher && EnglishLevel.englishLevelForTutors().contains(user.level)) {
+                if (!user.isTutor && EnglishLevel.englishLevelForTutors().contains(user.level)) {
                   // open form
                   Navigator.pop(context);
                   showDialog<void>(

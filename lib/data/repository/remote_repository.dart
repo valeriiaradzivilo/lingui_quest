@@ -108,4 +108,12 @@ class RemoteRepository {
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
+
+  Future<Either<Failure, GameModel>> getGameById(String gameId) async {
+    try {
+      return Right(await _database.getGameById(gameId));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
 }

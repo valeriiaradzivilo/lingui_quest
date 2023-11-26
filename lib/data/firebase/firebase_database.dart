@@ -9,6 +9,7 @@ import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:simple_logger/simple_logger.dart';
+import 'package:uuid/uuid.dart';
 
 class FirebaseDatabaseImpl {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -30,7 +31,7 @@ class FirebaseDatabaseImpl {
               firstName: params.firstName,
               lastName: params.lastName,
               level: EnglishLevel.a1,
-              isTeacher: false));
+              isTutor: false));
         } catch (e) {
           rethrow;
         }
@@ -113,7 +114,7 @@ class FirebaseDatabaseImpl {
     try {
       return firestore.collection('userData').snapshots().map((event) => event.docs
           .map((e) {
-            if (e.data()['isTeacher']) {
+            if (e.data()['isTutor']) {
               return UserModel.fromJson(e.data());
             }
           })
@@ -161,7 +162,7 @@ class FirebaseDatabaseImpl {
       if (_firebaseAuth.currentUser != null) {
         final data = await firestore
             .collection('userData')
-            .where('userId', isEqualTo: _firebaseAuth.currentUser?.uid)
+            .where('user_id', isEqualTo: _firebaseAuth.currentUser!.uid)
             .limit(1)
             .get();
         return UserModel.fromJson(data.docs.first.data());
@@ -176,16 +177,16 @@ class FirebaseDatabaseImpl {
   Future<void> createNewTutor(TutorModel tutor) async {
     try {
       final CollectionReference tutorInfoTable = firestore.collection('tutorInfo');
-      await tutorInfoTable.add(tutor.toJson());
+      await tutorInfoTable.add(tutor.copyWith(userId: _firebaseAuth.currentUser!.uid).toJson());
       print('Tutor added');
       final userDataDocToEdit = await firestore
           .collection('userData')
-          .where('userId', isEqualTo: _firebaseAuth.currentUser?.uid)
+          .where('user_id', isEqualTo: _firebaseAuth.currentUser?.uid)
           .limit(1)
           .get();
       final id = userDataDocToEdit.docs.first.id;
 
-      await firestore.collection('userData').doc(id).update({'isTeacher': true});
+      await firestore.collection('userData').doc(id).update({'is_tutor': true});
       print('User was edited');
     } catch (e) {
       rethrow;
@@ -195,7 +196,7 @@ class FirebaseDatabaseImpl {
   Future<void> createNewGame(GameModel model) async {
     try {
       final CollectionReference gamesTable = firestore.collection('games');
-      await gamesTable.add(model.copyWith(creatorId: _firebaseAuth.currentUser!.uid).toJson());
+      await gamesTable.add(model.copyWith(creatorId: _firebaseAuth.currentUser!.uid, id: Uuid().v1()).toJson());
       print('Game added');
     } catch (e) {
       rethrow;
@@ -209,6 +210,15 @@ class FirebaseDatabaseImpl {
       return resultStream.map((event) => event.docs.map((doc) {
             return GameModel.fromJson(doc.data());
           }).toList());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<GameModel> getGameById(String id) async {
+    try {
+      final res = await firestore.collection('games').where('id', isEqualTo: id).limit(1).get();
+      return GameModel.fromJson(res.docs.first.data());
     } catch (e) {
       rethrow;
     }

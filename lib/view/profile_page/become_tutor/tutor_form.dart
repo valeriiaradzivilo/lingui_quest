@@ -59,6 +59,7 @@ class _TutorFormState extends State<TutorForm> {
                     currency: _currency!,
                     contacts: contacts,
                     price: prices);
+                Navigator.of(context).maybePop();
                 if (res) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

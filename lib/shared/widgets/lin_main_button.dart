@@ -13,24 +13,24 @@ class LinMainButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(PaddingConst.small),
-      child: Container(
-        padding: EdgeInsets.all(PaddingConst.medium),
-        decoration: BoxDecoration(
-          color: isEnabled && onTap == null ? Colors.transparent : Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Theme.of(context).colorScheme.secondaryContainer),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              spreadRadius: PaddingConst.extraSmall,
-              blurRadius: PaddingConst.extraSmall,
-              offset: const Offset(3, 3), // changes position of shadow
-            ),
-          ],
-        ),
-        child: IntrinsicWidth(
-          child: InkWell(
-            onTap: isEnabled ? onTap : null,
+      child: InkWell(
+        onTap: isEnabled ? onTap : null,
+        child: Container(
+          padding: EdgeInsets.all(PaddingConst.medium),
+          decoration: BoxDecoration(
+            color: isEnabled && onTap == null ? Colors.transparent : Theme.of(context).colorScheme.secondaryContainer,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Theme.of(context).colorScheme.secondaryContainer),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                spreadRadius: PaddingConst.extraSmall,
+                blurRadius: PaddingConst.extraSmall,
+                offset: const Offset(3, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: IntrinsicWidth(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

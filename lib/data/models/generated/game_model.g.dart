@@ -8,6 +8,7 @@ part of '../game_model.dart';
 
 _$GameModelImpl _$$GameModelImplFromJson(Map<String, dynamic> json) =>
     _$GameModelImpl(
+      id: json['id'] as String,
       creatorId: json['creator_id'] as String,
       name: json['name'] as String,
       questions: (json['questions'] as List<dynamic>)
@@ -20,6 +21,7 @@ _$GameModelImpl _$$GameModelImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$GameModelImplToJson(_$GameModelImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'creator_id': instance.creatorId,
       'name': instance.name,
       'questions': instance.questions.map((e) => e.toJson()).toList(),

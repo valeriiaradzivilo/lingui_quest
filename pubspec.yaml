@@ -45,6 +45,7 @@ dependencies:
   gap: ^3.0.1
   freezed: ^2.4.5
   rx_widgets: ^4.2.1
+  uuid: ^4.2.1
 
 dev_dependencies:
   flutter_test:

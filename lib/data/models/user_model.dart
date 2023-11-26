@@ -14,7 +14,7 @@ class UserModel {
   final String firstName;
   final String lastName;
   final EnglishLevel level;
-  final bool isTeacher;
+  final bool isTutor;
   UserModel(
       {required this.userId,
       required this.username,
@@ -22,12 +22,12 @@ class UserModel {
       required this.firstName,
       required this.lastName,
       required this.level,
-      required this.isTeacher});
+      required this.isTutor});
   factory UserModel.fromJson(Json json) => _$UserModelFromJson(json);
   Json toJson() => _$UserModelToJson(this);
 
   factory UserModel.empty() => UserModel(
-      userId: '', username: '', email: '', firstName: '', lastName: '', level: EnglishLevel.a1, isTeacher: false);
+      userId: '', username: '', email: '', firstName: '', lastName: '', level: EnglishLevel.a1, isTutor: false);
   @override
   bool operator ==(other) =>
       other is UserModel &&
@@ -37,7 +37,7 @@ class UserModel {
       firstName == other.firstName &&
       lastName == other.lastName &&
       level == other.level &&
-      isTeacher == other.isTeacher;
+      isTutor == other.isTutor;
   @override
   int get hashCode => identityHashCode(this);
 }

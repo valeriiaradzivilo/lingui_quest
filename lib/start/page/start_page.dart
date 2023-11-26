@@ -39,119 +39,122 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
     final StartCubit bloc = BlocProvider.of<StartCubit>(context);
     final isDesktop = MediaQuery.of(context).size.width > 600;
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 60,
-        leading: Padding(
-          padding: EdgeInsets.all(PaddingConst.small),
-          child: InkWell(
-            onTap: () => tabController.animateTo(TabBarOption.values.length),
-            child: SvgPicture.asset(
-              allowDrawingOutsideViewBox: true,
-              "assets/logo/logo.svg",
-              width: kIsWeb ? 200 : 50,
-              height: kIsWeb ? 200 : 50,
-            ),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: PaddingConst.medium),
-            child: const UserAvatarWidget(),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: PaddingConst.medium),
-            child: IconButton(
-              icon: Icon(
-                isDarkMode ? FeatherIcons.sun : FeatherIcons.moon,
-                size: 40,
+    return DefaultTabController(
+      length: TabBarOption.values.length + 1,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          toolbarHeight: 60,
+          leading: Padding(
+            padding: EdgeInsets.all(PaddingConst.small),
+            child: InkWell(
+              onTap: () => tabController.animateTo(TabBarOption.values.length),
+              child: SvgPicture.asset(
+                allowDrawingOutsideViewBox: true,
+                'assets/logo/logo.svg',
+                width: kIsWeb ? 200 : 50,
+                height: kIsWeb ? 200 : 50,
               ),
-              onPressed: widget.changeTheme,
             ),
           ),
-          //TODO: Add languages here
-        ],
-      ),
-      body: SafeArea(
-        minimum: EdgeInsets.all(PaddingConst.medium),
-        child: Center(
-          child: BlocConsumer<StartCubit, StartState>(
-              bloc: bloc..init(),
-              listener: (context, state) {
-                if (state.status == StartStatus.initial) {
-                  tabController.animateTo(state.currentTab.index);
-                }
-              },
-              builder: (context, state) {
-                if (state.status == StartStatus.initial) {
-                  if (kIsWeb && isDesktop) {
-                    return Row(
-                      children: [
-                        PreferredSize(
-                          preferredSize: Size.fromHeight(size.height - 100),
-                          child: RotatedBox(
-                              quarterTurns: 3,
-                              child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            controller: tabController,
-                            children: _buildTabViews(),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: PaddingConst.medium),
+              child: const UserAvatarWidget(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: PaddingConst.medium),
+              child: IconButton(
+                icon: Icon(
+                  isDarkMode ? FeatherIcons.sun : FeatherIcons.moon,
+                  size: 40,
+                ),
+                onPressed: widget.changeTheme,
+              ),
+            ),
+            //TODO: Add languages here
+          ],
+        ),
+        body: SafeArea(
+          minimum: EdgeInsets.all(PaddingConst.medium),
+          child: Center(
+            child: BlocConsumer<StartCubit, StartState>(
+                bloc: bloc..init(),
+                listener: (context, state) {
+                  if (state.status == StartStatus.initial) {
+                    tabController.animateTo(state.currentTab.index);
+                  }
+                },
+                builder: (context, state) {
+                  if (state.status == StartStatus.initial) {
+                    if (kIsWeb && isDesktop) {
+                      return Row(
+                        children: [
+                          PreferredSize(
+                            preferredSize: Size.fromHeight(size.height - 100),
+                            child: RotatedBox(
+                                quarterTurns: 3,
+                                child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
                           ),
-                        ),
-                      ],
-                    );
+                          Expanded(
+                            child: TabBarView(
+                              controller: tabController,
+                              children: _buildTabViews(),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    // else if (kIsWeb) {
+                    //   return Column(
+                    //     children: [
+                    //       Expanded(
+                    //         child: TabBarView(
+                    //           controller: tabController,
+                    //           children: _buildTabViews(),
+                    //         ),
+                    //       ),
+                    //       PreferredSize(
+                    //         preferredSize: Size.fromHeight(size.width - 100),
+                    //         child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController),
+                    //       ),
+                    //     ],
+                    //   );
+                    // }
+                    else {
+                      return TabBarView(
+                        controller: tabController,
+                        children: _buildTabViews(),
+                      );
+                    }
+                  } else if (state.status == StartStatus.error) {
+                    return const Text('Error');
+                  } else {
+                    return const CircularProgressIndicator();
                   }
-                  // else if (kIsWeb) {
-                  //   return Column(
-                  //     children: [
-                  //       Expanded(
-                  //         child: TabBarView(
-                  //           controller: tabController,
-                  //           children: _buildTabViews(),
-                  //         ),
-                  //       ),
-                  //       PreferredSize(
-                  //         preferredSize: Size.fromHeight(size.width - 100),
-                  //         child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController),
-                  //       ),
-                  //     ],
-                  //   );
-                  // }
-                  else {
-                    return TabBarView(
-                      controller: tabController,
-                      children: _buildTabViews(),
-                    );
-                  }
-                } else if (state.status == StartStatus.error) {
-                  return const Text('Error');
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              }),
+                }),
+          ),
         ),
+        bottomNavigationBar: !isDesktop
+            ? BottomAppBar(
+                elevation: PaddingConst.immense,
+                color: Theme.of(context).cardColor,
+                child: Center(child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
+              )
+            : null,
       ),
-      bottomNavigationBar: !isDesktop
-          ? BottomAppBar(
-              elevation: PaddingConst.immense,
-              color: Theme.of(context).cardColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController),
-                ],
-              ),
-            )
-          : null,
     );
   }
 

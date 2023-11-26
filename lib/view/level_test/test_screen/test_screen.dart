@@ -1,9 +1,8 @@
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
-import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
-import 'package:lingui_quest/shared/widgets/lin_question.dart';
+import 'package:lingui_quest/shared/widgets/lin_game_screen.dart';
 import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
 
 class TestScreen extends StatelessWidget {
@@ -13,7 +12,14 @@ class TestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<TestCubit>(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(FeatherIcons.arrowLeft),
+          onPressed: () {
+            //bloc.deleteData
+          },
+        ),
+      ),
       body: Center(
         child: BlocConsumer<TestCubit, TestState>(
             bloc: bloc..init(),
@@ -28,42 +34,13 @@ class TestScreen extends StatelessWidget {
                           bloc.makeTree(snapshot.data);
                         }
                         if (state.tasksTree != null && state.currentTest != null) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: LinQuestionText(
-                                  textTask: state.currentTest!.testTask.question,
-                                ),
-                              ),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  if (state.currentTest!.testTask.options[index].isNotEmpty) {
-                                    return CheckboxListTile(
-                                      title: Text(state.currentTest!.testTask.options[index]),
-                                      value: state.selectedAnswers.contains(index),
-                                      onChanged: (selected) => bloc.selectOrDeselectAnswer(index),
-                                    );
-                                  }
-                                  return null;
-                                },
-                                itemCount: state.currentTest!.testTask.options.map((e) => e.isNotEmpty).length,
-                              ),
-                              const SizedBox(height: 20),
-                              Center(
-                                child: LinMainButton(
-                                  onTap: state.selectedAnswers.isNotEmpty ? bloc.loadNextTask : null,
-                                  label: context.loc.next,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Center(
-                                child: Text(
-                                    'Time Remaining: ${state.remainingTime ~/ 60}:${(state.remainingTime % 60).toString().padLeft(2, '0')}'),
-                              ),
-                            ],
+                          return LinGameScreen(
+                            question: state.currentTest!.testTask.question,
+                            options: state.currentTest!.testTask.options,
+                            selectedAnswers: state.selectedAnswers,
+                            onSelected: bloc.selectOrDeselectAnswer,
+                            onNextTask: bloc.loadNextTask,
+                            remainingTime: state.remainingTime,
                           );
                         }
                         return const Text('Error generating test - try again :(');

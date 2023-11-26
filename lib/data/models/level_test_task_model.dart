@@ -7,11 +7,14 @@ part 'generated/level_test_task_model.g.dart';
 
 @JsonSerializable()
 class LevelTestTaskModel {
+  @JsonKey(name: 'creatorId')
   final String creatorId;
   final String question;
   final List<String> options;
+  @JsonKey(name: 'correctAnswerIds')
   final List<int> correctAnswerIds;
   final String level;
+  @JsonKey(name: 'isVerified')
   final bool isVerified;
   LevelTestTaskModel(
       {required this.creatorId,

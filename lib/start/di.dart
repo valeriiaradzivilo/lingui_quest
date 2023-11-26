@@ -10,12 +10,15 @@ import 'package:lingui_quest/data/usecase/create_test_tasks_tree.dart';
 import 'package:lingui_quest/data/usecase/get_all_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
+import 'package:lingui_quest/view/game_play_page/bloc/game_play_bloc.dart';
 import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
 import 'package:lingui_quest/view/games_page/create_game/create_question/bloc/create_question_bloc.dart';
+import 'package:lingui_quest/view/games_page/game_preview/bloc/game_preview_cubit.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
@@ -78,6 +81,8 @@ Future<void> init() async {
         serviceLocator<CreateNewGameUsecase>(),
       ));
   serviceLocator.registerFactory(() => QuestionCreationCubit());
+  serviceLocator.registerFactory(() => GamePreviewCubit(serviceLocator<GetGameByIdUsecase>()));
+  serviceLocator.registerFactory(() => GamePlayCubit(serviceLocator<GetCurrentUserUsecase>()));
 
   //usecases
   serviceLocator.registerLazySingleton<SignInUsecase>(
@@ -112,6 +117,10 @@ Future<void> init() async {
   );
   serviceLocator.registerLazySingleton<GetAllGamesUsecase>(
     () => GetAllGamesUsecase(repository: serviceLocator()),
+  );
+
+  serviceLocator.registerLazySingleton<GetGameByIdUsecase>(
+    () => GetGameByIdUsecase(repository: serviceLocator()),
   );
 
   //datasources

@@ -6,7 +6,8 @@ part of '../tutor_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TutorModel _$TutorModelFromJson(Map<String, dynamic> json) => TutorModel(
+_$TutorModelImpl _$$TutorModelImplFromJson(Map<String, dynamic> json) =>
+    _$TutorModelImpl(
       userId: json['user_id'] as String,
       about: json['about'] as String,
       contacts: Map<String, String>.from(json['contacts'] as Map),
@@ -17,7 +18,7 @@ TutorModel _$TutorModelFromJson(Map<String, dynamic> json) => TutorModel(
       ),
     );
 
-Map<String, dynamic> _$TutorModelToJson(TutorModel instance) =>
+Map<String, dynamic> _$$TutorModelImplToJson(_$TutorModelImpl instance) =>
     <String, dynamic>{
       'user_id': instance.userId,
       'about': instance.about,

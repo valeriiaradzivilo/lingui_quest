@@ -18,12 +18,10 @@ class GamesListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<GamesListBloc>(context);
     return BlocBuilder<GamesListBloc, GamesListState>(
-      bloc: bloc
-        ..add(FindCurrentUser())
-        ..add(FindAllGames()),
+      bloc: bloc..add(FindCurrentUser()),
       builder: (_, state) => Column(
         children: [
-          if (state.currentUser.isTeacher)
+          if (state.currentUser.isTutor)
             LinTutorOnlyZoneContainer(
               child: Row(
                 children: [
@@ -57,31 +55,32 @@ class _GamePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-        padding: EdgeInsets.all(PaddingConst.medium),
-        child: Container(
+    return InkWell(
+      onTap: () => Navigator.of(context).pushNamed('${AppRoutes.game}=${game.id}'),
+      child: Padding(
           padding: EdgeInsets.all(PaddingConst.medium),
-          decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: theme.colorScheme.onBackground)),
-          child: Column(children: [
-            Text(
-              game.name,
-              style: theme.textTheme.headlineMedium,
-            ),
-            MaxGap(20),
-            Row(
-              children: [
-                Text('${context.loc.gameTheme}: '),
-                Text(game.theme),
-              ],
-            ),
-            Spacer(),
-            Row(
-              children: [for (int i = 0; i < 5; i++) Icon(FeatherIcons.star)],
-            ),
-          ]),
-        ));
+          child: Container(
+            padding: EdgeInsets.all(PaddingConst.medium),
+            decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: theme.colorScheme.onBackground)),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                game.name,
+                style: theme.textTheme.headlineMedium,
+              ),
+              MaxGap(20),
+              Text(
+                '${context.loc.gameTheme}: ${game.theme}',
+                overflow: TextOverflow.ellipsis,
+              ),
+              Spacer(),
+              Row(
+                children: [for (int i = 0; i < 5; i++) Icon(FeatherIcons.star)],
+              ),
+            ]),
+          )),
+    );
   }
 }

@@ -9,6 +9,7 @@ part 'generated/game_model.g.dart';
 @freezed
 class GameModel with _$GameModel {
   const factory GameModel({
+    required String id,
     required String creatorId,
     required String name,
     required List<QuestionModel> questions,
@@ -20,6 +21,7 @@ class GameModel with _$GameModel {
 
   factory GameModel.empty() {
     return GameModel(
+      id: '',
       creatorId: '',
       name: '',
       questions: [],
