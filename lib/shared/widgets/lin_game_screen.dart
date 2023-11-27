@@ -13,6 +13,7 @@ class LinGameScreen extends StatelessWidget {
     required this.onNextTask,
     required this.remainingTime,
     this.isFinalQuestion = false,
+    this.isOneAnswer = false,
   });
   final String question;
   final List<String> options;
@@ -21,6 +22,7 @@ class LinGameScreen extends StatelessWidget {
   final void Function() onNextTask;
   final int remainingTime;
   final bool isFinalQuestion;
+  final bool isOneAnswer;
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +33,26 @@ class LinGameScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: LinQuestionText(textTask: question),
         ),
-        ListView.builder(
+        ListView.separated(
           shrinkWrap: true,
           itemBuilder: (context, index) {
             if (options[index].isNotEmpty) {
+              if (isOneAnswer) {
+                return RadioListTile(
+                    title: Text('${index + 1}. ${options[index]}'),
+                    value: index,
+                    groupValue: selectedAnswers.isNotEmpty ? selectedAnswers.first : 0,
+                    onChanged: (selected) => onSelected(index));
+              }
               return CheckboxListTile(
-                title: Text(options[index]),
+                title: Text('${index + 1}. ${options[index]}'),
                 value: selectedAnswers.contains(index),
                 onChanged: (selected) => onSelected(index),
               );
             }
             return null;
           },
+          separatorBuilder: (_, __) => Divider(),
           itemCount: options.map((e) => e.isNotEmpty).length,
         ),
         const SizedBox(height: 20),

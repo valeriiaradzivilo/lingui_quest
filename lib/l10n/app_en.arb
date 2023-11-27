@@ -88,6 +88,10 @@
 
   "gameDoesNotExist":"Such game does not exist. Maybe it was deleted by creator.",
   "startGame":"Start this game",
+  "resultGame":"The game is finished, your result is: ",
+  "highScoreMessageGame":"Great job!",
+  "averageScoreMessageGame":"Well done. Next time you will definitely be better!",
+  "lowScoreMessageGame":"Good luck next time. Study harder!",
 
   "questionCreate":"Create new question",
   "addOption":"Add option",
@@ -98,6 +102,9 @@
   "couldNotCreateTheGame":"Unfortunately the game was not created. Try again!",
 
   "startTest":"Start test",
+  "notLoggedIn":"You need to log in firstly.",
+  "tryAgain":"Try again!",
+
   "becomeTutor":"I want to become tutor",
   "howToBecomeTutor":"If you want to become a tutor, you must have at least B2 level verified on the platform. This will give you an ability to post and be visible to students in search of tutor. You will need to fill in short form before you become one.",
   "areYouReady":"Are you ready?",

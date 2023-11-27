@@ -15,7 +15,6 @@ class GamePreviewPage extends StatelessWidget {
     final gameId = ModalRoute.of(context)?.settings.name;
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(PaddingConst.large),
@@ -27,6 +26,7 @@ class GamePreviewPage extends StatelessWidget {
                     width: double.infinity,
                     child: Column(
                       children: [
+                        Gap(PaddingConst.immense),
                         Text(
                           state.game.name,
                           style: theme.textTheme.displayMedium,

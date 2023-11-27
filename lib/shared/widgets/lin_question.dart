@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingui_quest/shared/constants/padding_constants.dart';
 
 class LinQuestionText extends StatelessWidget {
   const LinQuestionText({super.key, required this.textTask});
@@ -7,7 +8,11 @@ class LinQuestionText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return TextTaskType.getType(textTask).getWidget(textTask, null, theme);
+    return Container(
+        padding: EdgeInsets.all(PaddingConst.medium),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20), border: Border.all(color: theme.highlightColor, width: 5)),
+        child: TextTaskType.getType(textTask).getWidget(textTask, null, theme));
   }
 }
 

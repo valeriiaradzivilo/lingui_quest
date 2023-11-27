@@ -1,6 +1,7 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/widgets/lin_game_screen.dart';
 import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
@@ -48,9 +49,9 @@ class TestScreen extends StatelessWidget {
                       return const SizedBox();
                     });
               } else if (state.status == TestStatus.error) {
-                return const Text('Error');
+                return Text(context.loc.error);
               } else if (state.status == TestStatus.notLoggedIn) {
-                return const Text('You need to log in first to complete the test');
+                return Text(context.loc.notLoggedIn);
               } else if (state.status == TestStatus.result) {
                 return Center(
                   child: Text('Your level is : ${state.currentLevel.levelName} (${state.currentLevel.name})'),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
@@ -22,7 +23,7 @@ class GamePlayCubit extends Cubit<GamePlayState> {
       final shuffledQuestions = [...game.questions];
       shuffledQuestions.shuffle();
       emit(state.copyWith(
-        status: GamePlayStatus.progress,
+        status: GamePlayStatus.success,
         currentUser: myUser.foldRight(UserModel.empty(), (r, previous) => r),
         currentGame: game,
         currentQuestion: shuffledQuestions.first,
@@ -47,24 +48,44 @@ class GamePlayCubit extends Cubit<GamePlayState> {
   }
 
   void selectOrDeselectAnswer(int answerId) {
-    if (state.selectedAnswers.contains(answerId)) {
-      final List<int> newAnswers = [...state.selectedAnswers];
-      newAnswers.remove(answerId);
-      emit(state.copyWith(selectedAnswers: newAnswers));
+    if (state.currentQuestion.correctAnswers.length > 1) {
+      if (state.selectedAnswers.contains(answerId)) {
+        final List<int> newAnswers = [...state.selectedAnswers];
+        newAnswers.remove(answerId);
+        emit(state.copyWith(selectedAnswers: newAnswers));
+      } else {
+        final List<int> newAnswers = [...state.selectedAnswers];
+        newAnswers.add(answerId);
+        emit(state.copyWith(selectedAnswers: newAnswers));
+      }
     } else {
-      final List<int> newAnswers = [...state.selectedAnswers];
-      newAnswers.add(answerId);
-      emit(state.copyWith(selectedAnswers: newAnswers));
+      emit(state.copyWith(selectedAnswers: [answerId]));
     }
   }
 
   void loadNextTask() {
+    Function unOrdDeepEq = DeepCollectionEquality.unordered().equals;
+    final isCorrectAnswer = unOrdDeepEq(state.currentQuestion.correctAnswers, state.selectedAnswers);
     if (state.shuffledQuestions.length > state.questionNumber + 1) {
       emit(state.copyWith(
         questionNumber: state.questionNumber + 1,
         currentQuestion: state.shuffledQuestions[state.questionNumber + 1],
         selectedAnswers: [],
+        amountOfCorrectlyAnsweredQuestions: state.amountOfCorrectlyAnsweredQuestions + (isCorrectAnswer ? 1 : 0),
+      ));
+    } else {
+      emit(state.copyWith(
+        status: GamePlayStatus.result,
+        amountOfCorrectlyAnsweredQuestions: state.amountOfCorrectlyAnsweredQuestions + (isCorrectAnswer ? 1 : 0),
       ));
     }
+  }
+
+  void deleteResults() => emit(GamePlayState.initial());
+
+  @override
+  Future<void> close() {
+    emit(GamePlayState.initial());
+    return super.close();
   }
 }

@@ -12,6 +12,7 @@ class GamePlayState extends Equatable {
   final List<int> selectedAnswers;
   final List<QuestionModel> shuffledQuestions;
   final int questionNumber;
+  final int amountOfCorrectlyAnsweredQuestions;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
@@ -25,18 +26,19 @@ class GamePlayState extends Equatable {
     required this.selectedAnswers,
     required this.shuffledQuestions,
     required this.questionNumber,
+    required this.amountOfCorrectlyAnsweredQuestions,
   });
   factory GamePlayState.initial() {
     return GamePlayState(
-      status: GamePlayStatus.progress,
-      currentQuestion: QuestionModel.empty(),
-      currentUser: UserModel.empty(),
-      remainingTime: 3600,
-      currentGame: GameModel.empty(),
-      selectedAnswers: const [],
-      shuffledQuestions: [],
-      questionNumber: 0,
-    );
+        status: GamePlayStatus.progress,
+        currentQuestion: QuestionModel.empty(),
+        currentUser: UserModel.empty(),
+        remainingTime: 3600,
+        currentGame: GameModel.empty(),
+        selectedAnswers: const [],
+        shuffledQuestions: [],
+        questionNumber: 0,
+        amountOfCorrectlyAnsweredQuestions: 0);
   }
 
   @override
@@ -52,6 +54,7 @@ class GamePlayState extends Equatable {
     List<int>? selectedAnswers,
     List<QuestionModel>? shuffledQuestions,
     int? questionNumber,
+    int? amountOfCorrectlyAnsweredQuestions,
   }) {
     return GamePlayState(
       status: status ?? this.status,
@@ -63,6 +66,7 @@ class GamePlayState extends Equatable {
       selectedAnswers: selectedAnswers ?? this.selectedAnswers,
       shuffledQuestions: shuffledQuestions ?? this.shuffledQuestions,
       questionNumber: questionNumber ?? this.questionNumber,
+      amountOfCorrectlyAnsweredQuestions: amountOfCorrectlyAnsweredQuestions ?? this.amountOfCorrectlyAnsweredQuestions,
     );
   }
 }
