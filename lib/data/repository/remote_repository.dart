@@ -3,6 +3,7 @@ import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/data/firebase/firebase_database.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -112,6 +113,30 @@ class RemoteRepository {
   Future<Either<Failure, GameModel>> getGameById(String gameId) async {
     try {
       return Right(await _database.getGameById(gameId));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, GroupModel>> getGroupByCode(String code) async {
+    try {
+      return Right(await _database.getGroupByCode(code));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, List<GroupModel>>> getAllGroupsForCurrentUser() async {
+    try {
+      return Right(await _database.getAllGroupsForCurrentUser());
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> postGroup(GroupModel group) async {
+    try {
+      return Right(await _database.postGroup(group));
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }

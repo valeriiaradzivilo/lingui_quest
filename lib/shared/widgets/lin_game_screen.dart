@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_question.dart';
+import 'package:rx_widgets/rx_widgets.dart';
+import 'package:rxdart/rxdart.dart';
 
 class LinGameScreen extends StatelessWidget {
   const LinGameScreen({
@@ -11,7 +13,7 @@ class LinGameScreen extends StatelessWidget {
     required this.selectedAnswers,
     required this.onSelected,
     required this.onNextTask,
-    required this.remainingTime,
+    required this.remainingTimeStream,
     this.isFinalQuestion = false,
     this.isOneAnswer = false,
   });
@@ -20,7 +22,7 @@ class LinGameScreen extends StatelessWidget {
   final List<int> selectedAnswers;
   final void Function(int) onSelected;
   final void Function() onNextTask;
-  final int remainingTime;
+  final ValueStream<int> remainingTimeStream;
   final bool isFinalQuestion;
   final bool isOneAnswer;
 
@@ -67,7 +69,11 @@ class LinGameScreen extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Center(
-          child: Text('Time Remaining: ${remainingTime ~/ 60}:${(remainingTime % 60).toString().padLeft(2, '0')}'),
+          child: ReactiveWidget(
+            stream: remainingTimeStream,
+            widget: (remainingTime) =>
+                Text('Time Remaining: ${remainingTime ~/ 60}:${(remainingTime % 60).toString().padLeft(2, '0')}'),
+          ),
         ),
       ],
     );

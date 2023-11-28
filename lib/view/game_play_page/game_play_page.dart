@@ -41,7 +41,7 @@ class _GamePlayPageState extends State<GamePlayPage> {
                       selectedAnswers: state.selectedAnswers,
                       onSelected: cubit.selectOrDeselectAnswer,
                       onNextTask: cubit.loadNextTask,
-                      remainingTime: state.remainingTime,
+                      remainingTimeStream: cubit.remainingTimeStream,
                       isFinalQuestion: state.shuffledQuestions.length == state.questionNumber + 1,
                       isOneAnswer: state.currentQuestion.correctAnswers.length == 1,
                     ));

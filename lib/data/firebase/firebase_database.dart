@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingui_quest/core/extensions/custom_exceptions.dart';
 import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -219,6 +220,44 @@ class FirebaseDatabaseImpl {
     try {
       final res = await firestore.collection('games').where('id', isEqualTo: id).limit(1).get();
       return GameModel.fromJson(res.docs.first.data());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<GroupModel> getGroupByCode(String code) async {
+    try {
+      final res = await firestore.collection('studentGroups').where('code', isEqualTo: code).limit(1).get();
+      return GroupModel.fromJson(res.docs.first.data());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+//TODO:Change it to Stream
+  Future<List<GroupModel>> getAllGroupsForCurrentUser() async {
+    try {
+      final resAsCreator = await firestore
+          .collection('studentGroups')
+          .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
+          .get();
+      final resAsStudent = await firestore
+          .collection('studentGroups')
+          .where('students', arrayContains: _firebaseAuth.currentUser!.uid)
+          .get();
+      final res = [
+        ...resAsCreator.docs.map((e) => GroupModel.fromJson(e.data())),
+        ...resAsStudent.docs.map((e) => GroupModel.fromJson(e.data()))
+      ];
+      return res;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> postGroup(GroupModel group) async {
+    try {
+      await firestore.collection('studentGroups').add(group.toJson());
     } catch (e) {
       rethrow;
     }

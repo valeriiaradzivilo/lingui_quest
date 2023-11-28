@@ -35,8 +35,10 @@ class LinMainButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (icon != null) ...[Flexible(child: Icon(icon)), Gap(PaddingConst.extraSmall)],
-                Gap(PaddingConst.small),
+                if (icon != null) ...[
+                  Flexible(child: Icon(icon)),
+                  Gap(PaddingConst.medium),
+                ],
                 Flexible(
                     flex: 2,
                     child: Text(

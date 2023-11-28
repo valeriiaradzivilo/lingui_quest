@@ -131,6 +131,8 @@
 
   "myGroups":"My Groups",
   "joinGroup":"Join Group",
-  "createGroup":"Create Group"
+  "createGroup":"Create Group",
+  "tutor":"Tutor",
+  "student":"Student"
 }
 

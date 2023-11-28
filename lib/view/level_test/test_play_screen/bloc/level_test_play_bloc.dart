@@ -11,6 +11,7 @@ import 'package:lingui_quest/data/usecase/create_test_tasks_tree.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'level_test_play_state.dart';
 
@@ -18,9 +19,7 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
   LevelTestPlayCubit(this._currentUserUsecase, this._createTestTaskTreeUsecase, this._getAllTestTasksUsecase)
       : super(LevelTestPlayState.initial());
 
-  final GetCurrentUserUsecase _currentUserUsecase;
-  final CreateTestTaskTreeUsecase _createTestTaskTreeUsecase;
-  final GetAllTestTasksUsecase _getAllTestTasksUsecase;
+  late final ValueStream<int> remainingTimeStream = _remainingTimeController.stream;
 
   void init() async {
     //TODO: Clean
@@ -59,10 +58,11 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
 
   void startTimer() {
     Timer.periodic(const Duration(milliseconds: 1050), (timer) {
-      if (state.remainingTime > 0) {
-        emit(state.copyWith(remainingTime: state.remainingTime - 1));
+      if (_remainingTimeController.value > 0) {
+        _remainingTimeController.add(_remainingTimeController.value - 1);
       } else {
         timer.cancel();
+        emit(state.copyWith(status: TestStatus.result));
         // Calculate and show the test result
       }
     });
@@ -113,4 +113,10 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
   void deleteTestData() {
     emit(LevelTestPlayState.initial());
   }
+
+  late final _remainingTimeController = BehaviorSubject.seeded(state.remainingTime);
+
+  final GetCurrentUserUsecase _currentUserUsecase;
+  final CreateTestTaskTreeUsecase _createTestTaskTreeUsecase;
+  final GetAllTestTasksUsecase _getAllTestTasksUsecase;
 }

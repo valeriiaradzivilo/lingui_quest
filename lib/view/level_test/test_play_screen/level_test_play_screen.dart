@@ -46,7 +46,7 @@ class _TestScreenState extends State<LevelTestPlayScreen> {
                             selectedAnswers: state.selectedAnswers,
                             onSelected: bloc.selectOrDeselectAnswer,
                             onNextTask: bloc.loadNextTask,
-                            remainingTime: state.remainingTime,
+                            remainingTimeStream: bloc.remainingTimeStream,
                           );
                         }
                         return const Text('Error generating test - try again :(');

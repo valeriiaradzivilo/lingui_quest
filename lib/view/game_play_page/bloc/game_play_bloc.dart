@@ -8,13 +8,14 @@ import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'game_play_state.dart';
 
 class GamePlayCubit extends Cubit<GamePlayState> {
   GamePlayCubit(this._currentUserUsecase) : super(GamePlayState.initial());
 
-  final GetCurrentUserUsecase _currentUserUsecase;
+  late final ValueStream<int> remainingTimeStream = _remainingTimeController.stream;
 
   void init(GameModel game) async {
     final myUser = await _currentUserUsecase(NoParams());
@@ -41,8 +42,8 @@ class GamePlayCubit extends Cubit<GamePlayState> {
 
   void startTimer() {
     Timer.periodic(const Duration(milliseconds: 1050), (timer) {
-      if (state.remainingTime > 0) {
-        emit(state.copyWith(remainingTime: state.remainingTime - 1));
+      if (_remainingTimeController.value > 0) {
+        _remainingTimeController.add(_remainingTimeController.value - 1);
       } else {
         timer.cancel();
         emit(state.copyWith(status: GamePlayStatus.result));
@@ -86,4 +87,7 @@ class GamePlayCubit extends Cubit<GamePlayState> {
   }
 
   void deleteResults() => emit(GamePlayState.initial());
+
+  late final _remainingTimeController = BehaviorSubject.seeded(state.currentGame.time);
+  final GetCurrentUserUsecase _currentUserUsecase;
 }

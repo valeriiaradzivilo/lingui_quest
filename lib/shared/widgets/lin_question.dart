@@ -43,17 +43,21 @@ enum TextTaskType {
   colonText; //'Fill in the gap : I ___ you.
 
   factory TextTaskType.getType(String text) {
+    final matchOneMissedText = RegExp(r'(^[a-zA-Z0-9 :]*(_+[a-zA-Z0-9 ]*){1}$)');
+    // TODO: Fix or fully delete dotted text
+    final matchOneMissedDottedText = RegExp(r'\b[A-Za-z0-9 ]*[\.]{2,100}\b');
+
     if (!text.contains(RegExp('[_"\']'))) {
       return TextTaskType.regularText;
     } else if (text.contains('__') || text.contains('..')) {
-      if (text.contains('..')) {
+      if (text.contains('..') && matchOneMissedDottedText.hasMatch(text)) {
         return TextTaskType.missedDottedText;
-      } else if (text.contains(':') && !text.contains(RegExp('["\']'))) {
+      } else if (text.contains(':') && !text.contains(RegExp('["\']')) && matchOneMissedText.hasMatch(text)) {
         return TextTaskType.colonText;
-      } else if (text.contains(RegExp('^\\w+ \\_+\\w*\$'))) {
-        return TextTaskType.regularText;
-      } else {
+      } else if (matchOneMissedText.hasMatch(text)) {
         return TextTaskType.missedText;
+      } else {
+        return TextTaskType.regularText;
       }
     }
 
@@ -99,7 +103,7 @@ enum TextTaskType {
         final String textBeforeColon = textTask.substring(0, textTask.indexOf(':') + 1);
         final String textAfterColon = textTask.substring(textTask.indexOf(':') + 1).trim();
         final String textBeforeMissed = textAfterColon.substring(0, textAfterColon.indexOf('_'));
-        final String textAfterMissed = textAfterColon.substring(textAfterColon.lastIndexOf('_'));
+        final String textAfterMissed = textAfterColon.substring(textAfterColon.lastIndexOf('_') + 1);
 
         return Wrap(
           children: [

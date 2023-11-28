@@ -9,6 +9,7 @@ import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/enums/game_theme_enum.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_number_editing_field.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/create_game_page/bloc/create_game_bloc.dart';
@@ -234,10 +235,15 @@ class _TopicNTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _TopicText(topic),
-        LinTextField(
-          controller: controller,
-          label: label,
-        ),
+        topic == CreateGameMainParts.time.topic(context)
+            ? LinNumberEditingField(
+                controller: controller,
+                label: label,
+              )
+            : LinTextField(
+                controller: controller,
+                label: label,
+              ),
       ],
     );
   }
