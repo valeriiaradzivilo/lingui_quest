@@ -12,11 +12,11 @@ import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 
-part 'test_state.dart';
+part 'level_test_play_state.dart';
 
-class TestCubit extends Cubit<TestState> {
-  TestCubit(this._currentUserUsecase, this._createTestTaskTreeUsecase, this._getAllTestTasksUsecase)
-      : super(TestState.initial());
+class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
+  LevelTestPlayCubit(this._currentUserUsecase, this._createTestTaskTreeUsecase, this._getAllTestTasksUsecase)
+      : super(LevelTestPlayState.initial());
 
   final GetCurrentUserUsecase _currentUserUsecase;
   final CreateTestTaskTreeUsecase _createTestTaskTreeUsecase;
@@ -58,7 +58,7 @@ class TestCubit extends Cubit<TestState> {
   }
 
   void startTimer() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(milliseconds: 1050), (timer) {
       if (state.remainingTime > 0) {
         emit(state.copyWith(remainingTime: state.remainingTime - 1));
       } else {
@@ -108,5 +108,9 @@ class TestCubit extends Cubit<TestState> {
     }
     emit(state.copyWith(status: TestStatus.result));
     return;
+  }
+
+  void deleteTestData() {
+    emit(LevelTestPlayState.initial());
   }
 }

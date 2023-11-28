@@ -15,16 +15,16 @@ import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
+import 'package:lingui_quest/view/create_game_page/bloc/create_game_bloc.dart';
+import 'package:lingui_quest/view/create_game_page/create_question/bloc/create_question_bloc.dart';
 import 'package:lingui_quest/view/game_play_page/bloc/game_play_bloc.dart';
-import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
-import 'package:lingui_quest/view/games_page/create_game/create_question/bloc/create_question_bloc.dart';
 import 'package:lingui_quest/view/games_page/game_preview/bloc/game_preview_cubit.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
+import 'package:lingui_quest/view/groups/bloc/groups_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
-import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
-import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
+import 'package:lingui_quest/view/level_test/main_info_screen/bloc/level_test_bloc.dart';
+import 'package:lingui_quest/view/level_test/test_play_screen/bloc/level_test_play_bloc.dart';
 import 'package:lingui_quest/view/profile_page/become_tutor/bloc/become_tutor_cubit.dart';
-import 'package:lingui_quest/view/search_tutor/bloc/tutors_bloc.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
 
@@ -56,14 +56,11 @@ Future<void> init() async {
     () => LevelTestBloc(serviceLocator<GetCurrentUserUsecase>()),
   );
   serviceLocator.registerFactory(
-    () => TestCubit(
+    () => LevelTestPlayCubit(
       serviceLocator<GetCurrentUserUsecase>(),
       serviceLocator<CreateTestTaskTreeUsecase>(),
       serviceLocator<GetAllTestTasksUsecase>(),
     ),
-  );
-  serviceLocator.registerFactory(
-    () => TutorsSearchBloc(),
   );
   serviceLocator.registerFactory(
     () => GamesListBloc(
@@ -77,12 +74,11 @@ Future<void> init() async {
       serviceLocator<CreateNewTutorUsecase>(),
     ),
   );
-  serviceLocator.registerFactory(() => GameCreationCubit(
-        serviceLocator<CreateNewGameUsecase>(),
-      ));
+  serviceLocator.registerFactory(() => GameCreationCubit(serviceLocator<CreateNewGameUsecase>()));
   serviceLocator.registerFactory(() => QuestionCreationCubit());
   serviceLocator.registerFactory(() => GamePreviewCubit(serviceLocator<GetGameByIdUsecase>()));
   serviceLocator.registerFactory(() => GamePlayCubit(serviceLocator<GetCurrentUserUsecase>()));
+  serviceLocator.registerFactory(() => GroupsBloc(serviceLocator<GetCurrentUserUsecase>()));
 
   //usecases
   serviceLocator.registerLazySingleton<SignInUsecase>(

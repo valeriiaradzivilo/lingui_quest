@@ -16,6 +16,7 @@ class GameModel with _$GameModel {
     required EnglishLevel level,
     required String theme,
     required String description,
+    required int time,
   }) = _GameModel;
   factory GameModel.fromJson(Json json) => _$GameModelFromJson(json);
 
@@ -28,11 +29,12 @@ class GameModel with _$GameModel {
       level: EnglishLevel.a1,
       theme: '',
       description: '',
+      time: 3600,
     );
   }
 
   const GameModel._();
 
   bool get validate =>
-      name.isNotEmpty && questions.every((e) => e.validate) && theme.isNotEmpty && description.isNotEmpty;
+      name.isNotEmpty && questions.every((e) => e.validate) && theme.isNotEmpty && description.isNotEmpty && time > 0;
 }

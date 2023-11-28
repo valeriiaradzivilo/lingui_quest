@@ -11,13 +11,14 @@ import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/start/routes.dart';
-import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
-import 'package:lingui_quest/view/games_page/create_game/create_question/create_question.dart';
+import 'package:lingui_quest/view/create_game_page/bloc/create_game_bloc.dart';
+import 'package:lingui_quest/view/create_game_page/create_question/create_question.dart';
 
 enum CreateGameMainParts {
   name,
   description,
-  theme;
+  theme,
+  time;
 
   Widget widget({TextEditingController? controller, required BuildContext context, required GameCreationState state}) =>
       switch (this) {
@@ -29,17 +30,20 @@ enum CreateGameMainParts {
             topic: topic(context),
             state: state,
           ),
+        time => _TopicNTextField(controller: controller!, topic: topic(context), label: label(context))
       };
 
   String topic(BuildContext context) => switch (this) {
         name => context.loc.gameName,
         description => context.loc.gameDescription,
         theme => context.loc.gameTheme,
+        time => context.loc.gameTime,
       };
   String label(BuildContext context) => switch (this) {
         name => context.loc.gameNameLabel,
         description => context.loc.gameDescriptionLabel,
-        theme => context.loc.gameTheme
+        theme => context.loc.gameTheme,
+        time => context.loc.gameTimeLabel
       };
 }
 
@@ -54,6 +58,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _themeController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final GameCreationCubit bloc = BlocProvider.of<GameCreationCubit>(context);
@@ -162,6 +167,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
         CreateGameMainParts.name => _nameController,
         CreateGameMainParts.description => _descriptionController,
         CreateGameMainParts.theme => _themeController,
+        CreateGameMainParts.time => _timeController
       };
 }
 

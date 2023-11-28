@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 
 class LinQuestionText extends StatelessWidget {
-  const LinQuestionText({super.key, required this.textTask});
+  const LinQuestionText({super.key, required this.textTask, required this.answer});
   final String textTask;
+  final List<String>? answer;
 
   @override
   Widget build(BuildContext context) {
@@ -12,13 +13,13 @@ class LinQuestionText extends StatelessWidget {
         padding: EdgeInsets.all(PaddingConst.medium),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20), border: Border.all(color: theme.highlightColor, width: 5)),
-        child: TextTaskType.getType(textTask).getWidget(textTask, null, theme));
+        child: TextTaskType.getType(textTask).getWidget(textTask, answer, theme));
   }
 }
 
 class MissedTextBox extends StatelessWidget {
   const MissedTextBox({super.key, required this.insertedText});
-  final String? insertedText;
+  final List<String>? insertedText;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,9 @@ class MissedTextBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(2),
       color: theme.colorScheme.surfaceTint.withOpacity(0.5),
-      child: Text(insertedText != null && (insertedText?.isNotEmpty ?? false) ? insertedText! : '                '),
+      child: Text(insertedText != null && (insertedText?.isNotEmpty ?? false)
+          ? insertedText!.map((e) => e != insertedText!.last ? '$e/' : e).join()
+          : '                '),
     );
   }
 }
@@ -47,7 +50,7 @@ enum TextTaskType {
         return TextTaskType.missedDottedText;
       } else if (text.contains(':') && !text.contains(RegExp('["\']'))) {
         return TextTaskType.colonText;
-      } else if (text.contains(RegExp('_+.+?_+'))) {
+      } else if (text.contains(RegExp('^\\w+ \\_+\\w*\$'))) {
         return TextTaskType.regularText;
       } else {
         return TextTaskType.missedText;
@@ -57,7 +60,7 @@ enum TextTaskType {
     return TextTaskType.regularText;
   }
 
-  Widget getWidget(String textTask, String? answer, ThemeData theme) {
+  Widget getWidget(String textTask, List<String>? answer, ThemeData theme) {
     switch (this) {
       case TextTaskType.regularText:
         return Text(textTask);

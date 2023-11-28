@@ -81,7 +81,9 @@
   "gameName":"Give a name to your game",
   "gameNameLabel":"Name",
   "gameDescription":"Describe your game",
-  "gameDescriptionLabel":"Description",
+  "gameDescriptionLabel":"Description",  
+  "gameTime":"Set time for your game in minutes (write only numbers)",
+  "gameTimeLabel":"Time",
   "gameTheme":"Theme",
   "gameQuestions":"Questions",
   "gameAddQuestion":"Add",
@@ -128,6 +130,7 @@
 
 
   "myGroups":"My Groups",
-  "joinGroup":"Join Group"
+  "joinGroup":"Join Group",
+  "createGroup":"Create Group"
 }
 

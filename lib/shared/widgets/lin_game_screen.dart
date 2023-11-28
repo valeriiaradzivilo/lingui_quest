@@ -31,7 +31,10 @@ class LinGameScreen extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: LinQuestionText(textTask: question),
+          child: LinQuestionText(
+            textTask: question,
+            answer: selectedAnswers.map((e) => options[e]).toList(),
+          ),
         ),
         ListView.separated(
           shrinkWrap: true,
@@ -41,7 +44,7 @@ class LinGameScreen extends StatelessWidget {
                 return RadioListTile(
                     title: Text('${index + 1}. ${options[index]}'),
                     value: index,
-                    groupValue: selectedAnswers.isNotEmpty ? selectedAnswers.first : 0,
+                    groupValue: selectedAnswers.isNotEmpty ? selectedAnswers.first : null,
                     onChanged: (selected) => onSelected(index));
               }
               return CheckboxListTile(

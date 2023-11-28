@@ -7,7 +7,7 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
-import 'package:lingui_quest/view/games_page/create_game/create_question/bloc/create_question_bloc.dart';
+import 'package:lingui_quest/view/create_game_page/create_question/bloc/create_question_bloc.dart';
 
 class CreateQuestionPage extends StatefulWidget {
   const CreateQuestionPage({super.key, this.questionToEdit});

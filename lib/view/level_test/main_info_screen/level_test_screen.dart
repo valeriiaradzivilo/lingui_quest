@@ -5,7 +5,7 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/start/routes.dart';
-import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
+import 'package:lingui_quest/view/level_test/main_info_screen/bloc/level_test_bloc.dart';
 
 class LevelTestScreen extends StatelessWidget {
   const LevelTestScreen({super.key});

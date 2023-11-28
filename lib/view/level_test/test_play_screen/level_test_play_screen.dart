@@ -1,28 +1,33 @@
-import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/widgets/lin_game_screen.dart';
-import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
+import 'package:lingui_quest/view/level_test/test_play_screen/bloc/level_test_play_bloc.dart';
 
-class TestScreen extends StatelessWidget {
-  const TestScreen({super.key});
+class LevelTestPlayScreen extends StatefulWidget {
+  const LevelTestPlayScreen({super.key});
+
+  @override
+  State<LevelTestPlayScreen> createState() => _TestScreenState();
+}
+
+class _TestScreenState extends State<LevelTestPlayScreen> {
+  late final LevelTestPlayCubit bloc;
+
+  @override
+  void dispose() {
+    bloc.deleteTestData();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<TestCubit>(context);
+    bloc = BlocProvider.of<LevelTestPlayCubit>(context);
+
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(FeatherIcons.arrowLeft),
-          onPressed: () {
-            //bloc.deleteData
-          },
-        ),
-      ),
       body: Center(
-        child: BlocConsumer<TestCubit, TestState>(
+        child: BlocConsumer<LevelTestPlayCubit, LevelTestPlayState>(
             bloc: bloc..init(),
             listener: (context, state) {},
             builder: (context, state) {

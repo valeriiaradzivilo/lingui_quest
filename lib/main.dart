@@ -9,21 +9,21 @@ import 'package:lingui_quest/start/di.dart';
 import 'package:lingui_quest/start/gallery_option_theme.dart';
 import 'package:lingui_quest/start/page/start_page.dart';
 import 'package:lingui_quest/start/routes.dart';
+import 'package:lingui_quest/view/create_game_page/bloc/create_game_bloc.dart';
+import 'package:lingui_quest/view/create_game_page/create_game.dart';
+import 'package:lingui_quest/view/create_game_page/create_question/bloc/create_question_bloc.dart';
 import 'package:lingui_quest/view/game_play_page/bloc/game_play_bloc.dart';
-import 'package:lingui_quest/view/games_page/create_game/bloc/create_game_bloc.dart';
-import 'package:lingui_quest/view/games_page/create_game/create_game.dart';
-import 'package:lingui_quest/view/games_page/create_game/create_question/bloc/create_question_bloc.dart';
 import 'package:lingui_quest/view/games_page/game_preview/bloc/game_preview_cubit.dart';
 import 'package:lingui_quest/view/games_page/game_preview/game_preview_page.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
+import 'package:lingui_quest/view/groups/bloc/groups_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.dart';
-import 'package:lingui_quest/view/level_test/main_screen/bloc/level_test_bloc.dart';
-import 'package:lingui_quest/view/level_test/test_screen/bloc/test_bloc.dart';
-import 'package:lingui_quest/view/level_test/test_screen/test_screen.dart';
+import 'package:lingui_quest/view/level_test/main_info_screen/bloc/level_test_bloc.dart';
+import 'package:lingui_quest/view/level_test/test_play_screen/bloc/level_test_play_bloc.dart';
+import 'package:lingui_quest/view/level_test/test_play_screen/level_test_play_screen.dart';
 import 'package:lingui_quest/view/profile_page/become_tutor/bloc/become_tutor_cubit.dart';
 import 'package:lingui_quest/view/profile_page/full_profile_page.dart';
-import 'package:lingui_quest/view/search_tutor/bloc/tutors_bloc.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 import 'package:lingui_quest/view/sign_in_page/sign_in_page.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
@@ -52,14 +52,14 @@ class MyApp extends StatelessWidget {
         BlocProvider<StartCubit>(create: (_) => serviceLocator<StartCubit>()),
         BlocProvider<CreateTaskCubit>(create: (_) => serviceLocator<CreateTaskCubit>()),
         BlocProvider<LevelTestBloc>(create: (_) => serviceLocator<LevelTestBloc>()),
-        BlocProvider<TestCubit>(create: (_) => serviceLocator<TestCubit>()),
-        BlocProvider<TutorsSearchBloc>(create: (_) => serviceLocator<TutorsSearchBloc>()),
+        BlocProvider<LevelTestPlayCubit>(create: (_) => serviceLocator<LevelTestPlayCubit>()),
         BlocProvider<GamesListBloc>(create: (_) => serviceLocator<GamesListBloc>()),
         BlocProvider<BecomeTutorCubit>(create: (_) => serviceLocator<BecomeTutorCubit>()),
         BlocProvider<GameCreationCubit>(create: (_) => serviceLocator<GameCreationCubit>()),
         BlocProvider<QuestionCreationCubit>(create: (_) => serviceLocator<QuestionCreationCubit>()),
         BlocProvider<GamePreviewCubit>(create: (_) => serviceLocator<GamePreviewCubit>()),
         BlocProvider<GamePlayCubit>(create: (_) => serviceLocator<GamePlayCubit>()),
+        BlocProvider<GroupsBloc>(create: (_) => serviceLocator<GroupsBloc>()),
       ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),
@@ -96,7 +96,7 @@ class MyApp extends StatelessWidget {
       AppRoutes.signIn: (context) => const SignInPage(),
       AppRoutes.signUp: (context) => const SignUpPage(),
       AppRoutes.createTestTask: (context) => const CreateTestTaskPopup(),
-      AppRoutes.test: (context) => const TestScreen(),
+      AppRoutes.test: (context) => const LevelTestPlayScreen(),
       AppRoutes.profile: (context) => const FullProfilePage(),
       AppRoutes.createGame: (context) => const CreateGamePage(),
     };

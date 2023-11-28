@@ -1,8 +1,8 @@
-part of 'test_bloc.dart';
+part of 'level_test_play_bloc.dart';
 
 enum TestStatus { progress, error, success, notLoggedIn, result }
 
-class TestState extends Equatable {
+class LevelTestPlayState extends Equatable {
   final TestStatus status;
   final String? errorMessage;
   final Node? tasksTree;
@@ -15,7 +15,7 @@ class TestState extends Equatable {
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
-  const TestState(
+  const LevelTestPlayState(
       {required this.status,
       this.errorMessage,
       required this.currentLevel,
@@ -25,8 +25,8 @@ class TestState extends Equatable {
       required this.remainingTime,
       required this.currentTest,
       required this.selectedAnswers});
-  factory TestState.initial() {
-    return TestState(
+  factory LevelTestPlayState.initial() {
+    return LevelTestPlayState(
         status: TestStatus.progress,
         currentLevel: EnglishLevel.a1,
         tasksTree: null,
@@ -41,7 +41,7 @@ class TestState extends Equatable {
   List<Object?> get props =>
       [status, _time, currentLevel, tasksTree, testsData, currentUser, remainingTime, currentTest, selectedAnswers];
 
-  TestState copyWith({
+  LevelTestPlayState copyWith({
     TestStatus? status,
     String? errorMessage,
     EnglishLevel? currentLevel,
@@ -52,7 +52,7 @@ class TestState extends Equatable {
     Node? currentTest,
     List<int>? selectedAnswers,
   }) {
-    return TestState(
+    return LevelTestPlayState(
         status: status ?? this.status,
         errorMessage: errorMessage ?? this.errorMessage,
         currentLevel: currentLevel ?? this.currentLevel,

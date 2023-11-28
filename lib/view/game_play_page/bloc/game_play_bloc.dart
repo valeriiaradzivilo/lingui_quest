@@ -29,6 +29,9 @@ class GamePlayCubit extends Cubit<GamePlayState> {
         currentQuestion: shuffledQuestions.first,
         questionNumber: 0,
         shuffledQuestions: shuffledQuestions,
+        remainingTime: game.time * 60,
+        // game time in creation is set in minutes
+        // the timer should update each second
       ));
       startTimer();
     } else {
@@ -37,11 +40,12 @@ class GamePlayCubit extends Cubit<GamePlayState> {
   }
 
   void startTimer() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(milliseconds: 1050), (timer) {
       if (state.remainingTime > 0) {
         emit(state.copyWith(remainingTime: state.remainingTime - 1));
       } else {
         timer.cancel();
+        emit(state.copyWith(status: GamePlayStatus.result));
         // Calculate and show the test result
       }
     });
@@ -82,10 +86,4 @@ class GamePlayCubit extends Cubit<GamePlayState> {
   }
 
   void deleteResults() => emit(GamePlayState.initial());
-
-  @override
-  Future<void> close() {
-    emit(GamePlayState.initial());
-    return super.close();
-  }
 }

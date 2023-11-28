@@ -27,6 +27,7 @@ mixin _$GameModel {
   EnglishLevel get level => throw _privateConstructorUsedError;
   String get theme => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  int get time => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +47,8 @@ abstract class $GameModelCopyWith<$Res> {
       List<QuestionModel> questions,
       EnglishLevel level,
       String theme,
-      String description});
+      String description,
+      int time});
 }
 
 /// @nodoc
@@ -69,6 +71,7 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
     Object? level = null,
     Object? theme = null,
     Object? description = null,
+    Object? time = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -99,6 +102,10 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      time: null == time
+          ? _value.time
+          : time // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -118,7 +125,8 @@ abstract class _$$GameModelImplCopyWith<$Res>
       List<QuestionModel> questions,
       EnglishLevel level,
       String theme,
-      String description});
+      String description,
+      int time});
 }
 
 /// @nodoc
@@ -139,6 +147,7 @@ class __$$GameModelImplCopyWithImpl<$Res>
     Object? level = null,
     Object? theme = null,
     Object? description = null,
+    Object? time = null,
   }) {
     return _then(_$GameModelImpl(
       id: null == id
@@ -169,6 +178,10 @@ class __$$GameModelImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      time: null == time
+          ? _value.time
+          : time // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -183,7 +196,8 @@ class _$GameModelImpl extends _GameModel {
       required final List<QuestionModel> questions,
       required this.level,
       required this.theme,
-      required this.description})
+      required this.description,
+      required this.time})
       : _questions = questions,
         super._();
 
@@ -210,10 +224,12 @@ class _$GameModelImpl extends _GameModel {
   final String theme;
   @override
   final String description;
+  @override
+  final int time;
 
   @override
   String toString() {
-    return 'GameModel(id: $id, creatorId: $creatorId, name: $name, questions: $questions, level: $level, theme: $theme, description: $description)';
+    return 'GameModel(id: $id, creatorId: $creatorId, name: $name, questions: $questions, level: $level, theme: $theme, description: $description, time: $time)';
   }
 
   @override
@@ -230,7 +246,8 @@ class _$GameModelImpl extends _GameModel {
             (identical(other.level, level) || other.level == level) &&
             (identical(other.theme, theme) || other.theme == theme) &&
             (identical(other.description, description) ||
-                other.description == description));
+                other.description == description) &&
+            (identical(other.time, time) || other.time == time));
   }
 
   @JsonKey(ignore: true)
@@ -243,7 +260,8 @@ class _$GameModelImpl extends _GameModel {
       const DeepCollectionEquality().hash(_questions),
       level,
       theme,
-      description);
+      description,
+      time);
 
   @JsonKey(ignore: true)
   @override
@@ -267,7 +285,8 @@ abstract class _GameModel extends GameModel {
       required final List<QuestionModel> questions,
       required final EnglishLevel level,
       required final String theme,
-      required final String description}) = _$GameModelImpl;
+      required final String description,
+      required final int time}) = _$GameModelImpl;
   const _GameModel._() : super._();
 
   factory _GameModel.fromJson(Map<String, dynamic> json) =
@@ -287,6 +306,8 @@ abstract class _GameModel extends GameModel {
   String get theme;
   @override
   String get description;
+  @override
+  int get time;
   @override
   @JsonKey(ignore: true)
   _$$GameModelImplCopyWith<_$GameModelImpl> get copyWith =>
