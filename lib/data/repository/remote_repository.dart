@@ -126,7 +126,7 @@ class RemoteRepository {
     }
   }
 
-  Future<Either<Failure, List<GroupModel>>> getAllGroupsForCurrentUser() async {
+  Future<Either<Failure, Stream<List<GroupModel>>>> getAllGroupsForCurrentUser() async {
     try {
       return Right(await _database.getAllGroupsForCurrentUser());
     } catch (e) {

@@ -12,6 +12,8 @@ import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecas
 import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
+import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
@@ -82,6 +84,8 @@ Future<void> init() async {
   serviceLocator.registerFactory(() => GroupsBloc(
         serviceLocator<GetCurrentUserUsecase>(),
         serviceLocator<GetAllGroupsForCurrentUserUsecase>(),
+        serviceLocator<GetGroupByCodeUsecase>(),
+        serviceLocator<PostGroupUsecase>(),
       ));
 
   //usecases
@@ -124,6 +128,12 @@ Future<void> init() async {
 
   serviceLocator.registerLazySingleton<GetGameByIdUsecase>(
     () => GetGameByIdUsecase(repository: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<GetGroupByCodeUsecase>(
+    () => GetGroupByCodeUsecase(repository: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<PostGroupUsecase>(
+    () => PostGroupUsecase(repository: serviceLocator()),
   );
 
   //datasources

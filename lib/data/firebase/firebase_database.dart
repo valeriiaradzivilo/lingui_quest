@@ -9,6 +9,7 @@ import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:simple_logger/simple_logger.dart';
 import 'package:uuid/uuid.dart';
 
@@ -235,20 +236,30 @@ class FirebaseDatabaseImpl {
   }
 
 //TODO:Change it to Stream
-  Future<List<GroupModel>> getAllGroupsForCurrentUser() async {
+  Future<Stream<List<GroupModel>>> getAllGroupsForCurrentUser() async {
     try {
-      final resAsCreator = await firestore
+      final resAsCreator = firestore
           .collection('studentGroups')
           .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
-          .get();
-      final resAsStudent = await firestore
+          .snapshots();
+      final resAsStudent = firestore
           .collection('studentGroups')
           .where('students', arrayContains: _firebaseAuth.currentUser!.uid)
-          .get();
-      final res = [
-        ...resAsCreator.docs.map((e) => GroupModel.fromJson(e.data())),
-        ...resAsStudent.docs.map((e) => GroupModel.fromJson(e.data()))
-      ];
+          .snapshots();
+      // final res = [
+      //   ...resAsCreator.docs.map((e) => GroupModel.fromJson(e.data())),
+      //   ...resAsStudent.docs.map((e) => GroupModel.fromJson(e.data()))
+      // ];
+      final Stream<List<GroupModel>> res = Rx.combineLatest2(resAsCreator, resAsStudent, (creator, student) {
+        final List<GroupModel> listOfGroups = [];
+        for (final doc in creator.docs) {
+          listOfGroups.add(GroupModel.fromJson(doc.data()));
+        }
+        for (final doc in student.docs) {
+          listOfGroups.add(GroupModel.fromJson(doc.data()));
+        }
+        return listOfGroups;
+      }).asBroadcastStream();
       return res;
     } catch (e) {
       rethrow;
@@ -257,7 +268,8 @@ class FirebaseDatabaseImpl {
 
   Future<void> postGroup(GroupModel group) async {
     try {
-      await firestore.collection('studentGroups').add(group.toJson());
+      final newGroup = group.copyWith(creatorId: _firebaseAuth.currentUser!.uid, code: Uuid().v1());
+      await firestore.collection('studentGroups').add(newGroup.toJson());
     } catch (e) {
       rethrow;
     }

@@ -133,6 +133,17 @@
   "joinGroup":"Join Group",
   "createGroup":"Create Group",
   "tutor":"Tutor",
-  "student":"Student"
+  "student":"Student",
+  "code":"Code",
+  "findGroup":"Find group",
+  "isItCorrectGroup":"Is this the group you wanted to join?",
+  "joinGroupInfo":"After you press 'approve' the request will be send to the tutor who created the group.",
+  "groupName":"Name",
+  "groupDescription":"Description",
+  "couldNotFindGroup":"Could not find the group by this code. Check the correctness of your code.",
+  "groupWasNotCreated":"Could not create your group. Try again!",
+  "groupWasCreatedSuccessfully":"Your group was created successfully.",
+  "createGroupInfo":"Students can request access to tests in this group using code. The code will be generated automatically. After a student sends a request, you will be able to add them through teacher tab."
+
 }
 

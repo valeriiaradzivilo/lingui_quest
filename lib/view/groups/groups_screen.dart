@@ -8,6 +8,9 @@ import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/view/groups/bloc/groups_bloc.dart';
+import 'package:lingui_quest/view/groups/components/create_group_alert.dart';
+import 'package:lingui_quest/view/groups/components/join_group_alert.dart';
+import 'package:rx_widgets/rx_widgets.dart';
 
 class GroupsScreen extends StatelessWidget {
   const GroupsScreen({super.key});
@@ -34,12 +37,12 @@ class GroupsScreen extends StatelessWidget {
                     if (state.currentUser.isTutor)
                       LinMainButton(
                         label: context.loc.createGroup,
-                        onTap: () {},
+                        onTap: () => showDialog(context: context, builder: (_) => CreateGroupAlert()),
                         icon: FeatherIcons.filePlus,
                       ),
                     LinMainButton(
                       label: context.loc.joinGroup,
-                      onTap: () {},
+                      onTap: () => showDialog(context: context, builder: (_) => JoinGroupAlert()),
                       icon: FeatherIcons.userPlus,
                     )
                   ],
@@ -47,13 +50,21 @@ class GroupsScreen extends StatelessWidget {
                 SizedBox(height: PaddingConst.large),
                 Expanded(
                     child: SingleChildScrollView(
-                  child: Wrap(children: [
-                    for (int index = 0; index < state.allGroups.length; index++)
-                      _GroupBoxWidget(
-                        group: state.allGroups[index],
-                        isCreator: state.allGroups[index].creatorId == state.currentUser.userId,
-                      ),
-                  ]),
+                  child: ReactiveWidget(
+                    stream: state.allGroups,
+                    widget: (groups) => Wrap(
+                        alignment: WrapAlignment.start,
+                        runAlignment: WrapAlignment.start,
+                        spacing: PaddingConst.medium,
+                        runSpacing: PaddingConst.medium,
+                        children: [
+                          for (int index = 0; index < groups.length; index++)
+                            _GroupBoxWidget(
+                              group: groups[index],
+                              isCreator: groups[index].creatorId == state.currentUser.userId,
+                            ),
+                        ]),
+                  ),
                 )),
               ],
             );
@@ -72,9 +83,7 @@ class _GroupBoxWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.all(PaddingConst.small),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), border: Border.all(color: theme.colorScheme.onBackground)),
+      decoration: BoxDecoration(border: Border.all(color: theme.colorScheme.onBackground)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -98,10 +107,13 @@ class _GroupBoxWidget extends StatelessWidget {
               children: [
                 Text(
                   group.name,
+                  maxLines: 5,
+                  overflow: TextOverflow.fade,
                 ),
                 Text(
                   group.description,
                   overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                 )
               ],
             ),

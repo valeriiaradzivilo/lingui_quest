@@ -4,13 +4,13 @@ import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/repository/remote_repository.dart';
 
-class GetAllGroupsForCurrentUserUsecase extends UseCaseFutureEither<List<GroupModel>, NoParams> {
+class GetAllGroupsForCurrentUserUsecase extends UseCaseFutureEither<Stream<List<GroupModel>>, NoParams> {
   final RemoteRepository repository;
 
   GetAllGroupsForCurrentUserUsecase({required this.repository});
 
   @override
-  Future<Either<Failure, List<GroupModel>>> call(NoParams params) async {
+  Future<Either<Failure, Stream<List<GroupModel>>>> call(NoParams params) async {
     return repository.getAllGroupsForCurrentUser();
   }
 }
