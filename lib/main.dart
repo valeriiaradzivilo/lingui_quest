@@ -35,7 +35,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  init();
+  await init();
   // HiveDatabase.openBox();
   runApp(const MyApp());
 }

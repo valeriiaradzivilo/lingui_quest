@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
-import 'package:lingui_quest/data/firebase/firebase_database.dart';
-import 'package:lingui_quest/data/repository/remote_repository.dart';
+import 'package:lingui_quest/data/data_source/implementation/firebase_remote_data_source_implementation.dart';
+import 'package:lingui_quest/data/repository/implementation/remote_repository_implementation.dart';
 import 'package:lingui_quest/data/usecase/add_test_task_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_new_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_new_tutor_usecase.dart';
@@ -10,6 +10,7 @@ import 'package:lingui_quest/data/usecase/create_test_tasks_tree.dart';
 import 'package:lingui_quest/data/usecase/get_all_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
+import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
@@ -34,7 +35,100 @@ import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
 final GetIt serviceLocator = GetIt.instance;
 
 Future<void> init() async {
-  //cubits
+  // Initialize data sources
+  await initDatasources();
+
+  // Initialize repository
+  await initRepository();
+
+  // Initialize use cases
+  await initUseCases();
+
+  // Initialize cubs
+  await initCubs();
+}
+
+Future<void> initDatasources() async {
+  final firebaseDatabase = FirebaseRemoteDatasourceImplementation();
+  serviceLocator.registerLazySingleton<FirebaseRemoteDatasourceImplementation>(
+    () => firebaseDatabase,
+  );
+}
+
+Future<void> initUseCases() async {
+  final remoteRepository = serviceLocator<RemoteRepositoryImplementation>();
+
+  serviceLocator.registerLazySingleton<SignInUsecase>(
+    () => SignInUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<SignUpWithEmailUsecase>(
+    () => SignUpWithEmailUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<SignOutUsecase>(
+    () => SignOutUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<GetCurrentUserUsecase>(
+    () => GetCurrentUserUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<AddTestTaskUsecase>(
+    () => AddTestTaskUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<GetAllGroupsForCurrentUserUsecase>(
+    () => GetAllGroupsForCurrentUserUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<GetAllTestTasksUsecase>(
+    () => GetAllTestTasksUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<CreateNewGameUsecase>(
+    () => CreateNewGameUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<GetAllGamesUsecase>(
+    () => GetAllGamesUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<GetGameByIdUsecase>(
+    () => GetGameByIdUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<CreateNewTutorUsecase>(
+    () => CreateNewTutorUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<CreateTestTaskTreeUsecase>(
+    () => CreateTestTaskTreeUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<GetCurrentTutorUsecase>(
+    () => GetCurrentTutorUsecase(repository: remoteRepository),
+  );
+  serviceLocator.registerLazySingleton<GetGroupByCodeUsecase>(
+    () => GetGroupByCodeUsecase(repository: remoteRepository),
+  );
+  serviceLocator.registerLazySingleton<PostGroupUsecase>(
+    () => PostGroupUsecase(repository: remoteRepository),
+  );
+}
+
+Future<void> initRepository() async {
+  final remoteDataSource = serviceLocator<FirebaseRemoteDatasourceImplementation>();
+  serviceLocator.registerLazySingleton<RemoteRepositoryImplementation>(
+    () => RemoteRepositoryImplementation(remoteDataSource),
+  );
+}
+
+Future<void> initCubs() async {
+  final getCurrentUserUsecase = serviceLocator<GetCurrentUserUsecase>();
+  final getCurrentTutorUsecase = serviceLocator<GetCurrentTutorUsecase>();
+
+  // Cubits for screens
   serviceLocator.registerFactory(
     () => SignInCubit(
       serviceLocator<SignInUsecase>(),
@@ -47,20 +141,23 @@ Future<void> init() async {
   );
   serviceLocator.registerFactory(
     () => StartCubit(
-      // serviceLocator<CheckLoggedInUsecase>(),
-      serviceLocator<GetCurrentUserUsecase>(),
+      getCurrentUserUsecase,
       serviceLocator<SignOutUsecase>(),
+      getCurrentTutorUsecase,
     ),
   );
   serviceLocator.registerFactory(
-    () => CreateTaskCubit(serviceLocator<AddTestTaskUsecase>(), serviceLocator<GetCurrentUserUsecase>()),
+    () => CreateTaskCubit(
+      serviceLocator<AddTestTaskUsecase>(),
+      getCurrentUserUsecase,
+    ),
   );
   serviceLocator.registerFactory(
-    () => LevelTestBloc(serviceLocator<GetCurrentUserUsecase>()),
+    () => LevelTestBloc(getCurrentUserUsecase),
   );
   serviceLocator.registerFactory(
     () => LevelTestPlayCubit(
-      serviceLocator<GetCurrentUserUsecase>(),
+      getCurrentUserUsecase,
       serviceLocator<CreateTestTaskTreeUsecase>(),
       serviceLocator<GetAllTestTasksUsecase>(),
     ),
@@ -68,83 +165,23 @@ Future<void> init() async {
   serviceLocator.registerFactory(
     () => GamesListBloc(
       serviceLocator<GetAllGamesUsecase>(),
-      serviceLocator<GetCurrentUserUsecase>(),
+      getCurrentUserUsecase,
     ),
   );
   serviceLocator.registerFactory(
     () => BecomeTutorCubit(
-      serviceLocator<GetCurrentUserUsecase>(),
+      getCurrentUserUsecase,
       serviceLocator<CreateNewTutorUsecase>(),
     ),
   );
   serviceLocator.registerFactory(() => GameCreationCubit(serviceLocator<CreateNewGameUsecase>()));
   serviceLocator.registerFactory(() => QuestionCreationCubit());
   serviceLocator.registerFactory(() => GamePreviewCubit(serviceLocator<GetGameByIdUsecase>()));
-  serviceLocator.registerFactory(() => GamePlayCubit(serviceLocator<GetCurrentUserUsecase>()));
+  serviceLocator.registerFactory(() => GamePlayCubit(getCurrentUserUsecase));
   serviceLocator.registerFactory(() => GroupsBloc(
-        serviceLocator<GetCurrentUserUsecase>(),
+        getCurrentUserUsecase,
         serviceLocator<GetAllGroupsForCurrentUserUsecase>(),
         serviceLocator<GetGroupByCodeUsecase>(),
         serviceLocator<PostGroupUsecase>(),
       ));
-
-  //usecases
-  serviceLocator.registerLazySingleton<SignInUsecase>(
-    () => SignInUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<SignOutUsecase>(
-    () => SignOutUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<SignUpWithEmailUsecase>(
-    () => SignUpWithEmailUsecase(repository: serviceLocator()),
-  );
-  // serviceLocator.registerLazySingleton<CheckLoggedInUsecase>(
-  //   () => CheckLoggedInUsecase(),
-  // );
-  serviceLocator.registerLazySingleton<AddTestTaskUsecase>(
-    () => AddTestTaskUsecase(repository: serviceLocator<RemoteRepository>()),
-  );
-  serviceLocator.registerLazySingleton<GetCurrentUserUsecase>(
-    () => GetCurrentUserUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<GetAllGroupsForCurrentUserUsecase>(
-    () => GetAllGroupsForCurrentUserUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<GetAllTestTasksUsecase>(
-    () => GetAllTestTasksUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<CreateTestTaskTreeUsecase>(
-    () => CreateTestTaskTreeUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<CreateNewTutorUsecase>(
-    () => CreateNewTutorUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<CreateNewGameUsecase>(
-    () => CreateNewGameUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<GetAllGamesUsecase>(
-    () => GetAllGamesUsecase(repository: serviceLocator()),
-  );
-
-  serviceLocator.registerLazySingleton<GetGameByIdUsecase>(
-    () => GetGameByIdUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<GetGroupByCodeUsecase>(
-    () => GetGroupByCodeUsecase(repository: serviceLocator()),
-  );
-  serviceLocator.registerLazySingleton<PostGroupUsecase>(
-    () => PostGroupUsecase(repository: serviceLocator()),
-  );
-
-  //datasources
-  serviceLocator.registerLazySingleton<RemoteRepository>(
-    () => RemoteRepository(
-      serviceLocator<FirebaseDatabaseImpl>(),
-    ),
-  );
-
-  //repository
-  serviceLocator.registerLazySingleton<FirebaseDatabaseImpl>(
-    () => FirebaseDatabaseImpl(),
-  );
 }

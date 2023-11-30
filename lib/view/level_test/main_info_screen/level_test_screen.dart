@@ -4,6 +4,7 @@ import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_tutor_only_zone_container.dart';
 import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/level_test/main_info_screen/bloc/level_test_bloc.dart';
 
@@ -66,21 +67,18 @@ class _CreateTestTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: EdgeInsets.all(PaddingConst.medium),
-      width: MediaQuery.of(context).size.width / 3,
-      decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(color: theme.hintColor, width: 3)),
-      child: Column(
+    return LinTutorOnlyZoneContainer(
+      child: Row(
         children: [
           LinButton(
               label: context.loc.createTestTask,
               onTap: () => Navigator.of(context).pushNamed(AppRoutes.createTestTask)),
-          Text(
-            'This option is only for verified teachers, you can submit any task and it will appear in the test after it will be checked.',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.labelSmall,
+          Expanded(
+            child: Text(
+              'This option is only for verified teachers, you can submit any task and it will appear in the test after it will be checked.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.labelSmall,
+            ),
           )
         ],
       ),

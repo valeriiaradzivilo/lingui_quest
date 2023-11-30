@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingui_quest/core/extensions/custom_exceptions.dart';
 import 'package:lingui_quest/core/helper/serializable_interface.dart';
+import 'package:lingui_quest/data/data_source/firebase_remote_data_source.dart';
+import 'package:lingui_quest/data/firebase/firebase_constants.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
@@ -13,10 +15,11 @@ import 'package:rxdart/rxdart.dart';
 import 'package:simple_logger/simple_logger.dart';
 import 'package:uuid/uuid.dart';
 
-class FirebaseDatabaseImpl {
+class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  @override
   Future<void> createUserWithEmailAndPassword(SignUpParams params) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
@@ -55,9 +58,10 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  @override
   Future<void> saveUserData(UserModel user) async {
     try {
-      final CollectionReference userData = firestore.collection('userData');
+      final CollectionReference userData = firestore.collection(FirebaseCollection.userData.collectionName);
       await userData.add(user.toJson());
       print('User added');
     } catch (e) {
@@ -65,6 +69,7 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
@@ -81,19 +86,19 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  @override
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
-
-      // HiveDatabase.cleanUserId();
     } catch (e) {
       rethrow;
     }
   }
 
+  @override
   Future<void> crateNewTestTask(LevelTestTaskModel task) async {
     try {
-      final CollectionReference testTasks = firestore.collection('testTasks');
+      final CollectionReference testTasks = firestore.collection(FirebaseCollection.testTasks.collectionName);
       await testTasks.add(task.toJson());
       print('Task added');
     } catch (e) {
@@ -101,10 +106,11 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  @override
   Future<Stream<List<LevelTestTaskModel>>> readTasks() async {
     try {
       return firestore
-          .collection('testTasks')
+          .collection(FirebaseCollection.testTasks.collectionName)
           .snapshots()
           .map((snapshot) => snapshot.docs.map((doc) => LevelTestTaskModel.fromJson(doc.data())).toList());
     } catch (e) {
@@ -112,9 +118,10 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  @override
   Future<Stream<List<UserModel>>> getAllUserDataTeachers() async {
     try {
-      return firestore.collection('userData').snapshots().map((event) => event.docs
+      return firestore.collection(FirebaseCollection.userData.collectionName).snapshots().map((event) => event.docs
           .map((e) {
             if (e.data()['isTutor']) {
               return UserModel.fromJson(e.data());
@@ -127,43 +134,12 @@ class FirebaseDatabaseImpl {
     }
   }
 
-  // Future<Stream<List<TutorModel>>> getAllTutors() async {
-  //   try {
-  //     final Stream<List<UserModel>> usersData = await getAllUserDataTeachers();
-  //     final Stream<List<Json>> tutorsData =
-  //         firestore.collection('tutorInfo').snapshots().map((event) => event.docs.map((e) => e.data()).toList());
-
-  //     return Rx.combineLatest2(
-  //       usersData,
-  //       tutorsData,
-  //       (List<UserModel> users, List<Map<String, dynamic>> tutors) {
-  //         final Map<String, UserModel> usersMap = Map.fromEntries(users.map((user) => MapEntry(user.userId, user)));
-
-  //         final List<TutorModel> combinedData = [];
-  //         for (final tutor in tutors) {
-  //           final userId = tutor['userId'] as String;
-  //           final user = usersMap[userId];
-  //           if (user != null) {
-  //             final Map<String, dynamic> allData = {'user': user.toJson(), ...tutor};
-  //             print(allData);
-  //             final model = TutorModel.fromJson(allData);
-  //             combinedData.add(model);
-  //           }
-  //         }
-
-  //         return combinedData;
-  //       },
-  //     ).asBroadcastStream();
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
-
+  @override
   Future<UserModel> getCurrentUserData() async {
     try {
       if (_firebaseAuth.currentUser != null) {
         final data = await firestore
-            .collection('userData')
+            .collection(FirebaseCollection.userData.collectionName)
             .where('user_id', isEqualTo: _firebaseAuth.currentUser!.uid)
             .limit(1)
             .get();
@@ -176,28 +152,30 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  @override
   Future<void> createNewTutor(TutorModel tutor) async {
     try {
-      final CollectionReference tutorInfoTable = firestore.collection('tutorInfo');
+      final CollectionReference tutorInfoTable = firestore.collection(FirebaseCollection.tutor.collectionName);
       await tutorInfoTable.add(tutor.copyWith(userId: _firebaseAuth.currentUser!.uid).toJson());
       print('Tutor added');
       final userDataDocToEdit = await firestore
-          .collection('userData')
+          .collection(FirebaseCollection.userData.collectionName)
           .where('user_id', isEqualTo: _firebaseAuth.currentUser?.uid)
           .limit(1)
           .get();
       final id = userDataDocToEdit.docs.first.id;
 
-      await firestore.collection('userData').doc(id).update({'is_tutor': true});
+      await firestore.collection(FirebaseCollection.userData.collectionName).doc(id).update({'is_tutor': true});
       print('User was edited');
     } catch (e) {
       rethrow;
     }
   }
 
+  @override
   Future<void> createNewGame(GameModel model) async {
     try {
-      final CollectionReference gamesTable = firestore.collection('games');
+      final CollectionReference gamesTable = firestore.collection(FirebaseCollection.games.collectionName);
       await gamesTable.add(model.copyWith(creatorId: _firebaseAuth.currentUser!.uid, id: Uuid().v1()).toJson());
       print('Game added');
     } catch (e) {
@@ -205,10 +183,11 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  @override
   Future<Stream<List<GameModel>>> getAllGames(int page) async {
     try {
       final Stream<QuerySnapshot<Json>> resultStream =
-          firestore.collection('games').snapshots().skip(page * 10).take(10);
+          firestore.collection(FirebaseCollection.games.collectionName).snapshots().skip(page * 10).take(10);
       return resultStream.map((event) => event.docs.map((doc) {
             return GameModel.fromJson(doc.data());
           }).toList());
@@ -217,39 +196,42 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  @override
   Future<GameModel> getGameById(String id) async {
     try {
-      final res = await firestore.collection('games').where('id', isEqualTo: id).limit(1).get();
+      final res =
+          await firestore.collection(FirebaseCollection.games.collectionName).where('id', isEqualTo: id).limit(1).get();
       return GameModel.fromJson(res.docs.first.data());
     } catch (e) {
       rethrow;
     }
   }
 
+  @override
   Future<GroupModel> getGroupByCode(String code) async {
     try {
-      final res = await firestore.collection('studentGroups').where('code', isEqualTo: code).limit(1).get();
+      final res = await firestore
+          .collection(FirebaseCollection.groups.collectionName)
+          .where('code', isEqualTo: code)
+          .limit(1)
+          .get();
       return GroupModel.fromJson(res.docs.first.data());
     } catch (e) {
       rethrow;
     }
   }
 
-//TODO:Change it to Stream
+  @override
   Future<Stream<List<GroupModel>>> getAllGroupsForCurrentUser() async {
     try {
       final resAsCreator = firestore
-          .collection('studentGroups')
+          .collection(FirebaseCollection.groups.collectionName)
           .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
           .snapshots();
       final resAsStudent = firestore
-          .collection('studentGroups')
+          .collection(FirebaseCollection.groups.collectionName)
           .where('students', arrayContains: _firebaseAuth.currentUser!.uid)
           .snapshots();
-      // final res = [
-      //   ...resAsCreator.docs.map((e) => GroupModel.fromJson(e.data())),
-      //   ...resAsStudent.docs.map((e) => GroupModel.fromJson(e.data()))
-      // ];
       final Stream<List<GroupModel>> res = Rx.combineLatest2(resAsCreator, resAsStudent, (creator, student) {
         final List<GroupModel> listOfGroups = [];
         for (final doc in creator.docs) {
@@ -266,10 +248,26 @@ class FirebaseDatabaseImpl {
     }
   }
 
+  @override
   Future<void> postGroup(GroupModel group) async {
     try {
       final newGroup = group.copyWith(creatorId: _firebaseAuth.currentUser!.uid, code: Uuid().v1());
-      await firestore.collection('studentGroups').add(newGroup.toJson());
+      await firestore.collection(FirebaseCollection.groups.collectionName).add(newGroup.toJson());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<TutorModel> getCurrentTutor() async {
+    try {
+      final tutorModelMap = await firestore
+          .collection(FirebaseCollection.tutor.collectionName)
+          .where('userId', isEqualTo: _firebaseAuth.currentUser!.uid)
+          .limit(1)
+          .get();
+
+      return TutorModel.fromJson(tutorModelMap.docs.first.data());
     } catch (e) {
       rethrow;
     }

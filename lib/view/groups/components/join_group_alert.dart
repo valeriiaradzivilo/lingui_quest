@@ -28,7 +28,11 @@ class _JoinGroupAlertState extends State<JoinGroupAlert> {
         label: context.loc.code,
       ),
       actions: [
-        LinButton(label: context.loc.cancel, onTap: () => Navigator.of(context).pop()),
+        LinButton(
+          label: context.loc.cancel,
+          onTap: () => Navigator.of(context).pop(),
+          isTransparentBack: true,
+        ),
         LinButton(
             label: context.loc.findGroup,
             onTap: () async {

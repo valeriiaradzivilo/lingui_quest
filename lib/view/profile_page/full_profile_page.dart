@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
+import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
@@ -45,6 +46,10 @@ class FullProfilePage extends StatelessWidget {
                     if (!state.currentUser.isTutor)
                       LinButton(
                           label: context.loc.becomeTutor, onTap: () => _becomeTutor(context, user: state.currentUser))
+                    else ...[
+                      Gap(PaddingConst.large),
+                      _TutorInfoBox(state.tutorModel),
+                    ]
                   ],
                 ),
               ),
@@ -67,4 +72,29 @@ void _becomeTutor(BuildContext context, {required UserModel user}) {
           user: user,
         );
       });
+}
+
+class _TutorInfoBox extends StatelessWidget {
+  const _TutorInfoBox(this.tutorModel);
+  final TutorModel tutorModel;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return tutorModel != TutorModel.empty()
+        ? Container(
+            decoration: ShapeDecoration(
+                shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(20), side: BorderSide(color: theme.highlightColor))),
+            child: Column(
+              children: [
+                // TODO: Add all info + ability to edit
+                Text(context.loc.tutorProfile),
+                Text('${context.loc.aboutTutor}:${tutorModel.about}'),
+                Text('${context.loc.preferencesTutor}:${tutorModel.preferences}'),
+              ],
+            ),
+          )
+        : SizedBox();
+  }
 }

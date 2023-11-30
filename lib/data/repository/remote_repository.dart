@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:lingui_quest/core/base/failure.dart';
-import 'package:lingui_quest/data/firebase/firebase_database.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
@@ -10,135 +9,69 @@ import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 
-class RemoteRepository {
-  final FirebaseDatabaseImpl _database;
+abstract class RemoteRepository {
+  /// Signs up a user with an email.
+  ///
+  /// [params] - The parameters for signing up.
+  Future<Either<Failure, void>> signUpWithEmail(SignUpParams params);
 
-  RemoteRepository(this._database);
+  /// Signs in a user.
+  ///
+  /// [params] - The parameters for signing in.
+  Future<Either<Failure, void>> signIn(SignInParams params);
 
-  Future<Either<Failure, void>> signUpWithEmail(SignUpParams params) async {
-    try {
-      await _database.createUserWithEmailAndPassword(params);
-      return const Right(null);
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Signs out a user.
+  Future<Either<Failure, void>> signOut();
 
-  Future<Either<Failure, void>> signIn(SignInParams params) async {
-    try {
-      await _database.signInWithEmailAndPassword(params.email, params.password);
-      return const Right(null);
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Gets the current user.
+  Future<Either<Failure, UserModel>> getCurrentUser();
 
-  Future<Either<Failure, void>> signOut() async {
-    try {
-      await _database.signOut();
-      return const Right(null);
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Adds a test task to the repository.
+  ///
+  /// [task] - The test task to add.
+  Future<Either<Failure, void>> addTestTask(LevelTestTaskModel task);
 
-  Future<Either<Failure, UserModel>> getCurrentUser() async {
-    try {
-      final UserModel currentUser = await _database.getCurrentUserData();
-      return Right(currentUser);
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Gets all test tasks from the repository.
+  Future<Either<Failure, Stream<List<LevelTestTaskModel>>>> getAllTestTasks();
 
-  Future<Either<Failure, void>> addTestTask(LevelTestTaskModel task) async {
-    try {
-      await _database.crateNewTestTask(task);
-      return const Right(null);
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Creates a test task tree from a list of test tasks.
+  ///
+  /// [allTasks] - The list of test tasks.
+  Future<Either<Failure, Node>> createTestTaskTree(List<LevelTestTaskModel> allTasks);
 
-  Future<Either<Failure, Stream<List<LevelTestTaskModel>>>> getAllTestTasks() async {
-    try {
-      final res = await _database.readTasks();
-      return Right(res);
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Creates a tutor in the repository.
+  ///
+  /// [tutor] - The tutor to create.
+  Future<Either<Failure, void>> createTutor(TutorModel tutor);
 
-  Future<Either<Failure, Node>> createTestTaskTree(List<LevelTestTaskModel> allTasks) async {
-    try {
-      final LevelTestTasksTree myTree = LevelTestTasksTree();
-      return Right(await myTree.startTree(allTasks));
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Gets a tutor model for current user in the repository.
+  Future<Either<Failure, TutorModel>> getCurrentTutor();
 
-  // Future<Either<Failure, Stream<List<TutorModel>>>> getAllTutors() async {
-  //   try {
-  //     return Right(await _database.getAllTutors());
-  //   } catch (e) {
-  //     return Left(UndefinedFailure(message: e.toString()));
-  //   }
-  // }
+  /// Creates a game in the repository.
+  ///
+  /// [game] - The game to create.
+  Future<Either<Failure, void>> createGame(GameModel game);
 
-  Future<Either<Failure, void>> createTutor(TutorModel tutor) async {
-    try {
-      return Right(await _database.createNewTutor(tutor));
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Gets all games from the repository, paginated.
+  ///
+  /// [page] - The page of games to get.
+  Future<Either<Failure, Stream<List<GameModel>>>> getAllGames(int page);
 
-  Future<Either<Failure, void>> createGame(GameModel game) async {
-    try {
-      return Right(await _database.createNewGame(game));
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Gets a game by its ID.
+  ///
+  /// [gameId] - The ID of the game.
+  Future<Either<Failure, GameModel>> getGameById(String gameId);
 
-  Future<Either<Failure, Stream<List<GameModel>>>> getAllGames(int page) async {
-    try {
-      return Right(await _database.getAllGames(page));
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Gets a group by its code.
+  ///
+  /// [code] - The code of the group.
+  Future<Either<Failure, GroupModel>> getGroupByCode(String code);
 
-  Future<Either<Failure, GameModel>> getGameById(String gameId) async {
-    try {
-      return Right(await _database.getGameById(gameId));
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Gets all groups for the current user.
+  Future<Either<Failure, Stream<List<GroupModel>>>> getAllGroupsForCurrentUser();
 
-  Future<Either<Failure, GroupModel>> getGroupByCode(String code) async {
-    try {
-      return Right(await _database.getGroupByCode(code));
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
-
-  Future<Either<Failure, Stream<List<GroupModel>>>> getAllGroupsForCurrentUser() async {
-    try {
-      return Right(await _database.getAllGroupsForCurrentUser());
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
-
-  Future<Either<Failure, void>> postGroup(GroupModel group) async {
-    try {
-      return Right(await _database.postGroup(group));
-    } catch (e) {
-      return Left(UndefinedFailure(message: e.toString()));
-    }
-  }
+  /// Posts a group to the repository.
+  ///
+  /// [group] - The group to post.
+  Future<Either<Failure, void>> postGroup(GroupModel group);
 }

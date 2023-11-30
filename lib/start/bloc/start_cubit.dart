@@ -3,7 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
+import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
+import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
 import 'package:lingui_quest/start/page/start_page.dart';
@@ -11,20 +13,23 @@ import 'package:lingui_quest/start/page/start_page.dart';
 part 'start_state.dart';
 
 class StartCubit extends Cubit<StartState> {
-  StartCubit(
-      // this._checkLoggedInUsecase,
-      this._getCurrentUserUsecase,
-      this._signOutUsecase)
+  StartCubit(this._getCurrentUserUsecase, this._signOutUsecase, this._getCurrentTutorUsecase)
       : super(StartState.initial());
 
-  // final CheckLoggedInUsecase _checkLoggedInUsecase;
   final GetCurrentUserUsecase _getCurrentUserUsecase;
   final SignOutUsecase _signOutUsecase;
+  final GetCurrentTutorUsecase _getCurrentTutorUsecase;
 
   void init() async {
     await checkLoggedIn();
     await getInitials();
     emit(state.copyWith(status: StartStatus.initial));
+  }
+
+  void findTutorProfile() async {
+    final tutor = await _getCurrentTutorUsecase(NoParams());
+
+    emit(state.copyWith(tutorModel: tutor.foldRight(TutorModel.empty(), (r, previous) => r)));
   }
 
   void setLoggedIn() {

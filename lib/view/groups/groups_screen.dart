@@ -97,7 +97,7 @@ class _GroupBoxWidget extends StatelessWidget {
                   )
                 : Container(
                     padding: EdgeInsets.all(PaddingConst.extraSmall),
-                    color: Colors.cyan[900],
+                    color: Colors.cyan[800],
                     child: Text(context.loc.student),
                   ),
           ),
