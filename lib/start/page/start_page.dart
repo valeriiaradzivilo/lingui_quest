@@ -9,7 +9,7 @@ import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/components/tab_bar.dart';
 import 'package:lingui_quest/start/components/user_widget.dart';
 import 'package:lingui_quest/view/games_page/games_list/games_list.dart';
-import 'package:lingui_quest/view/groups/groups_screen.dart';
+import 'package:lingui_quest/view/groups/all_groups/groups_screen.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 import 'package:lingui_quest/view/level_test/main_info_screen/level_test_screen.dart';
 

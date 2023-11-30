@@ -67,7 +67,7 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
         isTransparentBack: true,
         key: ValueKey(KeyConstants.signInButton),
         label: context.loc.signIn,
-        onTap: () => Navigator.of(context).pushNamed(AppRoutes.signIn),
+        onTap: () => Navigator.of(context).pushNamed(AppRoutes.signIn.path),
       );
     } else {
       return IntrinsicWidth(
@@ -76,7 +76,7 @@ class _UserAvatarWidgetState extends State<UserAvatarWidget> {
             children: [
               LinButton(
                 label: context.loc.profile,
-                onTap: () => Navigator.of(context).pushNamed(AppRoutes.profile),
+                onTap: () => Navigator.of(context).pushNamed(AppRoutes.profile.path),
                 isTransparentBack: true,
               ),
               const Divider(),

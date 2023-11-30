@@ -27,7 +27,7 @@ class _SignInPageState extends State<SignInPage> {
         body: BlocConsumer<SignInCubit, SignInState>(listener: (context, state) {
       if (state.status == SignInStatus.success) {
         blocStart.setLoggedIn();
-        Navigator.of(context).pushNamed(AppRoutes.initial);
+        Navigator.of(context).pushNamed(AppRoutes.initial.path);
       }
     }, builder: (context, state) {
       return Padding(
@@ -67,7 +67,7 @@ class _SignInPageState extends State<SignInPage> {
                   InkWell(
                       key: ValueKey(KeyConstants.noProfileYet),
                       onTap: () {
-                        Navigator.of(context).pushNamed(AppRoutes.signUp);
+                        Navigator.of(context).pushNamed(AppRoutes.signUp.path);
                       },
                       child: Text(
                         context.loc.noProfileYet,

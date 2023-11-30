@@ -29,7 +29,7 @@ class GamesListScreen extends StatelessWidget {
                   Gap(PaddingConst.small),
                   LinMainButton(
                     label: context.loc.createGame,
-                    onTap: () => Navigator.of(context).pushNamed(AppRoutes.createGame),
+                    onTap: () => Navigator.of(context).pushNamed(AppRoutes.createGame.path),
                   ),
                 ],
               ),

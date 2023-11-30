@@ -134,7 +134,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                       children: [
                         LinButton(
                           label: context.loc.cancel,
-                          onTap: () => Navigator.pushNamed(context, AppRoutes.initial),
+                          onTap: () => Navigator.pushNamed(context, AppRoutes.initial.path),
                           isTransparentBack: true,
                         ),
                         LinButton(
@@ -148,7 +148,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                                     : context.loc.couldNotCreateTheGame),
                                 backgroundColor: isSuccessfullyCreated ? Colors.green : theme.colorScheme.error,
                               ));
-                              Navigator.pushNamed(context, AppRoutes.initial);
+                              Navigator.pushNamed(context, AppRoutes.initial.path);
                             }
                           },
                         ),

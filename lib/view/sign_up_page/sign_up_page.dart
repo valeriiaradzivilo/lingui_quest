@@ -57,7 +57,7 @@ class _SignInPageState extends State<SignUpPage> {
                           children: [
                             SvgPicture.asset(
                               allowDrawingOutsideViewBox: true,
-                              "assets/logo/logo.svg",
+                              'assets/logo/logo.svg',
                               width: 100,
                               height: 100,
                             ),
@@ -117,7 +117,7 @@ class _SignInPageState extends State<SignUpPage> {
                               final res = await bloc.signUp(_firstNameController.text, _lastNameController.text,
                                   _emailController.text, _passwordController.text);
                               if (res) {
-                                Navigator.of(context).pushReplacementNamed(AppRoutes.initial);
+                                Navigator.of(context).pushReplacementNamed(AppRoutes.initial.path);
                               }
                             }
                           },

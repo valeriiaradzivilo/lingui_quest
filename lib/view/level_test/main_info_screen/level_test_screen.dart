@@ -34,7 +34,7 @@ class LevelTestScreen extends StatelessWidget {
                           padding: EdgeInsets.all(PaddingConst.large),
                           child: LinMainButton(
                               label: context.loc.startTest,
-                              onTap: () => Navigator.of(context).pushNamed(AppRoutes.test)),
+                              onTap: () => Navigator.of(context).pushNamed(AppRoutes.test.path)),
                         ),
                       ),
                       RichText(
@@ -72,7 +72,7 @@ class _CreateTestTask extends StatelessWidget {
         children: [
           LinButton(
               label: context.loc.createTestTask,
-              onTap: () => Navigator.of(context).pushNamed(AppRoutes.createTestTask)),
+              onTap: () => Navigator.of(context).pushNamed(AppRoutes.createTestTask.path)),
           Expanded(
             child: Text(
               'This option is only for verified teachers, you can submit any task and it will appear in the test after it will be checked.',
