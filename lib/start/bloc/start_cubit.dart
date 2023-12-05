@@ -23,13 +23,16 @@ class StartCubit extends Cubit<StartState> {
   void init() async {
     await checkLoggedIn();
     await getInitials();
+    await findTutorProfile();
     emit(state.copyWith(status: StartStatus.initial));
   }
 
-  void findTutorProfile() async {
-    final tutor = await _getCurrentTutorUsecase(NoParams());
+  Future findTutorProfile() async {
+    if (state.currentUser.isTutor) {
+      final tutor = await _getCurrentTutorUsecase(NoParams());
 
-    emit(state.copyWith(tutorModel: tutor.foldRight(TutorModel.empty(), (r, previous) => r)));
+      emit(state.copyWith(tutorModel: tutor.foldRight(TutorModel.empty(), (r, previous) => r)));
+    }
   }
 
   void setLoggedIn() {

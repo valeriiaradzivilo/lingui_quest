@@ -27,10 +27,10 @@ class TutorModel with _$TutorModel {
       other is TutorModel &&
       userId == other.userId &&
       about == other.about &&
-      contacts == other.contacts &&
+      DeepCollectionEquality().equals(contacts, other.contacts) &&
       currency == other.currency &&
       preferences == other.preferences &&
-      price == other.price;
+      DeepCollectionEquality().equals(price, other.price);
   @override
   int get hashCode => identityHashCode(this);
 }

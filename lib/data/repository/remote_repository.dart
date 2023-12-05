@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
@@ -74,4 +75,9 @@ abstract class RemoteRepository {
   ///
   /// [group] - The group to post.
   Future<Either<Failure, void>> postGroup(GroupModel group);
+
+  /// Get a full group information from Firebase.
+  ///
+  /// [group] - The group to get.
+  Future<Either<Failure, GroupFullInfoModel>> getFullGroupInfo(GroupModel group);
 }

@@ -7,7 +7,7 @@ import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
-import 'package:lingui_quest/start/routes.dart';
+import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -129,6 +129,9 @@ class _SignInPageState extends State<SignUpPage> {
                     ),
                   ),
                 );
+              }
+              if (state.status == SignUpStatus.error) {
+                return Center(child: Text(state.errorMessage ?? context.loc.errorOccurredSignUp));
               } else {
                 return const Center(child: CircularProgressIndicator());
               }

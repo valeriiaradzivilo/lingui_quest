@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:lingui_quest/data/firebase/firebase_options.dart';
+import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/start/di.dart';
 import 'package:lingui_quest/start/gallery_option_theme.dart';
-import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/create_game_page/bloc/create_game_bloc.dart';
 import 'package:lingui_quest/view/create_game_page/create_question/bloc/create_question_bloc.dart';
 import 'package:lingui_quest/view/game_play_page/bloc/game_play_bloc.dart';
@@ -39,7 +39,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: _blocProviders(),
+      providers: [
+        BlocProvider(create: (_) => serviceLocator<SignInCubit>()),
+        BlocProvider(create: (_) => serviceLocator<SignUpCubit>()),
+        BlocProvider(create: (_) => serviceLocator<StartCubit>()),
+        BlocProvider(create: (_) => serviceLocator<CreateTaskCubit>()),
+        BlocProvider(create: (_) => serviceLocator<LevelTestBloc>()),
+        BlocProvider(create: (_) => serviceLocator<LevelTestPlayCubit>()),
+        BlocProvider(create: (_) => serviceLocator<GamesListBloc>()),
+        BlocProvider(create: (_) => serviceLocator<BecomeTutorCubit>()),
+        BlocProvider(create: (_) => serviceLocator<GameCreationCubit>()),
+        BlocProvider(create: (_) => serviceLocator<QuestionCreationCubit>()),
+        BlocProvider(create: (_) => serviceLocator<GamePreviewCubit>()),
+        BlocProvider(create: (_) => serviceLocator<GamePlayCubit>()),
+        BlocProvider(create: (_) => serviceLocator<GroupsBloc>()),
+      ],
       child: ChangeNotifierProvider<ThemeModel>(
         create: (_) => ThemeModel(),
         child: Consumer<ThemeModel>(builder: (_, model, __) {
@@ -67,50 +81,6 @@ class MyApp extends StatelessWidget {
         }),
       ),
     );
-  }
-
-  List<BlocProvider> _blocProviders() {
-    return [
-      BlocProvider(
-        create: (_) => serviceLocator<SignInCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<SignUpCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<StartCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<CreateTaskCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<LevelTestBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<LevelTestPlayCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<GamesListBloc>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<BecomeTutorCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<GameCreationCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<QuestionCreationCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<GamePreviewCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<GamePlayCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => serviceLocator<GroupsBloc>(),
-      ),
-    ];
   }
 }
 

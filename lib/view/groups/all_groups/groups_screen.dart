@@ -10,6 +10,7 @@ import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/view/groups/all_groups/bloc/groups_bloc.dart';
 import 'package:lingui_quest/view/groups/all_groups/components/create_group_alert.dart';
 import 'package:lingui_quest/view/groups/all_groups/components/join_group_alert.dart';
+import 'package:lingui_quest/view/groups/chosen_group/chosen_group_screen.dart';
 import 'package:rx_widgets/rx_widgets.dart';
 
 class GroupsScreen extends StatelessWidget {
@@ -82,6 +83,7 @@ class _GroupBoxWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cubit = BlocProvider.of<GroupsBloc>(context);
     return Container(
       decoration: BoxDecoration(border: Border.all(color: theme.colorScheme.onBackground)),
       child: Row(
@@ -121,7 +123,13 @@ class _GroupBoxWidget extends StatelessWidget {
           Gap(PaddingConst.medium),
           IconButton(
             icon: Icon(FeatherIcons.arrowRight),
-            onPressed: () {},
+            onPressed: () async {
+              await cubit.chosenGroup(group);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ChosenGroupScreen()),
+              );
+            },
           ),
         ],
       ),

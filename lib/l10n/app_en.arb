@@ -129,13 +129,17 @@
   "tutorOnlyZone":"This is tutor only zone, you should not have access to it unless you are a tutor.",
   "tutorProfile":"Tutor Profile",
 
+  "couldNotOpenTheLink":"Could not open this link ",
+
 
   "myGroups":"My Groups",
+  "group":"Group",
   "joinGroup":"Join Group",
   "createGroup":"Create Group",
   "tutor":"Tutor",
   "student":"Student",
   "code":"Code",
+  "showCode":"Show Code",
   "findGroup":"Find group",
   "isItCorrectGroup":"Is this the group you wanted to join?",
   "joinGroupInfo":"After you press 'approve' the request will be send to the tutor who created the group.",

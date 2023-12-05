@@ -3,6 +3,7 @@ import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/data/data_source/firebase_remote_data_source.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
@@ -153,6 +154,15 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   Future<Either<Failure, void>> postGroup(GroupModel group) async {
     try {
       return Right(await _database.postGroup(group));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GroupFullInfoModel>> getFullGroupInfo(GroupModel group) async {
+    try {
+      return Right(await _database.getFullGroupInfo(group));
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }

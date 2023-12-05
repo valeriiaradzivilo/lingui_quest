@@ -12,6 +12,7 @@ import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecas
 import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
 import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_full_group_info.dart';
 import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
@@ -109,11 +110,17 @@ Future<void> initUseCases() async {
   serviceLocator.registerLazySingleton<GetCurrentTutorUsecase>(
     () => GetCurrentTutorUsecase(repository: remoteRepository),
   );
+
   serviceLocator.registerLazySingleton<GetGroupByCodeUsecase>(
     () => GetGroupByCodeUsecase(repository: remoteRepository),
   );
+
   serviceLocator.registerLazySingleton<PostGroupUsecase>(
     () => PostGroupUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<GetFullGroupInfoUsecase>(
+    () => GetFullGroupInfoUsecase(repository: remoteRepository),
   );
 }
 
@@ -130,6 +137,13 @@ Future<void> initCubs() async {
 
   // Cubits for screens
   serviceLocator.registerFactory(
+    () => StartCubit(
+      getCurrentUserUsecase,
+      serviceLocator<SignOutUsecase>(),
+      getCurrentTutorUsecase,
+    ),
+  );
+  serviceLocator.registerFactory(
     () => SignInCubit(
       serviceLocator<SignInUsecase>(),
     ),
@@ -139,13 +153,7 @@ Future<void> initCubs() async {
       serviceLocator<SignUpWithEmailUsecase>(),
     ),
   );
-  serviceLocator.registerFactory(
-    () => StartCubit(
-      getCurrentUserUsecase,
-      serviceLocator<SignOutUsecase>(),
-      getCurrentTutorUsecase,
-    ),
-  );
+
   serviceLocator.registerFactory(
     () => CreateTaskCubit(
       serviceLocator<AddTestTaskUsecase>(),
@@ -183,5 +191,6 @@ Future<void> initCubs() async {
         serviceLocator<GetAllGroupsForCurrentUserUsecase>(),
         serviceLocator<GetGroupByCodeUsecase>(),
         serviceLocator<PostGroupUsecase>(),
+        serviceLocator<GetFullGroupInfoUsecase>(),
       ));
 }

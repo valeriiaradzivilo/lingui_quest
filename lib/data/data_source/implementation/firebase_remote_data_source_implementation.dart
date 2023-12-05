@@ -5,6 +5,7 @@ import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/data/data_source/firebase_remote_data_source.dart';
 import 'package:lingui_quest/data/firebase/firebase_constants.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
@@ -263,7 +264,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     try {
       final tutorModelMap = await firestore
           .collection(FirebaseCollection.tutor.collectionName)
-          .where('userId', isEqualTo: _firebaseAuth.currentUser!.uid)
+          .where('user_id', isEqualTo: _firebaseAuth.currentUser!.uid)
           .limit(1)
           .get();
 
@@ -271,5 +272,25 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<GroupFullInfoModel> getFullGroupInfo(GroupModel group) async {
+    final resTutor = await firestore
+        .collection(FirebaseCollection.tutor.collectionName)
+        .where('user_id', isEqualTo: group.creatorId)
+        .limit(1)
+        .get();
+
+    final resUser = await firestore
+        .collection(FirebaseCollection.userData.collectionName)
+        .where('user_id', isEqualTo: group.creatorId)
+        .limit(1)
+        .get();
+    return GroupFullInfoModel(
+      group,
+      TutorModel.fromJson(resTutor.docs.first.data()),
+      UserModel.fromJson(resUser.docs.first.data()),
+    );
   }
 }

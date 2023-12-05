@@ -1,25 +1,32 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
+import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_full_group_info.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
 
 part 'groups_state.dart';
 
 class GroupsBloc extends Cubit<GroupsState> {
-  GroupsBloc(this._getCurrentUserUsecase, this._getAllGroupsForCurrentUserUsecase, this._getGroupByCodeUsecase,
-      this._postGroupUsecase)
-      : super(GroupsState.initial());
+  GroupsBloc(
+    this._getCurrentUserUsecase,
+    this._getAllGroupsForCurrentUserUsecase,
+    this._getGroupByCodeUsecase,
+    this._postGroupUsecase,
+    this._getFullGroupInfoUsecase,
+  ) : super(GroupsState.initial());
 
   final GetCurrentUserUsecase _getCurrentUserUsecase;
   final GetAllGroupsForCurrentUserUsecase _getAllGroupsForCurrentUserUsecase;
   final GetGroupByCodeUsecase _getGroupByCodeUsecase;
   final PostGroupUsecase _postGroupUsecase;
+  final GetFullGroupInfoUsecase _getFullGroupInfoUsecase;
 
   void getCurrentUser() async {
     final user = await _getCurrentUserUsecase(NoParams());
@@ -49,5 +56,10 @@ class GroupsBloc extends Cubit<GroupsState> {
         GroupModel(creatorId: '', name: name, description: description, code: '', students: []));
 
     return creationRes.isRight();
+  }
+
+  Future chosenGroup(GroupModel group) async {
+    final fullInfo = await _getFullGroupInfoUsecase(group);
+    emit(state.copyWith(chosenGroup: fullInfo.foldRight(null, (r, previous) => r)));
   }
 }

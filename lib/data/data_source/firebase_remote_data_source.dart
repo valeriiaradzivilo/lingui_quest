@@ -1,4 +1,5 @@
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
@@ -83,4 +84,9 @@ abstract class FirebaseRemoteDatasource {
   ///
   /// [group] - The group to post.
   Future<void> postGroup(GroupModel group);
+
+  /// Get a full group information from Firebase.
+  ///
+  /// [group] - The group to get.
+  Future<GroupFullInfoModel> getFullGroupInfo(GroupModel group);
 }

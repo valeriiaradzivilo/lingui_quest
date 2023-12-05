@@ -8,26 +8,37 @@ class GroupsState extends Equatable {
   final UserModel currentUser;
   final Stream<List<GroupModel>> allGroups;
   final GroupModel? searchResultGroup;
+  final GroupFullInfoModel? chosenGroup;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
-  const GroupsState(
-      {required this.status,
-      this.errorMessage,
-      required this.currentUser,
-      required this.allGroups,
-      required this.searchResultGroup});
+  const GroupsState({
+    required this.status,
+    this.errorMessage,
+    required this.currentUser,
+    required this.allGroups,
+    required this.searchResultGroup,
+    required this.chosenGroup,
+  });
   factory GroupsState.initial() {
     return GroupsState(
       status: GroupsStatus.progress,
       currentUser: UserModel.empty(),
       allGroups: Stream.empty(),
       searchResultGroup: null,
+      chosenGroup: null,
     );
   }
 
   @override
-  List<Object?> get props => [status, _time, currentUser, allGroups, searchResultGroup];
+  List<Object?> get props => [
+        status,
+        _time,
+        currentUser,
+        allGroups,
+        searchResultGroup,
+        chosenGroup,
+      ];
 
   GroupsState copyWith({
     GroupsStatus? status,
@@ -36,6 +47,7 @@ class GroupsState extends Equatable {
     UserModel? currentUser,
     Stream<List<GroupModel>>? allGroups,
     GroupModel? searchResultGroup,
+    GroupFullInfoModel? chosenGroup,
   }) {
     return GroupsState(
       status: status ?? this.status,
@@ -43,6 +55,7 @@ class GroupsState extends Equatable {
       currentUser: currentUser ?? this.currentUser,
       allGroups: allGroups ?? this.allGroups,
       searchResultGroup: searchResultGroup,
+      chosenGroup: chosenGroup,
     );
   }
 }

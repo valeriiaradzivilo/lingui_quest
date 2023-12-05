@@ -46,6 +46,7 @@ dependencies:
   freezed: ^2.4.5
   rx_widgets: ^4.2.1
   uuid: ^4.2.1
+  url_launcher: ^6.2.1
 
 dev_dependencies:
   flutter_test:
