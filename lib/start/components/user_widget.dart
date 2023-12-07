@@ -8,8 +8,8 @@ import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_round_photo.dart';
+import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
-import 'package:lingui_quest/start/routes.dart';
 
 class UserAvatarWidget extends StatefulWidget {
   const UserAvatarWidget({super.key});

@@ -3,22 +3,29 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
+import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_join_requests_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
 import 'package:lingui_quest/start/page/start_page.dart';
 
 part 'start_state.dart';
 
 class StartCubit extends Cubit<StartState> {
-  StartCubit(this._getCurrentUserUsecase, this._signOutUsecase, this._getCurrentTutorUsecase)
-      : super(StartState.initial());
+  StartCubit(
+    this._getCurrentUserUsecase,
+    this._signOutUsecase,
+    this._getCurrentTutorUsecase,
+    this._getJoinRequestsUsecase,
+  ) : super(StartState.initial());
 
   final GetCurrentUserUsecase _getCurrentUserUsecase;
   final SignOutUsecase _signOutUsecase;
   final GetCurrentTutorUsecase _getCurrentTutorUsecase;
+  final GetJoinRequestsUsecase _getJoinRequestsUsecase;
 
   void init() async {
     await checkLoggedIn();
@@ -30,8 +37,11 @@ class StartCubit extends Cubit<StartState> {
   Future findTutorProfile() async {
     if (state.currentUser.isTutor) {
       final tutor = await _getCurrentTutorUsecase(NoParams());
-
-      emit(state.copyWith(tutorModel: tutor.foldRight(TutorModel.empty(), (r, previous) => r)));
+      final joinRequests = await _getJoinRequestsUsecase(NoParams());
+      emit(state.copyWith(
+        tutorModel: tutor.foldRight(TutorModel.empty(), (r, previous) => r),
+        joinRequests: joinRequests.foldRight(Stream.empty(), (r, previous) => r),
+      ));
     }
   }
 

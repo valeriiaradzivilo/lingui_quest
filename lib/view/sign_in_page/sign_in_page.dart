@@ -5,8 +5,8 @@ import 'package:lingui_quest/shared/constants/key_constants.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
+import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
-import 'package:lingui_quest/start/routes.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 
 class SignInPage extends StatefulWidget {

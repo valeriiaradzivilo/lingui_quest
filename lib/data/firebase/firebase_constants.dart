@@ -3,13 +3,15 @@ enum FirebaseCollection {
   groups,
   testTasks,
   tutor,
-  userData;
+  userData,
+  joinRequest;
 
   String get collectionName => switch (this) {
         games => 'games',
         groups => 'studentGroups',
         testTasks => 'testTasks',
         tutor => 'tutorInfo',
-        userData => 'userData'
+        userData => 'userData',
+        joinRequest => 'joinRequest'
       };
 }

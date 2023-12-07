@@ -6,15 +6,16 @@ import 'package:lingui_quest/data/repository/implementation/remote_repository_im
 import 'package:lingui_quest/data/usecase/add_test_task_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_new_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_new_tutor_usecase.dart';
-import 'package:lingui_quest/data/usecase/create_test_tasks_tree.dart';
+import 'package:lingui_quest/data/usecase/create_test_tasks_tree_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecase.dart';
-import 'package:lingui_quest/data/usecase/get_all_test_tasks.dart';
+import 'package:lingui_quest/data/usecase/get_all_test_tasks_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_full_group_info.dart';
 import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_join_requests_usecase.dart';
 import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
@@ -122,6 +123,10 @@ Future<void> initUseCases() async {
   serviceLocator.registerLazySingleton<GetFullGroupInfoUsecase>(
     () => GetFullGroupInfoUsecase(repository: remoteRepository),
   );
+
+  serviceLocator.registerLazySingleton<GetJoinRequestsUsecase>(
+    () => GetJoinRequestsUsecase(repository: remoteRepository),
+  );
 }
 
 Future<void> initRepository() async {
@@ -141,6 +146,7 @@ Future<void> initCubs() async {
       getCurrentUserUsecase,
       serviceLocator<SignOutUsecase>(),
       getCurrentTutorUsecase,
+      serviceLocator<GetJoinRequestsUsecase>(),
     ),
   );
   serviceLocator.registerFactory(

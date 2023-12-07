@@ -16,7 +16,7 @@ class LinLanguage extends StatelessWidget {
             height: 10,
           ),
         ),
-        const Text("Eng")
+        const Text('Eng')
       ],
     );
   }

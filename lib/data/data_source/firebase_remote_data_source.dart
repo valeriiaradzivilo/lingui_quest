@@ -1,6 +1,7 @@
 import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
+import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -89,4 +90,7 @@ abstract class FirebaseRemoteDatasource {
   ///
   /// [group] - The group to get.
   Future<GroupFullInfoModel> getFullGroupInfo(GroupModel group);
+
+  /// Get all join requests for current group from Firebase.
+  Future<Stream<List<JoinRequestFullModel>>> getJoinRequests();
 }

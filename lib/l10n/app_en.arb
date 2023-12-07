@@ -131,6 +131,11 @@
 
   "couldNotOpenTheLink":"Could not open this link ",
 
+  "accept":"Accept",
+  "decline":"Decline",
+  "joinRequests":"Join Requests",
+  "wantsToJoinTheGroup":"wants to joint the group",
+
 
   "myGroups":"My Groups",
   "group":"Group",

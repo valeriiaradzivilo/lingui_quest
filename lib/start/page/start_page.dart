@@ -6,12 +6,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
+import 'package:lingui_quest/start/components/join_requests_alert_dialog.dart';
 import 'package:lingui_quest/start/components/tab_bar.dart';
 import 'package:lingui_quest/start/components/user_widget.dart';
 import 'package:lingui_quest/view/games_page/games_list/games_list.dart';
 import 'package:lingui_quest/view/groups/all_groups/groups_screen.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 import 'package:lingui_quest/view/level_test/main_info_screen/level_test_screen.dart';
+import 'package:rx_widgets/rx_widgets.dart';
 
 enum TabBarOption {
   // roadmap,
@@ -79,12 +81,28 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                   ),
                   actions: [
                     if (state.currentUser.isTutor)
-                      Padding(
-                          padding: EdgeInsets.only(right: PaddingConst.medium),
-                          child: IconButton(
-                            icon: Icon(FeatherIcons.bell),
-                            onPressed: () {},
-                          )),
+                      ReactiveWidget(
+                        stream: state.joinRequests,
+                        placeHolderWidget: IconButton(
+                          icon: Icon(FeatherIcons.bell),
+                          onPressed: null,
+                        ),
+                        widget: (list) => Badge.count(
+                          count: list.length,
+                          offset: Offset(-10, 0),
+                          isLabelVisible: list.isNotEmpty,
+                          child: Padding(
+                              padding: EdgeInsets.only(right: PaddingConst.medium),
+                              child: IconButton(
+                                icon: Icon(FeatherIcons.bell),
+                                onPressed: () => showDialog(
+                                    context: context,
+                                    builder: (context) => JoinRequestsAlertDialog(
+                                          joinRequests: list,
+                                        )),
+                              )),
+                        ),
+                      ),
                     Padding(
                       padding: EdgeInsets.only(right: PaddingConst.medium),
                       child: const UserAvatarWidget(),

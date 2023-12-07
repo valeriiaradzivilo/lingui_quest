@@ -13,11 +13,11 @@ class ValidationConstant {
   }
 
   static String? password(String? password, BuildContext context) {
-    final uppercaseRegExp = RegExp("[A-Z]+.+");
-    final lowercaseRegExp = RegExp("[a-z]+.+");
-    final digitsRegExp = RegExp("\\d+");
-    final charactersRegExp = RegExp("[@!]+");
-    final forbiddenCharactersRegExp = RegExp("[^!@a-zA-Z\\d]");
+    final uppercaseRegExp = RegExp('[A-Z]+.+');
+    final lowercaseRegExp = RegExp('[a-z]+.+');
+    final digitsRegExp = RegExp('\\d+');
+    final charactersRegExp = RegExp('[@!]+');
+    final forbiddenCharactersRegExp = RegExp('[^!@a-zA-Z\\d]');
     if (password == null) {
       return context.loc.passwordMinLength;
     } else if (password.isEmpty || password.length < 8) {
@@ -42,7 +42,7 @@ class ValidationConstant {
       return context.loc.passwordMinLength;
     } else if (name.isEmpty) {
       return context.loc.fieldShouldNotBeEmpty;
-    } else if (name.contains(" ")) {
+    } else if (name.contains(' ')) {
       return context.loc.fieldShouldNotHaveSpaces;
     }
 

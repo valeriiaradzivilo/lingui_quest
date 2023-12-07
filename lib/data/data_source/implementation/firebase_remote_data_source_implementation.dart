@@ -7,6 +7,8 @@ import 'package:lingui_quest/data/firebase/firebase_constants.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
+import 'package:lingui_quest/data/models/join_request_full_model.dart';
+import 'package:lingui_quest/data/models/join_request_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -292,5 +294,41 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
       TutorModel.fromJson(resTutor.docs.first.data()),
       UserModel.fromJson(resUser.docs.first.data()),
     );
+  }
+
+  @override
+  Future<Stream<List<JoinRequestFullModel>>> getJoinRequests() async {
+    // TODO: Change it as it must only show where this user is tutor
+    final groupsToCheck = await getAllGroupsForCurrentUser();
+    final Stream<List<JoinRequestFullModel>> streamOfRequests = groupsToCheck.asyncMap((event) async {
+      final List<JoinRequestFullModel> result = [];
+      for (final group in event) {
+        final requestsList = await firestore
+            .collection(FirebaseCollection.joinRequest.collectionName)
+            .where('group_id', isEqualTo: group.code)
+            .get();
+        if (requestsList.docs.isNotEmpty) {
+          for (final doc in requestsList.docs) {
+            final requestModel = JoinRequestModel.fromJson(doc.data());
+            result.add(JoinRequestFullModel(
+                group: group,
+                user: await _getUserByUserId(requestModel.userId),
+                requestDate: requestModel.requestDate));
+          }
+        }
+      }
+      return result;
+    });
+
+    return streamOfRequests;
+  }
+
+  Future<UserModel> _getUserByUserId(String userId) async {
+    final userResults = await firestore
+        .collection(FirebaseCollection.userData.collectionName)
+        .where('user_id', isEqualTo: userId)
+        .limit(1)
+        .get();
+    return UserModel.fromJson(userResults.docs.first.data());
   }
 }

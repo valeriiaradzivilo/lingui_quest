@@ -47,6 +47,7 @@ dependencies:
   rx_widgets: ^4.2.1
   uuid: ^4.2.1
   url_launcher: ^6.2.1
+  badges: ^3.1.2
 
 dev_dependencies:
   flutter_test:

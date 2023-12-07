@@ -20,7 +20,7 @@ class BecomeTutorCubit extends Cubit<BecomeTutorState> {
 
   void init() async {
     final Either<Failure, UserModel> getMyUser = await _currentUserUsecase(NoParams());
-    getMyUser.fold((l) => emit(state.copyWith(status: BecomeTutorStatus.error, errorMessage: "You are not signed in")),
+    getMyUser.fold((l) => emit(state.copyWith(status: BecomeTutorStatus.error, errorMessage: 'You are not signed in')),
         (r) {
       emit(state.copyWith(
           status: BecomeTutorStatus.initial, userId: getMyUser.foldRight('', (r, previous) => r.userId)));

@@ -126,7 +126,6 @@ class GalleryOptionTheme {
           return null;
         }),
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
               backgroundColor: colorScheme.primary,
@@ -135,6 +134,9 @@ class GalleryOptionTheme {
                   TextStyle(fontSize: 10, fontWeight: FontWeight.w300, color: colorScheme.onSecondaryContainer))),
       bottomAppBarTheme: BottomAppBarTheme(color: colorScheme.primary),
       colorScheme: colorScheme,
+      listTileTheme: ListTileThemeData(
+          tileColor: colorScheme.secondaryContainer,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
     );
   }
 }

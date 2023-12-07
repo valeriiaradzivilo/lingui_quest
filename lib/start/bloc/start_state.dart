@@ -9,6 +9,7 @@ class StartState extends Equatable {
   final bool isLoggedIn;
   final TabBarOption currentTab;
   final TutorModel tutorModel;
+  final Stream<List<JoinRequestFullModel>> joinRequests;
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
   const StartState({
@@ -18,6 +19,7 @@ class StartState extends Equatable {
     required this.isLoggedIn,
     required this.currentTab,
     required this.tutorModel,
+    required this.joinRequests,
   });
   factory StartState.initial() {
     return StartState(
@@ -26,11 +28,20 @@ class StartState extends Equatable {
       isLoggedIn: false,
       currentTab: TabBarOption.level,
       tutorModel: TutorModel.empty(),
+      joinRequests: Stream.empty(),
     );
   }
 
   @override
-  List<Object?> get props => [status, _time, currentUser, isLoggedIn, currentTab, tutorModel];
+  List<Object?> get props => [
+        status,
+        _time,
+        currentUser,
+        isLoggedIn,
+        currentTab,
+        tutorModel,
+        joinRequests,
+      ];
 
   StartState copyWith({
     StartStatus? status,
@@ -39,6 +50,7 @@ class StartState extends Equatable {
     bool? isLoggedIn,
     TabBarOption? currentTab,
     TutorModel? tutorModel,
+    Stream<List<JoinRequestFullModel>>? joinRequests,
   }) {
     return StartState(
       status: status ?? this.status,
@@ -47,6 +59,7 @@ class StartState extends Equatable {
       isLoggedIn: isLoggedIn ?? this.isLoggedIn,
       currentTab: currentTab ?? this.currentTab,
       tutorModel: tutorModel ?? this.tutorModel,
+      joinRequests: joinRequests ?? this.joinRequests,
     );
   }
 }

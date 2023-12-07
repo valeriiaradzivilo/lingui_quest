@@ -7,7 +7,7 @@ import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_tutor_only_zone_container.dart';
-import 'package:lingui_quest/start/routes.dart';
+import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
 import 'package:rx_widgets/rx_widgets.dart';
 

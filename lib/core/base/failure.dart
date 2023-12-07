@@ -15,8 +15,8 @@ abstract class Failure extends Equatable {
 class ServerFailure extends Failure {
   const ServerFailure({
     required String message,
-    ExceptionMessage type = ExceptionMessage.serviceUnavailable,
-  }) : super(failureMessage: message, type: type);
+    super.type = ExceptionMessage.serviceUnavailable,
+  }) : super(failureMessage: message);
 
   @override
   List<Object?> get props => [];
@@ -25,8 +25,8 @@ class ServerFailure extends Failure {
 class UndefinedFailure extends Failure {
   const UndefinedFailure({
     required String message,
-    ExceptionMessage type = ExceptionMessage.undefined,
-  }) : super(failureMessage: message, type: type);
+    super.type = ExceptionMessage.undefined,
+  }) : super(failureMessage: message);
 
   @override
   List<Object?> get props => [];

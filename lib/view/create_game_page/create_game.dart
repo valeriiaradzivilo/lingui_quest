@@ -11,7 +11,7 @@ import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_number_editing_field.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
-import 'package:lingui_quest/start/routes.dart';
+import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/view/create_game_page/bloc/create_game_bloc.dart';
 import 'package:lingui_quest/view/create_game_page/create_question/create_question.dart';
 
