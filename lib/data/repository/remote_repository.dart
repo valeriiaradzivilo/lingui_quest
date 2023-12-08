@@ -57,7 +57,7 @@ abstract class RemoteRepository {
   /// Gets all games from the repository, paginated.
   ///
   /// [page] - The page of games to get.
-  Future<Either<Failure, Stream<List<GameModel>>>> getAllGames(int page);
+  Future<Either<Failure, Stream<List<GameModel>>>> getAllPublicGames(int page);
 
   /// Gets a game by its ID.
   ///
@@ -71,6 +71,9 @@ abstract class RemoteRepository {
 
   /// Gets all groups for the current user.
   Future<Either<Failure, Stream<List<GroupModel>>>> getAllGroupsForCurrentUser();
+
+  /// Gets groups created by the current user.
+  Future<Either<Failure, Stream<List<GroupModel>>>> getCreatedGroupsForCurrentUser();
 
   /// Posts a group to the repository.
   ///

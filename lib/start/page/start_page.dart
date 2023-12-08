@@ -81,26 +81,29 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                   ),
                   actions: [
                     if (state.currentUser.isTutor)
-                      ReactiveWidget(
-                        stream: state.joinRequests,
-                        placeHolderWidget: IconButton(
-                          icon: Icon(FeatherIcons.bell),
-                          onPressed: null,
-                        ),
-                        widget: (list) => Badge.count(
-                          count: list.length,
-                          offset: Offset(-10, 0),
-                          isLabelVisible: list.isNotEmpty,
-                          child: Padding(
-                              padding: EdgeInsets.only(right: PaddingConst.medium),
-                              child: IconButton(
-                                icon: Icon(FeatherIcons.bell),
-                                onPressed: () => showDialog(
-                                    context: context,
-                                    builder: (context) => JoinRequestsAlertDialog(
-                                          joinRequests: list,
-                                        )),
-                              )),
+                      Padding(
+                        padding: EdgeInsets.all(PaddingConst.medium),
+                        child: ReactiveWidget(
+                          stream: state.joinRequests,
+                          placeHolderWidget: IconButton(
+                            icon: Icon(FeatherIcons.bell),
+                            onPressed: null,
+                          ),
+                          widget: (list) => Badge.count(
+                            count: list.length,
+                            offset: Offset(-10, 0),
+                            isLabelVisible: list.isNotEmpty,
+                            child: Padding(
+                                padding: EdgeInsets.only(right: PaddingConst.medium),
+                                child: IconButton(
+                                  icon: Icon(FeatherIcons.bell),
+                                  onPressed: () => showDialog(
+                                      context: context,
+                                      builder: (context) => JoinRequestsAlertDialog(
+                                            joinRequests: list,
+                                          )),
+                                )),
+                          ),
                         ),
                       ),
                     Padding(
@@ -117,7 +120,6 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                         onPressed: widget.changeTheme,
                       ),
                     ),
-                    //TODO: Add languages here
                   ],
                 ),
                 body: SafeArea(

@@ -14,6 +14,7 @@ import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/view/create_game_page/bloc/create_game_bloc.dart';
 import 'package:lingui_quest/view/create_game_page/create_question/create_question.dart';
+import 'package:rx_widgets/rx_widgets.dart';
 
 enum CreateGameMainParts {
   name,
@@ -128,6 +129,26 @@ class _CreateGamePageState extends State<CreateGamePage> {
                         ],
                       ),
                     ),
+                    Gap(PaddingConst.medium),
+                    SwitchListTile(
+                      value: state.isPublic,
+                      onChanged: bloc.setPublic,
+                      title: Text(context.loc.public),
+                      secondary: Tooltip(
+                        message: context.loc.publicInfo,
+                        child: const Icon(Icons.info_outline_rounded),
+                      ),
+                    ),
+                    if (!state.isPublic) ...[
+                      Gap(PaddingConst.small),
+                      _GroupSelectionBox(state),
+                    ],
+                    Gap(PaddingConst.medium),
+                    if (state.errorMessage != null && state.errorMessage!.isNotEmpty)
+                      Text(
+                        state.errorMessage!,
+                        style: theme.textTheme.headlineSmall?.copyWith(color: theme.colorScheme.error),
+                      ),
                     Gap(PaddingConst.medium),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -337,6 +358,40 @@ class _ChooseLevel extends StatelessWidget {
             }).toList(),
             onChanged: onChanged,
           )
+        ],
+      ),
+    );
+  }
+}
+
+class _GroupSelectionBox extends StatelessWidget {
+  const _GroupSelectionBox(this.state);
+  final GameCreationState state;
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final GameCreationCubit bloc = BlocProvider.of<GameCreationCubit>(context);
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: theme.highlightColor),
+      ),
+      padding: EdgeInsets.all(PaddingConst.medium),
+      child: Column(
+        children: [
+          Text(
+            context.loc.chooseGroups,
+            style: theme.textTheme.headlineSmall,
+          ),
+          ReactiveWidget(
+              stream: state.availableGroups,
+              widget: (allGroups) => Column(
+                    children: [
+                      for (final group in allGroups)
+                        CheckboxListTile(
+                            value: state.game.groups.contains(group), onChanged: (_) => bloc.selectGroups(group))
+                    ],
+                  ))
         ],
       ),
     );

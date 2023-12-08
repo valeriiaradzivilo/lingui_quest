@@ -18,6 +18,8 @@ _$GameModelImpl _$$GameModelImplFromJson(Map<String, dynamic> json) =>
       theme: json['theme'] as String,
       description: json['description'] as String,
       time: json['time'] as int,
+      groups:
+          (json['groups'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$GameModelImplToJson(_$GameModelImpl instance) =>
@@ -30,6 +32,7 @@ Map<String, dynamic> _$$GameModelImplToJson(_$GameModelImpl instance) =>
       'theme': instance.theme,
       'description': instance.description,
       'time': instance.time,
+      'groups': instance.groups,
     };
 
 const _$EnglishLevelEnumMap = {

@@ -10,6 +10,7 @@ import 'package:lingui_quest/data/usecase/create_test_tasks_tree_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_created_groups_by_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_full_group_info.dart';
@@ -127,6 +128,10 @@ Future<void> initUseCases() async {
   serviceLocator.registerLazySingleton<GetJoinRequestsUsecase>(
     () => GetJoinRequestsUsecase(repository: remoteRepository),
   );
+
+  serviceLocator.registerLazySingleton<GetCreatedGroupsByCurrentUserUsecase>(
+    () => GetCreatedGroupsByCurrentUserUsecase(repository: remoteRepository),
+  );
 }
 
 Future<void> initRepository() async {
@@ -188,7 +193,12 @@ Future<void> initCubs() async {
       serviceLocator<CreateNewTutorUsecase>(),
     ),
   );
-  serviceLocator.registerFactory(() => GameCreationCubit(serviceLocator<CreateNewGameUsecase>()));
+  serviceLocator.registerFactory(
+    () => GameCreationCubit(
+      serviceLocator<CreateNewGameUsecase>(),
+      serviceLocator<GetCreatedGroupsByCurrentUserUsecase>(),
+    ),
+  );
   serviceLocator.registerFactory(() => QuestionCreationCubit());
   serviceLocator.registerFactory(() => GamePreviewCubit(serviceLocator<GetGameByIdUsecase>()));
   serviceLocator.registerFactory(() => GamePlayCubit(getCurrentUserUsecase));

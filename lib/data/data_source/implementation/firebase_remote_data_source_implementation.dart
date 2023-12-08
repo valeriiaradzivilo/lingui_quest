@@ -187,10 +187,15 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
-  Future<Stream<List<GameModel>>> getAllGames(int page) async {
+  Future<Stream<List<GameModel>>> getAllPublicGames(int page) async {
     try {
-      final Stream<QuerySnapshot<Json>> resultStream =
-          firestore.collection(FirebaseCollection.games.collectionName).snapshots().skip(page * 10).take(10);
+      //game is considered public when groups list is empty
+      final Stream<QuerySnapshot<Json>> resultStream = firestore
+          .collection(FirebaseCollection.games.collectionName)
+          .where('groups', isEqualTo: [])
+          .snapshots()
+          .skip(page * 5)
+          .take(5);
       return resultStream.map((event) => event.docs.map((doc) {
             return GameModel.fromJson(doc.data());
           }).toList());
@@ -225,16 +230,18 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
-  Future<Stream<List<GroupModel>>> getAllGroupsForCurrentUser() async {
+  Future<Stream<List<GroupModel>>> getAllGroupsForCurrentUser({bool mustBeCreator = false}) async {
     try {
       final resAsCreator = firestore
           .collection(FirebaseCollection.groups.collectionName)
           .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
           .snapshots();
-      final resAsStudent = firestore
-          .collection(FirebaseCollection.groups.collectionName)
-          .where('students', arrayContains: _firebaseAuth.currentUser!.uid)
-          .snapshots();
+      final resAsStudent = mustBeCreator
+          ? Stream.empty()
+          : firestore
+              .collection(FirebaseCollection.groups.collectionName)
+              .where('students', arrayContains: _firebaseAuth.currentUser!.uid)
+              .snapshots();
       final Stream<List<GroupModel>> res = Rx.combineLatest2(resAsCreator, resAsStudent, (creator, student) {
         final List<GroupModel> listOfGroups = [];
         for (final doc in creator.docs) {
@@ -298,8 +305,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
 
   @override
   Future<Stream<List<JoinRequestFullModel>>> getJoinRequests() async {
-    // TODO: Change it as it must only show where this user is tutor
-    final groupsToCheck = await getAllGroupsForCurrentUser();
+    final groupsToCheck = await getAllGroupsForCurrentUser(mustBeCreator: true);
     final Stream<List<JoinRequestFullModel>> streamOfRequests = groupsToCheck.asyncMap((event) async {
       final List<JoinRequestFullModel> result = [];
       for (final group in event) {

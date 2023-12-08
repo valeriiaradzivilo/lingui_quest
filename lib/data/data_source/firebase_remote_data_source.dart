@@ -62,7 +62,7 @@ abstract class FirebaseRemoteDatasource {
   ///
   /// [page] - The page of games to get.
   /// Returns a stream of lists of game models.
-  Future<Stream<List<GameModel>>> getAllGames(int page);
+  Future<Stream<List<GameModel>>> getAllPublicGames(int page);
 
   /// Gets a game by its ID from Firebase.
   ///
@@ -79,7 +79,7 @@ abstract class FirebaseRemoteDatasource {
   /// Gets all groups for the current user from Firebase.
   ///
   /// Returns a stream of lists of group models.
-  Future<Stream<List<GroupModel>>> getAllGroupsForCurrentUser();
+  Future<Stream<List<GroupModel>>> getAllGroupsForCurrentUser({bool mustBeCreator = false});
 
   /// Posts a group to Firebase.
   ///

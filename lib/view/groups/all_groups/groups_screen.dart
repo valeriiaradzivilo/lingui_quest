@@ -51,20 +51,24 @@ class GroupsScreen extends StatelessWidget {
                 SizedBox(height: PaddingConst.large),
                 Expanded(
                     child: SingleChildScrollView(
-                  child: ReactiveWidget(
-                    stream: state.allGroups,
-                    widget: (groups) => Wrap(
-                        alignment: WrapAlignment.start,
-                        runAlignment: WrapAlignment.start,
-                        spacing: PaddingConst.medium,
-                        runSpacing: PaddingConst.medium,
-                        children: [
-                          for (int index = 0; index < groups.length; index++)
-                            _GroupBoxWidget(
-                              group: groups[index],
-                              isCreator: groups[index].creatorId == state.currentUser.userId,
-                            ),
-                        ]),
+                  child: Container(
+                    padding: EdgeInsets.all(PaddingConst.medium),
+                    width: double.infinity,
+                    child: ReactiveWidget(
+                      stream: state.allGroups,
+                      widget: (groups) => Wrap(
+                          alignment: WrapAlignment.start,
+                          runAlignment: WrapAlignment.start,
+                          spacing: PaddingConst.medium,
+                          runSpacing: PaddingConst.medium,
+                          children: [
+                            for (int index = 0; index < groups.length; index++)
+                              _GroupBoxWidget(
+                                group: groups[index],
+                                isCreator: groups[index].creatorId == state.currentUser.userId,
+                              ),
+                          ]),
+                    ),
                   ),
                 )),
               ],

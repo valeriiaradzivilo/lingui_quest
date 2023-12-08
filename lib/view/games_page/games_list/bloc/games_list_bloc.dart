@@ -15,11 +15,11 @@ final class FindAllGames extends GameListEvent {}
 final class FindCurrentUser extends GameListEvent {}
 
 class GamesListBloc extends Bloc<GameListEvent, GamesListState> {
-  final GetAllGamesUsecase _getAllGamesUsecase;
+  final GetAllGamesUsecase _getAllPublicGamesUsecase;
   final GetCurrentUserUsecase _getCurrentUserUsecase;
-  GamesListBloc(this._getAllGamesUsecase, this._getCurrentUserUsecase) : super(GamesListState.initial()) {
+  GamesListBloc(this._getAllPublicGamesUsecase, this._getCurrentUserUsecase) : super(GamesListState.initial()) {
     on<FindAllGames>((event, emit) async {
-      final allGamesListResult = await _getAllGamesUsecase(state.page);
+      final allGamesListResult = await _getAllPublicGamesUsecase(state.page);
       allGamesListResult.fold(
           (_) => emit(state.copyWith(status: GamesUploadStatus.error, errorMessage: 'Error getting games. Try again!')),
           (games) => emit(state.copyWith(gamesList: games)));
@@ -28,7 +28,7 @@ class GamesListBloc extends Bloc<GameListEvent, GamesListState> {
       (event, emit) async {
         final getCurrentUserRes = await _getCurrentUserUsecase(NoParams());
         getCurrentUserRes.fold((l) => null, (r) => emit(state.copyWith(currentUser: r)));
-        final allGamesListResult = await _getAllGamesUsecase(state.page);
+        final allGamesListResult = await _getAllPublicGamesUsecase(state.page);
         allGamesListResult.fold(
             (_) =>
                 emit(state.copyWith(status: GamesUploadStatus.error, errorMessage: 'Error getting games. Try again!')),

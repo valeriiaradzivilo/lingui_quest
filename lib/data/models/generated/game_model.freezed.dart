@@ -28,6 +28,7 @@ mixin _$GameModel {
   String get theme => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   int get time => throw _privateConstructorUsedError;
+  List<String> get groups => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,7 +49,8 @@ abstract class $GameModelCopyWith<$Res> {
       EnglishLevel level,
       String theme,
       String description,
-      int time});
+      int time,
+      List<String> groups});
 }
 
 /// @nodoc
@@ -72,6 +74,7 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
     Object? theme = null,
     Object? description = null,
     Object? time = null,
+    Object? groups = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -106,6 +109,10 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
               as int,
+      groups: null == groups
+          ? _value.groups
+          : groups // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -126,7 +133,8 @@ abstract class _$$GameModelImplCopyWith<$Res>
       EnglishLevel level,
       String theme,
       String description,
-      int time});
+      int time,
+      List<String> groups});
 }
 
 /// @nodoc
@@ -148,6 +156,7 @@ class __$$GameModelImplCopyWithImpl<$Res>
     Object? theme = null,
     Object? description = null,
     Object? time = null,
+    Object? groups = null,
   }) {
     return _then(_$GameModelImpl(
       id: null == id
@@ -182,6 +191,10 @@ class __$$GameModelImplCopyWithImpl<$Res>
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
               as int,
+      groups: null == groups
+          ? _value._groups
+          : groups // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -197,8 +210,10 @@ class _$GameModelImpl extends _GameModel {
       required this.level,
       required this.theme,
       required this.description,
-      required this.time})
+      required this.time,
+      required final List<String> groups})
       : _questions = questions,
+        _groups = groups,
         super._();
 
   factory _$GameModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -226,10 +241,17 @@ class _$GameModelImpl extends _GameModel {
   final String description;
   @override
   final int time;
+  final List<String> _groups;
+  @override
+  List<String> get groups {
+    if (_groups is EqualUnmodifiableListView) return _groups;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_groups);
+  }
 
   @override
   String toString() {
-    return 'GameModel(id: $id, creatorId: $creatorId, name: $name, questions: $questions, level: $level, theme: $theme, description: $description, time: $time)';
+    return 'GameModel(id: $id, creatorId: $creatorId, name: $name, questions: $questions, level: $level, theme: $theme, description: $description, time: $time, groups: $groups)';
   }
 
   @override
@@ -247,7 +269,8 @@ class _$GameModelImpl extends _GameModel {
             (identical(other.theme, theme) || other.theme == theme) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.time, time) || other.time == time));
+            (identical(other.time, time) || other.time == time) &&
+            const DeepCollectionEquality().equals(other._groups, _groups));
   }
 
   @JsonKey(ignore: true)
@@ -261,7 +284,8 @@ class _$GameModelImpl extends _GameModel {
       level,
       theme,
       description,
-      time);
+      time,
+      const DeepCollectionEquality().hash(_groups));
 
   @JsonKey(ignore: true)
   @override
@@ -286,7 +310,8 @@ abstract class _GameModel extends GameModel {
       required final EnglishLevel level,
       required final String theme,
       required final String description,
-      required final int time}) = _$GameModelImpl;
+      required final int time,
+      required final List<String> groups}) = _$GameModelImpl;
   const _GameModel._() : super._();
 
   factory _GameModel.fromJson(Map<String, dynamic> json) =
@@ -308,6 +333,8 @@ abstract class _GameModel extends GameModel {
   String get description;
   @override
   int get time;
+  @override
+  List<String> get groups;
   @override
   @JsonKey(ignore: true)
   _$$GameModelImplCopyWith<_$GameModelImpl> get copyWith =>

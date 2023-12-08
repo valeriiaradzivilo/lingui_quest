@@ -112,7 +112,7 @@ class GalleryOptionTheme {
             return null;
           }
           if (states.contains(MaterialState.selected)) {
-            return Colors.white;
+            return colorScheme.primary;
           }
           return null;
         }),

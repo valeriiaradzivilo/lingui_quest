@@ -17,6 +17,7 @@ class GameModel with _$GameModel {
     required String theme,
     required String description,
     required int time,
+    required List<String> groups,
   }) = _GameModel;
   factory GameModel.fromJson(Json json) => _$GameModelFromJson(json);
 
@@ -30,6 +31,7 @@ class GameModel with _$GameModel {
       theme: '',
       description: '',
       time: 3600,
+      groups: [],
     );
   }
 

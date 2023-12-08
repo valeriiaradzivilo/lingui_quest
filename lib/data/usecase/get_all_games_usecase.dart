@@ -11,6 +11,6 @@ class GetAllGamesUsecase extends UseCaseFutureEither<void, int> {
 
   @override
   Future<Either<Failure, Stream<List<GameModel>>>> call(int params) async {
-    return await repository.getAllGames(params);
+    return await repository.getAllPublicGames(params);
   }
 }

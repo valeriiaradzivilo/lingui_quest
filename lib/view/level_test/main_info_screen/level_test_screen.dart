@@ -15,8 +15,8 @@ class LevelTestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final LevelTestBloc bloc = BlocProvider.of<LevelTestBloc>(context);
     final theme = Theme.of(context);
-    return SingleChildScrollView(
-      child: Center(
+    return Center(
+      child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(PaddingConst.medium),
           child: BlocConsumer<LevelTestBloc, LevelTestState>(
@@ -28,7 +28,11 @@ class LevelTestScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(context.loc.levelTestInfo),
+                      Text(
+                        context.loc.levelTestInfo,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.titleLarge,
+                      ),
                       Center(
                         child: Padding(
                           padding: EdgeInsets.all(PaddingConst.large),

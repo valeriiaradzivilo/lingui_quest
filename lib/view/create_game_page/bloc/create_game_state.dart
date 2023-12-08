@@ -8,6 +8,8 @@ class GameCreationState extends Equatable {
   final UserModel currentUser;
   final GameModel game;
   final bool customTheme;
+  final bool isPublic;
+  final Stream<List<GroupModel>> availableGroups;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
@@ -17,14 +19,27 @@ class GameCreationState extends Equatable {
     required this.currentUser,
     required this.game,
     this.customTheme = true,
+    this.isPublic = true,
+    this.availableGroups = const Stream.empty(),
   });
   factory GameCreationState.initial() {
     return GameCreationState(
-        status: GameCreationStatus.progress, currentUser: UserModel.empty(), game: GameModel.empty());
+      status: GameCreationStatus.progress,
+      currentUser: UserModel.empty(),
+      game: GameModel.empty(),
+    );
   }
 
   @override
-  List<Object?> get props => [status, _time, currentUser, game, customTheme];
+  List<Object?> get props => [
+        status,
+        _time,
+        currentUser,
+        game,
+        customTheme,
+        isPublic,
+        availableGroups,
+      ];
 
   GameCreationState copyWith({
     GameCreationStatus? status,
@@ -32,6 +47,8 @@ class GameCreationState extends Equatable {
     UserModel? currentUser,
     GameModel? game,
     bool? customTheme,
+    bool? isPublic,
+    Stream<List<GroupModel>>? availableGroups,
   }) {
     return GameCreationState(
       status: status ?? this.status,
@@ -39,6 +56,8 @@ class GameCreationState extends Equatable {
       currentUser: currentUser ?? this.currentUser,
       game: game ?? this.game,
       customTheme: customTheme ?? this.customTheme,
+      isPublic: isPublic ?? this.isPublic,
+      availableGroups: availableGroups ?? this.availableGroups,
     );
   }
 }
