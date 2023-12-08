@@ -9,7 +9,7 @@ class GameCreationState extends Equatable {
   final GameModel game;
   final bool customTheme;
   final bool isPublic;
-  final Stream<List<GroupModel>> availableGroups;
+  final List<GroupModel> availableGroups;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
@@ -20,7 +20,7 @@ class GameCreationState extends Equatable {
     required this.game,
     this.customTheme = true,
     this.isPublic = true,
-    this.availableGroups = const Stream.empty(),
+    this.availableGroups = const [],
   });
   factory GameCreationState.initial() {
     return GameCreationState(
@@ -48,7 +48,7 @@ class GameCreationState extends Equatable {
     GameModel? game,
     bool? customTheme,
     bool? isPublic,
-    Stream<List<GroupModel>>? availableGroups,
+    List<GroupModel>? availableGroups,
   }) {
     return GameCreationState(
       status: status ?? this.status,

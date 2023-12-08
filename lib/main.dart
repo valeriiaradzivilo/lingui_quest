@@ -15,6 +15,7 @@ import 'package:lingui_quest/view/games_page/game_preview/bloc/game_preview_cubi
 import 'package:lingui_quest/view/games_page/game_preview/game_preview_page.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
 import 'package:lingui_quest/view/groups/all_groups/bloc/groups_bloc.dart';
+import 'package:lingui_quest/view/groups/chosen_group/chosen_group_screen.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/main_info_screen/bloc/level_test_bloc.dart';
 import 'package:lingui_quest/view/level_test/test_play_screen/bloc/level_test_play_bloc.dart';
@@ -71,6 +72,11 @@ class MyApp extends StatelessWidget {
                 if (settings.name != null && settings.name!.startsWith(AppRoutes.game.path)) {
                   return MaterialPageRoute(
                     builder: (context) => GamePreviewPage(),
+                    settings: settings,
+                  );
+                } else if (settings.name != null && settings.name!.startsWith(AppRoutes.group.path)) {
+                  return MaterialPageRoute(
+                    builder: (context) => ChosenGroupScreen(),
                     settings: settings,
                   );
                 }

@@ -27,6 +27,13 @@ class GameCreationCubit extends Cubit<GameCreationState> {
     emit(state.copyWith(game: state.game.copyWith(level: level ?? EnglishLevel.a1)));
   }
 
+  void setTime(String time) {
+    final t = int.tryParse(time);
+    if (t != null) {
+      emit(state.copyWith(game: state.game.copyWith(time: t * 60)));
+    }
+  }
+
   void setName(String name) => emit(state.copyWith(game: state.game.copyWith(name: name)));
   void setDescription(String description) => emit(state.copyWith(game: state.game.copyWith(description: description)));
 
@@ -66,12 +73,16 @@ class GameCreationCubit extends Cubit<GameCreationState> {
       isPublic: isPublic,
       game: isPublic ? state.game.copyWith(groups: []) : null,
     ));
+    if (!isPublic) getCreatedGroups();
   }
 
   Future getCreatedGroups() async {
-    final createdGroupsRes = await _getCreatedGroupsByCurrentUserUsecase(NoParams());
-    createdGroupsRes.fold((l) => emit(state.copyWith(errorMessage: 'Could not find created groups. Try again later!')),
-        (r) => emit(state.copyWith(availableGroups: r)));
+    if (state.availableGroups.isEmpty) {
+      final createdGroupsRes = await _getCreatedGroupsByCurrentUserUsecase(NoParams());
+      createdGroupsRes.fold(
+          (l) => emit(state.copyWith(errorMessage: 'Could not find created groups. Try again later!')),
+          (r) => emit(state.copyWith(availableGroups: r)));
+    }
   }
 
   void selectGroups(GroupModel group) {

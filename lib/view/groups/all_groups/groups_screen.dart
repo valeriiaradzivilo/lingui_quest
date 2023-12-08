@@ -1,16 +1,14 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
-import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/view/groups/all_groups/bloc/groups_bloc.dart';
 import 'package:lingui_quest/view/groups/all_groups/components/create_group_alert.dart';
+import 'package:lingui_quest/view/groups/all_groups/components/group_box.dart';
 import 'package:lingui_quest/view/groups/all_groups/components/join_group_alert.dart';
-import 'package:lingui_quest/view/groups/chosen_group/chosen_group_screen.dart';
 import 'package:rx_widgets/rx_widgets.dart';
 
 class GroupsScreen extends StatelessWidget {
@@ -63,7 +61,7 @@ class GroupsScreen extends StatelessWidget {
                           runSpacing: PaddingConst.medium,
                           children: [
                             for (int index = 0; index < groups.length; index++)
-                              _GroupBoxWidget(
+                              GroupBoxWidget(
                                 group: groups[index],
                                 isCreator: groups[index].creatorId == state.currentUser.userId,
                               ),
@@ -77,66 +75,5 @@ class GroupsScreen extends StatelessWidget {
             return Center(child: Text(context.loc.notLoggedIn));
           }
         });
-  }
-}
-
-class _GroupBoxWidget extends StatelessWidget {
-  const _GroupBoxWidget({required this.group, required this.isCreator});
-  final GroupModel group;
-  final bool isCreator;
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cubit = BlocProvider.of<GroupsBloc>(context);
-    return Container(
-      decoration: BoxDecoration(border: Border.all(color: theme.colorScheme.onBackground)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          RotatedBox(
-            quarterTurns: 3,
-            child: isCreator
-                ? Container(
-                    padding: EdgeInsets.all(PaddingConst.extraSmall),
-                    color: theme.colorScheme.errorContainer,
-                    child: Text(context.loc.tutor),
-                  )
-                : Container(
-                    padding: EdgeInsets.all(PaddingConst.extraSmall),
-                    color: Colors.cyan[800],
-                    child: Text(context.loc.student),
-                  ),
-          ),
-          Gap(PaddingConst.medium),
-          Flexible(
-            child: Column(
-              children: [
-                Text(
-                  group.name,
-                  maxLines: 5,
-                  overflow: TextOverflow.fade,
-                ),
-                Text(
-                  group.description,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                )
-              ],
-            ),
-          ),
-          Gap(PaddingConst.medium),
-          IconButton(
-            icon: Icon(FeatherIcons.arrowRight),
-            onPressed: () async {
-              await cubit.chosenGroup(group);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ChosenGroupScreen()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
   }
 }

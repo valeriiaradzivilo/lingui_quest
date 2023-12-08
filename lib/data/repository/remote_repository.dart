@@ -64,6 +64,11 @@ abstract class RemoteRepository {
   /// [gameId] - The ID of the game.
   Future<Either<Failure, GameModel>> getGameById(String gameId);
 
+  /// Gets a game by group code.
+  ///
+  /// [code] - The code of the group.
+  Future<Either<Failure, Stream<List<GameModel>>>> getGameByGroupCode(String code);
+
   /// Gets a group by its code.
   ///
   /// [code] - The code of the group.
@@ -73,7 +78,7 @@ abstract class RemoteRepository {
   Future<Either<Failure, Stream<List<GroupModel>>>> getAllGroupsForCurrentUser();
 
   /// Gets groups created by the current user.
-  Future<Either<Failure, Stream<List<GroupModel>>>> getCreatedGroupsForCurrentUser();
+  Future<Either<Failure, List<GroupModel>>> getCreatedGroupsForCurrentUser();
 
   /// Posts a group to the repository.
   ///

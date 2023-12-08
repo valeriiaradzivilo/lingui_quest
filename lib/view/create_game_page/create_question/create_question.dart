@@ -73,32 +73,35 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                     Column(
                       children: List.generate(
                         _optionsControllers.length,
-                        (index) => ListTile(
-                          leading: InkWell(
-                            onTap: () {
-                              List<int> chosenOptions = [...state.question.correctAnswers];
-                              if (chosenOptions.contains(index)) {
-                                chosenOptions.remove(index);
-                              } else {
-                                chosenOptions.add(index);
-                              }
-                              cubit.setCorrectAnswers(chosenOptions);
-                              setState(() => _forgotToChooseRightAnswer = chosenOptions.isEmpty);
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: state.question.correctAnswers.contains(index)
-                                  ? theme.highlightColor
-                                  : theme.canvasColor,
-                              child: Text((index + 1).toString()),
+                        (index) => Padding(
+                          padding: EdgeInsets.all(PaddingConst.small),
+                          child: ListTile(
+                            leading: InkWell(
+                              onTap: () {
+                                List<int> chosenOptions = [...state.question.correctAnswers];
+                                if (chosenOptions.contains(index)) {
+                                  chosenOptions.remove(index);
+                                } else {
+                                  chosenOptions.add(index);
+                                }
+                                cubit.setCorrectAnswers(chosenOptions);
+                                setState(() => _forgotToChooseRightAnswer = chosenOptions.isEmpty);
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: state.question.correctAnswers.contains(index)
+                                    ? theme.highlightColor
+                                    : theme.canvasColor,
+                                child: Text((index + 1).toString()),
+                              ),
                             ),
-                          ),
-                          title: LinTextField(
-                            controller: _optionsControllers[index],
-                            initialValue: widget.questionToEdit != null
-                                ? widget.questionToEdit!.options.length > index
-                                    ? widget.questionToEdit?.options[index]
-                                    : null
-                                : null,
+                            title: LinTextField(
+                              controller: _optionsControllers[index],
+                              initialValue: widget.questionToEdit != null
+                                  ? widget.questionToEdit!.options.length > index
+                                      ? widget.questionToEdit?.options[index]
+                                      : null
+                                  : null,
+                            ),
                           ),
                         ),
                       ),

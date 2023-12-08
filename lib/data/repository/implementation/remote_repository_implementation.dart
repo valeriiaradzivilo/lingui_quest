@@ -179,9 +179,18 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   }
 
   @override
-  Future<Either<Failure, Stream<List<GroupModel>>>> getCreatedGroupsForCurrentUser() async {
+  Future<Either<Failure, List<GroupModel>>> getCreatedGroupsForCurrentUser() async {
     try {
-      return Right(await _database.getAllGroupsForCurrentUser(mustBeCreator: true));
+      return Right(await _database.getCreatedGroupsByCurrentUser());
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Stream<List<GameModel>>>> getGameByGroupCode(String code) async {
+    try {
+      return Right(await _database.getGameByGroupCode(code));
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }

@@ -259,6 +259,16 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
+  Future<List<GroupModel>> getCreatedGroupsByCurrentUser() async {
+    final resAsCreator = await firestore
+        .collection(FirebaseCollection.groups.collectionName)
+        .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
+        .get();
+
+    return resAsCreator.docs.map((e) => GroupModel.fromJson(e.data())).toList();
+  }
+
+  @override
   Future<void> postGroup(GroupModel group) async {
     try {
       final newGroup = group.copyWith(creatorId: _firebaseAuth.currentUser!.uid, code: Uuid().v1());
@@ -300,6 +310,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
       group,
       TutorModel.fromJson(resTutor.docs.first.data()),
       UserModel.fromJson(resUser.docs.first.data()),
+      await getGameByGroupCode(group.code),
     );
   }
 
@@ -336,5 +347,12 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
         .limit(1)
         .get();
     return UserModel.fromJson(userResults.docs.first.data());
+  }
+
+  @override
+  Future<Stream<List<GameModel>>> getGameByGroupCode(String code) async {
+    final Stream<QuerySnapshot<Json>> resultStream =
+        firestore.collection(FirebaseCollection.games.collectionName).where('groups', arrayContains: code).snapshots();
+    return resultStream.map((event) => event.docs.map((e) => GameModel.fromJson(e.data())).toList());
   }
 }

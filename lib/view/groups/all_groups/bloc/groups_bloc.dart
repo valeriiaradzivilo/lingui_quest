@@ -10,6 +10,7 @@ import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_full_group_info.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
+import 'package:lingui_quest/start/app_routes.dart';
 
 part 'groups_state.dart';
 
@@ -28,7 +29,7 @@ class GroupsBloc extends Cubit<GroupsState> {
   final PostGroupUsecase _postGroupUsecase;
   final GetFullGroupInfoUsecase _getFullGroupInfoUsecase;
 
-  void getCurrentUser() async {
+  Future getCurrentUser() async {
     final user = await _getCurrentUserUsecase(NoParams());
     if (user.isRight()) {
       final allGroups = await _getAllGroupsForCurrentUserUsecase(NoParams());
@@ -61,5 +62,31 @@ class GroupsBloc extends Cubit<GroupsState> {
   Future chosenGroup(GroupModel group) async {
     final fullInfo = await _getFullGroupInfoUsecase(group);
     emit(state.copyWith(chosenGroup: fullInfo.foldRight(null, (r, previous) => r)));
+  }
+
+  void findChosenGroupByCode(String codeFromPath) async {
+    if (state.chosenGroup == null) {
+      if (state.currentUser.userId.isEmpty) {
+        await getCurrentUser();
+      }
+      final code = codeFromPath.replaceAll(AppRoutes.group.path, '');
+      final groupFromCodeRes = await _getGroupByCodeUsecase(code);
+      groupFromCodeRes.fold((l) {
+        emit(state.copyWith(chosenGroup: null, errorMessage: 'Could not find the group'));
+        return;
+      }, (r) async {
+        if (r.creatorId == state.currentUser.userId || r.students.contains(state.currentUser.userId)) {
+          final fullInfoRes = await _getFullGroupInfoUsecase(r);
+          emit(state.copyWith(chosenGroup: fullInfoRes.foldRight(null, (r, previous) => r)));
+          return;
+        }
+      });
+
+      emit(state.copyWith(errorMessage: 'You do not have access to this group. Join the group firstly.'));
+    }
+  }
+
+  void deleteChosenGroup() {
+    emit(state.copyWith(chosenGroup: null));
   }
 }

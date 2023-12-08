@@ -23,29 +23,31 @@ class LinTutorInfoSection extends StatelessWidget {
                 color: theme.colorScheme.onSecondaryContainer,
                 width: 3,
               ))),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            context.loc.tutorProfile.toUpperCase(),
-            style: theme.textTheme.displaySmall,
-          ),
-          Gap(PaddingConst.medium),
-          Text('${context.loc.aboutTutor} : ${tutor.about}'),
-          Gap(PaddingConst.medium),
-          Text('${context.loc.priceTutor} : '),
-          for (final price in tutor.price.entries) Text('${price.key} - ${price.value} ${tutor.currency}'),
-          Gap(PaddingConst.medium),
-          Text(context.loc.contactsTutor),
-          for (final contact in tutor.contacts.entries)
-            Row(
-              children: [
-                Text('${contact.key} -> '),
-                LinTextLink(text: contact.value),
-              ],
-            )
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              context.loc.tutorProfile.toUpperCase(),
+              style: theme.textTheme.displaySmall,
+            ),
+            Gap(PaddingConst.medium),
+            Text('${context.loc.aboutTutor} : ${tutor.about}'),
+            Gap(PaddingConst.medium),
+            Text('${context.loc.priceTutor} : '),
+            for (final price in tutor.price.entries) Text('${price.key} - ${price.value} ${tutor.currency}'),
+            Gap(PaddingConst.medium),
+            Text(context.loc.contactsTutor),
+            for (final contact in tutor.contacts.entries)
+              Wrap(
+                children: [
+                  Text('${contact.key} -> '),
+                  LinTextLink(text: contact.value),
+                ],
+              )
+          ],
+        ),
       ),
     );
   }

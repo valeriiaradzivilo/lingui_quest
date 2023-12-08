@@ -16,7 +16,8 @@ enum AppRoutes {
   test,
   profile,
   createGame,
-  game;
+  game,
+  group;
 
   String get path => switch (this) {
         initial => '/',
@@ -27,6 +28,7 @@ enum AppRoutes {
         profile => '/profile',
         createGame => '/create-game',
         game => '/game',
+        group => '/group',
       };
 
   static Map<String, Widget Function(BuildContext)> routes(ThemeModel model) {

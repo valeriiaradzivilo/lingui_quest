@@ -70,6 +70,12 @@ abstract class FirebaseRemoteDatasource {
   /// Returns a game model.
   Future<GameModel> getGameById(String id);
 
+  /// Gets a game by group code from Firebase.
+  ///
+  /// [code] - The code of the group.
+  /// Returns a list of game models.
+  Future<Stream<List<GameModel>>> getGameByGroupCode(String code);
+
   /// Gets a group by its code from Firebase.
   ///
   /// [code] - The code of the group.
@@ -79,7 +85,12 @@ abstract class FirebaseRemoteDatasource {
   /// Gets all groups for the current user from Firebase.
   ///
   /// Returns a stream of lists of group models.
-  Future<Stream<List<GroupModel>>> getAllGroupsForCurrentUser({bool mustBeCreator = false});
+  Future<Stream<List<GroupModel>>> getAllGroupsForCurrentUser();
+
+  /// Gets all created groups by the current user from Firebase.
+  ///
+  /// Returns a stream of lists of group models.
+  Future<List<GroupModel>> getCreatedGroupsByCurrentUser();
 
   /// Posts a group to Firebase.
   ///

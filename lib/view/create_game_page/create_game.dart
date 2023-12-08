@@ -14,7 +14,6 @@ import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/view/create_game_page/bloc/create_game_bloc.dart';
 import 'package:lingui_quest/view/create_game_page/create_question/create_question.dart';
-import 'package:rx_widgets/rx_widgets.dart';
 
 enum CreateGameMainParts {
   name,
@@ -80,6 +79,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                   if (state.customTheme) {
                     bloc.setTheme(_themeController.text);
                   }
+                  bloc.setTime(_timeController.text);
                 }
               },
               child: Padding(
@@ -117,7 +117,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                                 itemCount: state.game.questions.length,
                               ),
                             ),
-                          LinMainButton(
+                          LinButton(
                             label: context.loc.gameAddQuestion,
                             onTap: () async {
                               final newQuestion = await showDialog<QuestionModel>(
@@ -158,7 +158,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                           onTap: () => Navigator.pushNamed(context, AppRoutes.initial.path),
                           isTransparentBack: true,
                         ),
-                        LinButton(
+                        LinMainButton(
                           label: context.loc.createGame,
                           onTap: () async {
                             if ((formKey.currentState?.validate() ?? false) && state.game.validate) {
@@ -383,15 +383,16 @@ class _GroupSelectionBox extends StatelessWidget {
             context.loc.chooseGroups,
             style: theme.textTheme.headlineSmall,
           ),
-          ReactiveWidget(
-              stream: state.availableGroups,
-              widget: (allGroups) => Column(
-                    children: [
-                      for (final group in allGroups)
-                        CheckboxListTile(
-                            value: state.game.groups.contains(group), onChanged: (_) => bloc.selectGroups(group))
-                    ],
-                  ))
+          if (state.availableGroups.isEmpty) Text(context.loc.noGroupsFound),
+          for (final group in state.availableGroups)
+            Padding(
+              padding: EdgeInsets.all(PaddingConst.medium),
+              child: CheckboxListTile(
+                value: state.game.groups.contains(group.code),
+                onChanged: (_) => bloc.selectGroups(group),
+                title: Text(group.name),
+              ),
+            )
         ],
       ),
     );

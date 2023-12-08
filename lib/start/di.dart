@@ -14,6 +14,7 @@ import 'package:lingui_quest/data/usecase/get_created_groups_by_current_user_use
 import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_full_group_info.dart';
+import 'package:lingui_quest/data/usecase/get_game_by_group_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_join_requests_usecase.dart';
@@ -131,6 +132,10 @@ Future<void> initUseCases() async {
 
   serviceLocator.registerLazySingleton<GetCreatedGroupsByCurrentUserUsecase>(
     () => GetCreatedGroupsByCurrentUserUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<GetGameByGroupCodeUsecase>(
+    () => GetGameByGroupCodeUsecase(repository: remoteRepository),
   );
 }
 
