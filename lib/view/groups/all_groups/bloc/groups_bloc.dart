@@ -10,6 +10,7 @@ import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_full_group_info.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
+import 'package:lingui_quest/data/usecase/request_to_join_group_usecase.dart';
 import 'package:lingui_quest/start/app_routes.dart';
 
 part 'groups_state.dart';
@@ -21,6 +22,7 @@ class GroupsBloc extends Cubit<GroupsState> {
     this._getGroupByCodeUsecase,
     this._postGroupUsecase,
     this._getFullGroupInfoUsecase,
+    this._requestToJoinGroupUsecase,
   ) : super(GroupsState.initial());
 
   final GetCurrentUserUsecase _getCurrentUserUsecase;
@@ -28,6 +30,7 @@ class GroupsBloc extends Cubit<GroupsState> {
   final GetGroupByCodeUsecase _getGroupByCodeUsecase;
   final PostGroupUsecase _postGroupUsecase;
   final GetFullGroupInfoUsecase _getFullGroupInfoUsecase;
+  final RequestToJoinGroupUsecase _requestToJoinGroupUsecase;
 
   Future getCurrentUser() async {
     final user = await _getCurrentUserUsecase(NoParams());
@@ -88,5 +91,13 @@ class GroupsBloc extends Cubit<GroupsState> {
 
   void deleteChosenGroup() {
     emit(state.copyWith(chosenGroup: null));
+  }
+
+  Future<bool> sendRequestToJoinTheGroup() async {
+    if (state.searchResultGroup != null) {
+      final requestRes = await _requestToJoinGroupUsecase(state.searchResultGroup!.code);
+      return requestRes.isRight();
+    }
+    return false;
   }
 }

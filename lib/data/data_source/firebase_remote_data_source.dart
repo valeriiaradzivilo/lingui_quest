@@ -1,7 +1,9 @@
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
+import 'package:lingui_quest/data/models/join_request_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -104,4 +106,37 @@ abstract class FirebaseRemoteDatasource {
 
   /// Get all join requests for current group from Firebase.
   Future<Stream<List<JoinRequestFullModel>>> getJoinRequests();
+
+  /// Post a request to join the group.
+  ///
+  /// [code] - The code of the group.
+  Future<void> requestToJoinTheGroup(String code);
+
+  /// Add to students in 'studentsGroups' and delete a request to join the group.
+  ///
+  /// [model] - The request.
+  Future<void> acceptRequestToJoinTheGroup(JoinRequestModel model);
+
+  /// Declines a request to join the group.
+  ///
+  /// [id] - The unique identifier of the request.
+  Future<void> declineRequestToJoinTheGroup(String id);
+
+  /// Searches for a game by its unique identifier.
+  ///
+  /// [id] - The unique identifier of the game.
+  Future<void> searchGame(GameSearchModel searchModel);
+
+  /// Rates a game by its unique identifier.
+  ///
+  /// [id] - The unique identifier of the game.
+  Future<void> rateTheGame(String id);
+
+  /// Retrieves the list of games for the current user.
+  Future<void> getMyGames();
+
+  /// Posts the result of a game.
+  ///
+  /// [id] - The unique identifier of the game.
+  Future<void> postGameResult(String id);
 }

@@ -195,4 +195,13 @@ class RemoteRepositoryImplementation implements RemoteRepository {
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> requestToJoinTheGroup(String code) async {
+    try {
+      return Right(await _database.requestToJoinTheGroup(code));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
 }

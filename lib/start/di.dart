@@ -19,6 +19,7 @@ import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_join_requests_usecase.dart';
 import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
+import 'package:lingui_quest/data/usecase/request_to_join_group_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
@@ -137,6 +138,10 @@ Future<void> initUseCases() async {
   serviceLocator.registerLazySingleton<GetGameByGroupCodeUsecase>(
     () => GetGameByGroupCodeUsecase(repository: remoteRepository),
   );
+
+  serviceLocator.registerLazySingleton<RequestToJoinGroupUsecase>(
+    () => RequestToJoinGroupUsecase(repository: remoteRepository),
+  );
 }
 
 Future<void> initRepository() async {
@@ -213,5 +218,6 @@ Future<void> initCubs() async {
         serviceLocator<GetGroupByCodeUsecase>(),
         serviceLocator<PostGroupUsecase>(),
         serviceLocator<GetFullGroupInfoUsecase>(),
+        serviceLocator<RequestToJoinGroupUsecase>(),
       ));
 }

@@ -91,6 +91,9 @@
   "publicInfo":"Public game is the game that is visible to everyone. In case you want it to be visible to specific groups - turn off the switch.",
   "chooseGroups":"Choose Groups",
   "noGroupsFound":"No groups were found",
+  "requestToJoinGroupSuccessful":"Request to join the group was sent successfully!",
+  "couldNotRequestToJoinGroup":"Could not send your request. Try again later!",
+  "rateTheGame":"Rate the game you have just played!",
 
 
 

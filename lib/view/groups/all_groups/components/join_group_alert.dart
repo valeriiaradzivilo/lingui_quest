@@ -59,6 +59,8 @@ class _ConfirmGroupSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.of<GroupsBloc>(context);
+    final theme = Theme.of(context);
     return AlertDialog(
       title: Text(context.loc.isItCorrectGroup),
       content: BlocBuilder<GroupsBloc, GroupsState>(builder: (context, state) {
@@ -80,7 +82,27 @@ class _ConfirmGroupSearch extends StatelessWidget {
           onTap: () => Navigator.of(context).pop(),
           isTransparentBack: true,
         ),
-        LinButton(label: context.loc.confirm, onTap: () {})
+        LinButton(
+            label: context.loc.confirm,
+            onTap: () async {
+              final isRequested = await bloc.sendRequestToJoinTheGroup();
+              if (!isRequested) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: SelectableText(context.loc.couldNotRequestToJoinGroup),
+                    backgroundColor: theme.colorScheme.error,
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: SelectableText(context.loc.requestToJoinGroupSuccessful),
+                    backgroundColor: theme.colorScheme.primary,
+                  ),
+                );
+              }
+              Navigator.of(context).pop();
+            })
       ],
     );
   }

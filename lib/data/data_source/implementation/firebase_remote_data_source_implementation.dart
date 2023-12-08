@@ -5,6 +5,7 @@ import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/data/data_source/firebase_remote_data_source.dart';
 import 'package:lingui_quest/data/firebase/firebase_constants.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
@@ -316,7 +317,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
 
   @override
   Future<Stream<List<JoinRequestFullModel>>> getJoinRequests() async {
-    final groupsToCheck = await getAllGroupsForCurrentUser(mustBeCreator: true);
+    final groupsToCheck = getCreatedGroupsByCurrentUser().asStream();
     final Stream<List<JoinRequestFullModel>> streamOfRequests = groupsToCheck.asyncMap((event) async {
       final List<JoinRequestFullModel> result = [];
       for (final group in event) {
@@ -354,5 +355,49 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     final Stream<QuerySnapshot<Json>> resultStream =
         firestore.collection(FirebaseCollection.games.collectionName).where('groups', arrayContains: code).snapshots();
     return resultStream.map((event) => event.docs.map((e) => GameModel.fromJson(e.data())).toList());
+  }
+
+  @override
+  Future<void> requestToJoinTheGroup(String code) async {
+    final CollectionReference gamesTable = firestore.collection(FirebaseCollection.joinRequest.collectionName);
+    await gamesTable.add(
+        JoinRequestModel(groupId: code, userId: _firebaseAuth.currentUser!.uid, requestDate: DateTime.now()).toJson());
+    print('Request to join the channel is created');
+  }
+
+  @override
+  Future<void> acceptRequestToJoinTheGroup(JoinRequestModel model) {
+    // TODO: implement acceptRequestToJoinTheGroup
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> declineRequestToJoinTheGroup(String id) {
+    // TODO: implement declineRequestToJoinTheGroup
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> getMyGames() {
+    // TODO: implement getMyGames
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> postGameResult(String id) {
+    // TODO: implement postGameResult
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> rateTheGame(String id) {
+    // TODO: implement rateTheGame
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> searchGame(GameSearchModel searchModel) {
+    // TODO: implement searchGame
+    throw UnimplementedError();
   }
 }

@@ -92,4 +92,9 @@ abstract class RemoteRepository {
 
   /// Get all join requests for current group from Firebase.
   Future<Either<Failure, Stream<List<JoinRequestFullModel>>>> getJoinRequests();
+
+  /// Posts a request to join the group to the repository.
+  ///
+  /// [code] - The group code.
+  Future<Either<Failure, void>> requestToJoinTheGroup(String code);
 }
