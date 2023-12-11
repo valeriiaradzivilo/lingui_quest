@@ -9,7 +9,7 @@ class StartState extends Equatable {
   final bool isLoggedIn;
   final TabBarOption currentTab;
   final TutorModel tutorModel;
-  final Stream<List<JoinRequestFullModel>?> joinRequests;
+  final Stream<List<JoinRequestFullModel>> joinRequests;
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
   const StartState({
@@ -50,7 +50,7 @@ class StartState extends Equatable {
     bool? isLoggedIn,
     TabBarOption? currentTab,
     TutorModel? tutorModel,
-    Stream<List<JoinRequestFullModel>?>? joinRequests,
+    Stream<List<JoinRequestFullModel>>? joinRequests,
   }) {
     return StartState(
       status: status ?? this.status,

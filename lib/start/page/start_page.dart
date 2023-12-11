@@ -13,6 +13,7 @@ import 'package:lingui_quest/view/games_page/games_list/games_list.dart';
 import 'package:lingui_quest/view/groups/all_groups/groups_screen.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 import 'package:lingui_quest/view/level_test/main_info_screen/level_test_screen.dart';
+import 'package:rx_widgets/rx_widgets.dart';
 
 enum TabBarOption {
   // roadmap,
@@ -82,20 +83,25 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                     if (state.currentUser.isTutor)
                       Padding(
                         padding: EdgeInsets.all(PaddingConst.medium),
-                        child: Badge.count(
-                          count: 3,
-                          offset: Offset(-10, 0),
-                          isLabelVisible: true,
-                          child: Padding(
-                              padding: EdgeInsets.only(right: PaddingConst.medium),
-                              child: IconButton(
-                                icon: Icon(FeatherIcons.bell),
-                                onPressed: () => showDialog(
-                                    useRootNavigator: true,
-                                    useSafeArea: true,
-                                    context: context,
-                                    builder: (context) => JoinRequestsAlertDialog()),
-                              )),
+                        child: ReactiveWidget(
+                          stream: state.joinRequests,
+                          widget: (requests) => Badge.count(
+                            count: requests.length,
+                            offset: Offset(-10, 0),
+                            isLabelVisible: requests.isNotEmpty,
+                            child: Padding(
+                                padding: EdgeInsets.only(right: PaddingConst.medium),
+                                child: IconButton(
+                                  icon: Icon(FeatherIcons.bell),
+                                  onPressed: () => showDialog(
+                                      useRootNavigator: true,
+                                      useSafeArea: true,
+                                      context: context,
+                                      builder: (context) => JoinRequestsAlertDialog(
+                                            requests: requests,
+                                          )),
+                                )),
+                          ),
                         ),
                       ),
                     Padding(

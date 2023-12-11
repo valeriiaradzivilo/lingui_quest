@@ -8,6 +8,7 @@ import 'package:lingui_quest/shared/widgets/lin_tutor_only_zone_container.dart';
 import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
 import 'package:lingui_quest/view/games_page/games_list/components/game_box.dart';
+import 'package:lingui_quest/view/games_page/games_list/components/game_search.dart';
 import 'package:rx_widgets/rx_widgets.dart';
 
 class GamesListScreen extends StatelessWidget {
@@ -33,6 +34,7 @@ class GamesListScreen extends StatelessWidget {
                 ],
               ),
             ),
+          GameSearch(),
           Expanded(
               child: ReactiveWidget(
             stream: state.gamesList,

@@ -172,7 +172,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   }
 
   @override
-  Future<Either<Failure, Stream<List<JoinRequestFullModel>?>>> getJoinRequests() async {
+  Future<Either<Failure, Stream<List<JoinRequestFullModel>>>> getJoinRequests() async {
     try {
       return Right(await _database.getJoinRequests());
     } catch (e) {
@@ -235,8 +235,11 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   }
 
   @override
-  Future<Either<Failure, List<GameModel>>> searchGame(GameSearchModel searchModel) {
-    // TODO: implement searchGame
-    throw UnimplementedError();
+  Future<Either<Failure, List<GameModel>>> searchGame(GameSearchModel searchModel) async {
+    try {
+      return Right(await _database.searchGame(searchModel));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
   }
 }

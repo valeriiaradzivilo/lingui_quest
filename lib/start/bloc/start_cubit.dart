@@ -88,13 +88,13 @@ class StartCubit extends Cubit<StartState> {
 
   Future<bool> acceptJoinRequest(JoinRequestFullModel joinRequest) async {
     final res = await _acceptJoinGroupRequestUsecase(joinRequest);
-    // await _findJoinRequests();
+    await _findJoinRequests();
     return res.isRight();
   }
 
   Future<bool> declineJoinRequest(JoinRequestFullModel joinRequest) async {
     final res = await _declineJoinGroupRequestUsecase(joinRequest.id);
-    // await _findJoinRequests();
+    await _findJoinRequests();
     return res.isRight();
   }
 }

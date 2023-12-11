@@ -105,7 +105,7 @@ abstract class FirebaseRemoteDatasource {
   Future<GroupFullInfoModel> getFullGroupInfo(GroupModel group);
 
   /// Get all join requests for current group from Firebase.
-  Future<Stream<List<JoinRequestFullModel>?>> getJoinRequests();
+  Future<Stream<List<JoinRequestFullModel>>> getJoinRequests();
 
   /// Post a request to join the group.
   ///
@@ -124,8 +124,8 @@ abstract class FirebaseRemoteDatasource {
 
   /// Searches for a game by its unique identifier.
   ///
-  /// [id] - The unique identifier of the game.
-  Future<void> searchGame(GameSearchModel searchModel);
+  /// [searchModel] - Model which contains search values.
+  Future<List<GameModel>> searchGame(GameSearchModel searchModel);
 
   /// Rates a game by its unique identifier.
   ///

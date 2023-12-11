@@ -8,6 +8,8 @@ class GamesListState extends Equatable {
   final UserModel currentUser;
   final Stream<List<GameModel>> gamesList;
   final int page;
+  final List<GameModel> searchResult;
+  final GameSearchModel searchModel;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
@@ -17,14 +19,21 @@ class GamesListState extends Equatable {
     required this.currentUser,
     required this.gamesList,
     required this.page,
+    this.searchResult = const [],
+    required this.searchModel,
   });
   factory GamesListState.initial() {
     return GamesListState(
-        status: GamesUploadStatus.progress, currentUser: UserModel.empty(), gamesList: Stream.empty(), page: 0);
+      status: GamesUploadStatus.progress,
+      currentUser: UserModel.empty(),
+      gamesList: Stream.empty(),
+      page: 0,
+      searchModel: GameSearchModel(),
+    );
   }
 
   @override
-  List<Object?> get props => [status, _time, currentUser, gamesList];
+  List<Object?> get props => [status, _time, currentUser, gamesList, searchResult, searchModel];
 
   GamesListState copyWith({
     GamesUploadStatus? status,
@@ -32,6 +41,8 @@ class GamesListState extends Equatable {
     UserModel? currentUser,
     Stream<List<GameModel>>? gamesList,
     int? page,
+    List<GameModel>? searchResult,
+    GameSearchModel? searchModel,
   }) {
     return GamesListState(
       status: status ?? this.status,
@@ -39,6 +50,8 @@ class GamesListState extends Equatable {
       currentUser: currentUser ?? this.currentUser,
       gamesList: gamesList ?? this.gamesList,
       page: page ?? this.page,
+      searchResult: searchResult ?? this.searchResult,
+      searchModel: searchModel ?? this.searchModel,
     );
   }
 }

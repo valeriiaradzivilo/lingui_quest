@@ -35,6 +35,7 @@
   "chooseTheme": "Choose Theme",
   "selectLanguage": "Select Language",
   "search": "Search",
+  "applyFilters": "Apply Filters",
   "noResults": "No Results Found",
   "retry": "Retry",
   "loading": "Loading...",

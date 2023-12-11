@@ -8,20 +8,9 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
 
-class JoinRequestsAlertDialog extends StatefulWidget {
-  const JoinRequestsAlertDialog({super.key});
-
-  @override
-  State<JoinRequestsAlertDialog> createState() => _JoinRequestsAlertDialogState();
-}
-
-class _JoinRequestsAlertDialogState extends State<JoinRequestsAlertDialog> {
-  late final StartCubit bloc;
-  // @override
-  // void dispose() {
-  //   bloc.closeStream();
-  //   super.dispose();
-  // }
+class JoinRequestsAlertDialog extends StatelessWidget {
+  const JoinRequestsAlertDialog({super.key, required this.requests});
+  final List<JoinRequestFullModel> requests;
 
   @override
   Widget build(BuildContext context) {
@@ -29,27 +18,15 @@ class _JoinRequestsAlertDialogState extends State<JoinRequestsAlertDialog> {
       builder: (context, state) => AlertDialog(
           title: Text(context.loc.joinRequests),
           content: SingleChildScrollView(
-            child: StreamBuilder<List<JoinRequestFullModel>?>(
-                stream: state.joinRequests,
-                builder: (context, joinRequestsSnapshot) {
-                  if (joinRequestsSnapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (joinRequestsSnapshot.hasData) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        for (final request in joinRequestsSnapshot.data!) ...[
-                          _JoinRequestTile(request),
-                          Gap(PaddingConst.medium),
-                        ]
-                      ],
-                    );
-                  } else {
-                    return Text(context.loc.noRequestsFound);
-                  }
-                }),
-          )),
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final request in requests) ...[
+                _JoinRequestTile(request),
+                Gap(PaddingConst.medium),
+              ]
+            ],
+          ))),
     );
   }
 }
@@ -83,12 +60,18 @@ class _JoinRequestTile extends StatelessWidget {
               children: [
                 LinButton(
                   label: context.loc.decline,
-                  onTap: () => bloc.declineJoinRequest(model),
+                  onTap: () {
+                    bloc.declineJoinRequest(model);
+                    Navigator.of(context).pop();
+                  },
                   isTransparentBack: true,
                 ),
                 LinButton(
                   label: context.loc.accept,
-                  onTap: () => bloc.acceptJoinRequest(model),
+                  onTap: () {
+                    bloc.acceptJoinRequest(model);
+                    Navigator.of(context).pop();
+                  },
                   icon: FeatherIcons.check,
                 ),
               ],

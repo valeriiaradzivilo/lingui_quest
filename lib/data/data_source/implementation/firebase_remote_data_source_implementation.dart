@@ -318,37 +318,30 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
-  Future<Stream<List<JoinRequestFullModel>?>> getJoinRequests() async {
-    final resAsCreator = firestore
-        .collection(FirebaseCollection.groups.collectionName)
-        .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
-        .snapshots()
-        .asBroadcastStream();
-
-    final requestsList =
-        firestore.collection(FirebaseCollection.joinRequest.collectionName).snapshots().asBroadcastStream();
-
-    final joinRequestModels = Rx.combineLatest2(resAsCreator, requestsList, (groups, requests) {
-      final groupsCodesList = groups.docs.map((e) => GroupModel.fromJson(e.data())).map((e) => e.code);
-      final requestsForGroups = requestsList
-          .map((event) => event.docs.where((element) => groupsCodesList.contains(element.data()['group_id'])))
-          .asBroadcastStream();
-
-      return requestsForGroups.map((event) => event.map((e) => JoinRequestModel.fromJson(e.data())).toList());
-    }).flatMap((value) => value.map((event) => event)).asBroadcastStream();
-
-    return joinRequestModels.asyncMap((event) async {
-      final res = <JoinRequestFullModel>[];
-      for (final request in event) {
-        res.add(JoinRequestFullModel(
-            group: await getGroupByCode(request.groupId),
-            user: await _getUserByUserId(request.userId),
-            id: request.id,
-            requestDate: request.requestDate));
+  Future<Stream<List<JoinRequestFullModel>>> getJoinRequests() async {
+    final groupsToCheck = getCreatedGroupsByCurrentUser().asStream();
+    final Stream<List<JoinRequestFullModel>> streamOfRequests = groupsToCheck.asyncMap((event) async {
+      final List<JoinRequestFullModel> result = [];
+      for (final group in event) {
+        final requestsList = await firestore
+            .collection(FirebaseCollection.joinRequest.collectionName)
+            .where('group_id', isEqualTo: group.code)
+            .get();
+        if (requestsList.docs.isNotEmpty) {
+          for (final doc in requestsList.docs) {
+            final requestModel = JoinRequestModel.fromJson(doc.data());
+            result.add(JoinRequestFullModel(
+                group: group,
+                user: await _getUserByUserId(requestModel.userId),
+                requestDate: requestModel.requestDate,
+                id: requestModel.id));
+          }
+        }
       }
+      return result;
+    });
 
-      return res;
-    }).asBroadcastStream();
+    return streamOfRequests.asBroadcastStream();
   }
 
   Future<UserModel> _getUserByUserId(String userId) async {
@@ -437,8 +430,22 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
-  Future<void> searchGame(GameSearchModel searchModel) {
-    // TODO: implement searchGame
-    throw UnimplementedError();
+  Future<List<GameModel>> searchGame(GameSearchModel searchModel) async {
+    final QuerySnapshot<Json> gamesRes =
+        await firestore.collection(FirebaseCollection.games.collectionName).where('groups', isEqualTo: []).get();
+    final List<GameModel> allGames = gamesRes.docs.map((e) => GameModel.fromJson(e.data())).toList();
+    final List<GameModel> games = [];
+    if (searchModel.name != null) {
+      games.addAll(allGames.where((element) =>
+          element.name.toLowerCase().contains(searchModel.name!.toLowerCase()) ||
+          searchModel.name!.toLowerCase().contains(element.name.toLowerCase())));
+    }
+    if (searchModel.theme != null) {
+      games.addAll(allGames.where((element) => searchModel.theme!.contains(element.theme)));
+    }
+    if (searchModel.level != null) {
+      games.addAll(allGames.where((element) => searchModel.level!.contains(element.level)));
+    }
+    return games;
   }
 }
