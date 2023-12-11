@@ -1,15 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
+import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
+import 'package:lingui_quest/start/app_routes.dart';
+import 'package:lingui_quest/view/game_play_page/bloc/game_play_bloc.dart';
 
-class GamePlayResultPage extends StatelessWidget {
+class GamePlayResultPage extends StatefulWidget {
   const GamePlayResultPage({super.key, required this.percentResult});
   final double percentResult;
 
   @override
+  State<GamePlayResultPage> createState() => _GamePlayResultPageState();
+}
+
+class _GamePlayResultPageState extends State<GamePlayResultPage> {
+  late GamePlayCubit bloc;
+
+  double rate = 3;
+
+  @override
+  void dispose() {
+    bloc.deleteResults();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    bloc = BlocProvider.of<GamePlayCubit>(context);
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -17,14 +37,15 @@ class GamePlayResultPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('${context.loc.resultGame} ${percentResult * 100}%'),
+            Text('${context.loc.resultGame} ${widget.percentResult * 100}%'),
             Gap(PaddingConst.medium),
-            Text(switch (percentResult) {
+            Text(switch (widget.percentResult) {
               > 0.8 => context.loc.highScoreMessageGame,
               > 0.5 => context.loc.averageScoreMessageGame,
               _ => context.loc.lowScoreMessageGame,
             }),
             Text(context.loc.rateTheGame),
+            Gap(PaddingConst.large),
             RatingBar.builder(
               initialRating: 3,
               itemCount: 5,
@@ -60,10 +81,18 @@ class GamePlayResultPage extends StatelessWidget {
                 }
               },
               onRatingUpdate: (rating) {
-                //TODO: Implement rating save
-                print(rating);
+                setState(() => rate = rating);
               },
             ),
+            Gap(PaddingConst.small),
+            Center(
+              child: LinMainButton(
+                  label: context.loc.rate,
+                  onTap: () async {
+                    await bloc.rateTheGame(rate);
+                    Navigator.of(context).pushNamed(AppRoutes.initial.path);
+                  }),
+            )
           ],
         ),
       ),

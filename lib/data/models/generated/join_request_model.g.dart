@@ -11,6 +11,7 @@ _$JoinRequestModelImpl _$$JoinRequestModelImplFromJson(
     _$JoinRequestModelImpl(
       groupId: json['group_id'] as String,
       userId: json['user_id'] as String,
+      id: json['id'] as String,
       requestDate: fromTimestamp(json['request_date'] as Timestamp),
     );
 
@@ -19,5 +20,6 @@ Map<String, dynamic> _$$JoinRequestModelImplToJson(
     <String, dynamic>{
       'group_id': instance.groupId,
       'user_id': instance.userId,
+      'id': instance.id,
       'request_date': Timestamp.fromDate(instance.requestDate),
     };

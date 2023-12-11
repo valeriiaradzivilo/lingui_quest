@@ -3,10 +3,10 @@ import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
-import 'package:lingui_quest/data/models/join_request_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
+import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 
 abstract class FirebaseRemoteDatasource {
@@ -105,7 +105,7 @@ abstract class FirebaseRemoteDatasource {
   Future<GroupFullInfoModel> getFullGroupInfo(GroupModel group);
 
   /// Get all join requests for current group from Firebase.
-  Future<Stream<List<JoinRequestFullModel>>> getJoinRequests();
+  Future<Stream<List<JoinRequestFullModel>?>> getJoinRequests();
 
   /// Post a request to join the group.
   ///
@@ -115,7 +115,7 @@ abstract class FirebaseRemoteDatasource {
   /// Add to students in 'studentsGroups' and delete a request to join the group.
   ///
   /// [model] - The request.
-  Future<void> acceptRequestToJoinTheGroup(JoinRequestModel model);
+  Future<void> acceptRequestToJoinTheGroup(JoinRequestFullModel model);
 
   /// Declines a request to join the group.
   ///
@@ -130,7 +130,7 @@ abstract class FirebaseRemoteDatasource {
   /// Rates a game by its unique identifier.
   ///
   /// [id] - The unique identifier of the game.
-  Future<void> rateTheGame(String id);
+  Future<void> rateTheGame(GameRate rate);
 
   /// Retrieves the list of games for the current user.
   Future<void> getMyGames();

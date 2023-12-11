@@ -13,6 +13,7 @@ import 'package:lingui_quest/data/models/join_request_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
+import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:rxdart/rxdart.dart';
@@ -253,6 +254,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
         }
         return listOfGroups;
       }).asBroadcastStream();
+
       return res;
     } catch (e) {
       rethrow;
@@ -316,29 +318,37 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
-  Future<Stream<List<JoinRequestFullModel>>> getJoinRequests() async {
-    final groupsToCheck = getCreatedGroupsByCurrentUser().asStream();
-    final Stream<List<JoinRequestFullModel>> streamOfRequests = groupsToCheck.asyncMap((event) async {
-      final List<JoinRequestFullModel> result = [];
-      for (final group in event) {
-        final requestsList = await firestore
-            .collection(FirebaseCollection.joinRequest.collectionName)
-            .where('group_id', isEqualTo: group.code)
-            .get();
-        if (requestsList.docs.isNotEmpty) {
-          for (final doc in requestsList.docs) {
-            final requestModel = JoinRequestModel.fromJson(doc.data());
-            result.add(JoinRequestFullModel(
-                group: group,
-                user: await _getUserByUserId(requestModel.userId),
-                requestDate: requestModel.requestDate));
-          }
-        }
-      }
-      return result;
-    });
+  Future<Stream<List<JoinRequestFullModel>?>> getJoinRequests() async {
+    final resAsCreator = firestore
+        .collection(FirebaseCollection.groups.collectionName)
+        .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
+        .snapshots()
+        .asBroadcastStream();
 
-    return streamOfRequests;
+    final requestsList =
+        firestore.collection(FirebaseCollection.joinRequest.collectionName).snapshots().asBroadcastStream();
+
+    final joinRequestModels = Rx.combineLatest2(resAsCreator, requestsList, (groups, requests) {
+      final groupsCodesList = groups.docs.map((e) => GroupModel.fromJson(e.data())).map((e) => e.code);
+      final requestsForGroups = requestsList
+          .map((event) => event.docs.where((element) => groupsCodesList.contains(element.data()['group_id'])))
+          .asBroadcastStream();
+
+      return requestsForGroups.map((event) => event.map((e) => JoinRequestModel.fromJson(e.data())).toList());
+    }).flatMap((value) => value.map((event) => event)).asBroadcastStream();
+
+    return joinRequestModels.asyncMap((event) async {
+      final res = <JoinRequestFullModel>[];
+      for (final request in event) {
+        res.add(JoinRequestFullModel(
+            group: await getGroupByCode(request.groupId),
+            user: await _getUserByUserId(request.userId),
+            id: request.id,
+            requestDate: request.requestDate));
+      }
+
+      return res;
+    }).asBroadcastStream();
   }
 
   Future<UserModel> _getUserByUserId(String userId) async {
@@ -359,22 +369,46 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
 
   @override
   Future<void> requestToJoinTheGroup(String code) async {
-    final CollectionReference gamesTable = firestore.collection(FirebaseCollection.joinRequest.collectionName);
-    await gamesTable.add(
-        JoinRequestModel(groupId: code, userId: _firebaseAuth.currentUser!.uid, requestDate: DateTime.now()).toJson());
+    final CollectionReference requestsTable = firestore.collection(FirebaseCollection.joinRequest.collectionName);
+    await requestsTable.add(JoinRequestModel(
+      groupId: code,
+      userId: _firebaseAuth.currentUser!.uid,
+      requestDate: DateTime.now(),
+      id: Uuid().v1(),
+    ).toJson());
     print('Request to join the channel is created');
   }
 
   @override
-  Future<void> acceptRequestToJoinTheGroup(JoinRequestModel model) {
-    // TODO: implement acceptRequestToJoinTheGroup
-    throw UnimplementedError();
+  Future<void> acceptRequestToJoinTheGroup(JoinRequestFullModel model) async {
+    final userDataDocToEdit = await firestore
+        .collection(FirebaseCollection.groups.collectionName)
+        .where('code', isEqualTo: model.group.code)
+        .limit(1)
+        .get();
+    final oldGroupData = GroupModel.fromJson(userDataDocToEdit.docs.first.data());
+    final id = userDataDocToEdit.docs.first.id;
+
+    await firestore.collection(FirebaseCollection.groups.collectionName).doc(id).update({
+      'students': [...oldGroupData.students, model.user.userId]
+    });
+
+    // if the group was updated - delete the request
+    await _deleteRequest(model.id);
+  }
+
+  Future _deleteRequest(String id) async {
+    final doc = await firestore
+        .collection(FirebaseCollection.joinRequest.collectionName)
+        .where('id', isEqualTo: id)
+        .limit(1)
+        .get();
+    await firestore.collection(FirebaseCollection.joinRequest.collectionName).doc(doc.docs.first.id).delete();
   }
 
   @override
-  Future<void> declineRequestToJoinTheGroup(String id) {
-    // TODO: implement declineRequestToJoinTheGroup
-    throw UnimplementedError();
+  Future<void> declineRequestToJoinTheGroup(String id) async {
+    await _deleteRequest(id);
   }
 
   @override
@@ -390,9 +424,16 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
-  Future<void> rateTheGame(String id) {
-    // TODO: implement rateTheGame
-    throw UnimplementedError();
+  Future<void> rateTheGame(GameRate rate) async {
+    final game =
+        await firestore.collection(FirebaseCollection.games.collectionName).where('id', isEqualTo: rate.gameId).get();
+
+    final gameModel = GameModel.fromJson(game.docs.first.data());
+    final double newRate = gameModel.rate == null ? rate.rate : (rate.rate + gameModel.rate!) / 2;
+    await firestore
+        .collection(FirebaseCollection.games.collectionName)
+        .doc(game.docs.first.id)
+        .update({'rate': newRate});
   }
 
   @override

@@ -17,6 +17,13 @@ class GamePlayPage extends StatefulWidget {
 
 class _GamePlayPageState extends State<GamePlayPage> {
   late final GamePlayCubit cubit;
+
+  @override
+  void initState() {
+    setState(() {});
+    super.initState();
+  }
+
   @override
   void dispose() {
     cubit.deleteResults();

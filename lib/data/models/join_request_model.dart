@@ -11,6 +11,7 @@ class JoinRequestModel with _$JoinRequestModel {
   const factory JoinRequestModel({
     required String groupId,
     required String userId,
+    required String id,
     @JsonKey(
       fromJson: fromTimestamp,
       toJson: Timestamp.fromDate,
@@ -23,6 +24,7 @@ class JoinRequestModel with _$JoinRequestModel {
     return JoinRequestModel(
       groupId: '',
       userId: '',
+      id: '',
       requestDate: DateTime.now(),
     );
   }

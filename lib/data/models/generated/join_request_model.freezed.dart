@@ -22,6 +22,7 @@ JoinRequestModel _$JoinRequestModelFromJson(Map<String, dynamic> json) {
 mixin _$JoinRequestModel {
   String get groupId => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
   DateTime get requestDate => throw _privateConstructorUsedError;
 
@@ -40,6 +41,7 @@ abstract class $JoinRequestModelCopyWith<$Res> {
   $Res call(
       {String groupId,
       String userId,
+      String id,
       @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
       DateTime requestDate});
 }
@@ -59,6 +61,7 @@ class _$JoinRequestModelCopyWithImpl<$Res, $Val extends JoinRequestModel>
   $Res call({
     Object? groupId = null,
     Object? userId = null,
+    Object? id = null,
     Object? requestDate = null,
   }) {
     return _then(_value.copyWith(
@@ -69,6 +72,10 @@ class _$JoinRequestModelCopyWithImpl<$Res, $Val extends JoinRequestModel>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
       requestDate: null == requestDate
           ? _value.requestDate
@@ -89,6 +96,7 @@ abstract class _$$JoinRequestModelImplCopyWith<$Res>
   $Res call(
       {String groupId,
       String userId,
+      String id,
       @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
       DateTime requestDate});
 }
@@ -106,6 +114,7 @@ class __$$JoinRequestModelImplCopyWithImpl<$Res>
   $Res call({
     Object? groupId = null,
     Object? userId = null,
+    Object? id = null,
     Object? requestDate = null,
   }) {
     return _then(_$JoinRequestModelImpl(
@@ -116,6 +125,10 @@ class __$$JoinRequestModelImplCopyWithImpl<$Res>
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
       requestDate: null == requestDate
           ? _value.requestDate
@@ -131,6 +144,7 @@ class _$JoinRequestModelImpl extends _JoinRequestModel {
   const _$JoinRequestModelImpl(
       {required this.groupId,
       required this.userId,
+      required this.id,
       @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
       required this.requestDate})
       : super._();
@@ -143,12 +157,14 @@ class _$JoinRequestModelImpl extends _JoinRequestModel {
   @override
   final String userId;
   @override
+  final String id;
+  @override
   @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
   final DateTime requestDate;
 
   @override
   String toString() {
-    return 'JoinRequestModel(groupId: $groupId, userId: $userId, requestDate: $requestDate)';
+    return 'JoinRequestModel(groupId: $groupId, userId: $userId, id: $id, requestDate: $requestDate)';
   }
 
   @override
@@ -158,13 +174,15 @@ class _$JoinRequestModelImpl extends _JoinRequestModel {
             other is _$JoinRequestModelImpl &&
             (identical(other.groupId, groupId) || other.groupId == groupId) &&
             (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.requestDate, requestDate) ||
                 other.requestDate == requestDate));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, groupId, userId, requestDate);
+  int get hashCode =>
+      Object.hash(runtimeType, groupId, userId, id, requestDate);
 
   @JsonKey(ignore: true)
   @override
@@ -185,6 +203,7 @@ abstract class _JoinRequestModel extends JoinRequestModel {
   const factory _JoinRequestModel(
       {required final String groupId,
       required final String userId,
+      required final String id,
       @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
       required final DateTime requestDate}) = _$JoinRequestModelImpl;
   const _JoinRequestModel._() : super._();
@@ -196,6 +215,8 @@ abstract class _JoinRequestModel extends JoinRequestModel {
   String get groupId;
   @override
   String get userId;
+  @override
+  String get id;
   @override
   @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
   DateTime get requestDate;

@@ -18,6 +18,7 @@ class GameModel with _$GameModel {
     required String description,
     required int time,
     required List<String> groups,
+    double? rate,
   }) = _GameModel;
   factory GameModel.fromJson(Json json) => _$GameModelFromJson(json);
 
@@ -32,6 +33,7 @@ class GameModel with _$GameModel {
       description: '',
       time: 3600,
       groups: [],
+      rate: null,
     );
   }
 

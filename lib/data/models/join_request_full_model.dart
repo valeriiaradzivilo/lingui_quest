@@ -12,6 +12,7 @@ class JoinRequestFullModel with _$JoinRequestFullModel {
   const factory JoinRequestFullModel({
     required GroupModel group,
     required UserModel user,
+    required String id,
     @JsonKey(
       fromJson: fromTimestamp,
       toJson: Timestamp.fromDate,
@@ -21,7 +22,12 @@ class JoinRequestFullModel with _$JoinRequestFullModel {
   factory JoinRequestFullModel.fromJson(Json json) => _$JoinRequestFullModelFromJson(json);
 
   factory JoinRequestFullModel.empty() {
-    return JoinRequestFullModel(group: GroupModel.empty(), user: UserModel.empty(), requestDate: DateTime.now());
+    return JoinRequestFullModel(
+      group: GroupModel.empty(),
+      user: UserModel.empty(),
+      requestDate: DateTime.now(),
+      id: '',
+    );
   }
 
   const JoinRequestFullModel._();

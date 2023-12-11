@@ -2,12 +2,14 @@ import 'package:dartz/dartz.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
+import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 
@@ -91,10 +93,30 @@ abstract class RemoteRepository {
   Future<Either<Failure, GroupFullInfoModel>> getFullGroupInfo(GroupModel group);
 
   /// Get all join requests for current group from Firebase.
-  Future<Either<Failure, Stream<List<JoinRequestFullModel>>>> getJoinRequests();
+  Future<Either<Failure, Stream<List<JoinRequestFullModel>?>>> getJoinRequests();
 
   /// Posts a request to join the group to the repository.
   ///
   /// [code] - The group code.
   Future<Either<Failure, void>> requestToJoinTheGroup(String code);
+
+  /// Add to students in 'studentsGroups' and delete a request to join the group.
+  ///
+  /// [model] - The request.
+  Future<Either<Failure, void>> acceptRequestToJoinTheGroup(JoinRequestFullModel model);
+
+  /// Declines a request to join the group.
+  ///
+  /// [id] - The unique identifier of the request.
+  Future<Either<Failure, void>> declineRequestToJoinTheGroup(String id);
+
+  /// Searches for a game by its unique identifier.
+  ///
+  /// [id] - The unique identifier of the game.
+  Future<Either<Failure, List<GameModel>>> searchGame(GameSearchModel searchModel);
+
+  /// Rates a game by its unique identifier.
+  ///
+  /// [id] - The unique identifier of the game.
+  Future<Either<Failure, void>> rateTheGame(GameRate rate);
 }

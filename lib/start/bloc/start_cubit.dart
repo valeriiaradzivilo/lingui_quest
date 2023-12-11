@@ -6,6 +6,8 @@ import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
+import 'package:lingui_quest/data/usecase/accept_join_group_request_usecase.dart';
+import 'package:lingui_quest/data/usecase/decline_join_group_request_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_join_requests_usecase.dart';
@@ -20,12 +22,16 @@ class StartCubit extends Cubit<StartState> {
     this._signOutUsecase,
     this._getCurrentTutorUsecase,
     this._getJoinRequestsUsecase,
+    this._acceptJoinGroupRequestUsecase,
+    this._declineJoinGroupRequestUsecase,
   ) : super(StartState.initial());
 
   final GetCurrentUserUsecase _getCurrentUserUsecase;
   final SignOutUsecase _signOutUsecase;
   final GetCurrentTutorUsecase _getCurrentTutorUsecase;
   final GetJoinRequestsUsecase _getJoinRequestsUsecase;
+  final AcceptJoinGroupRequestUsecase _acceptJoinGroupRequestUsecase;
+  final DeclineJoinGroupRequestUsecase _declineJoinGroupRequestUsecase;
 
   void init() async {
     await checkLoggedIn();
@@ -37,12 +43,18 @@ class StartCubit extends Cubit<StartState> {
   Future findTutorProfile() async {
     if (state.currentUser.isTutor) {
       final tutor = await _getCurrentTutorUsecase(NoParams());
-      final joinRequests = await _getJoinRequestsUsecase(NoParams());
+      await _findJoinRequests();
       emit(state.copyWith(
         tutorModel: tutor.foldRight(TutorModel.empty(), (r, previous) => r),
-        joinRequests: joinRequests.foldRight(Stream.empty(), (r, previous) => r),
       ));
     }
+  }
+
+  _findJoinRequests() async {
+    final joinRequests = await _getJoinRequestsUsecase(NoParams());
+    emit(state.copyWith(
+      joinRequests: joinRequests.foldRight(Stream.empty(), (r, previous) => r),
+    ));
   }
 
   void setLoggedIn() {
@@ -72,5 +84,17 @@ class StartCubit extends Cubit<StartState> {
 
   void setTabOption(TabBarOption option) {
     emit(state.copyWith(currentTab: option));
+  }
+
+  Future<bool> acceptJoinRequest(JoinRequestFullModel joinRequest) async {
+    final res = await _acceptJoinGroupRequestUsecase(joinRequest);
+    // await _findJoinRequests();
+    return res.isRight();
+  }
+
+  Future<bool> declineJoinRequest(JoinRequestFullModel joinRequest) async {
+    final res = await _declineJoinGroupRequestUsecase(joinRequest.id);
+    // await _findJoinRequests();
+    return res.isRight();
   }
 }

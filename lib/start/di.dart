@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:lingui_quest/data/data_source/implementation/firebase_remote_data_source_implementation.dart';
 import 'package:lingui_quest/data/repository/implementation/remote_repository_implementation.dart';
+import 'package:lingui_quest/data/usecase/accept_join_group_request_usecase.dart';
 import 'package:lingui_quest/data/usecase/add_test_task_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_new_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_new_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_test_tasks_tree_usecase.dart';
+import 'package:lingui_quest/data/usecase/decline_join_group_request_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks_usecase.dart';
@@ -19,6 +21,7 @@ import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_join_requests_usecase.dart';
 import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
+import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/request_to_join_group_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
@@ -142,6 +145,16 @@ Future<void> initUseCases() async {
   serviceLocator.registerLazySingleton<RequestToJoinGroupUsecase>(
     () => RequestToJoinGroupUsecase(repository: remoteRepository),
   );
+  serviceLocator.registerLazySingleton<AcceptJoinGroupRequestUsecase>(
+    () => AcceptJoinGroupRequestUsecase(repository: remoteRepository),
+  );
+  serviceLocator.registerLazySingleton<DeclineJoinGroupRequestUsecase>(
+    () => DeclineJoinGroupRequestUsecase(repository: remoteRepository),
+  );
+
+  serviceLocator.registerLazySingleton<RateGameUsecase>(
+    () => RateGameUsecase(repository: remoteRepository),
+  );
 }
 
 Future<void> initRepository() async {
@@ -162,6 +175,8 @@ Future<void> initCubs() async {
       serviceLocator<SignOutUsecase>(),
       getCurrentTutorUsecase,
       serviceLocator<GetJoinRequestsUsecase>(),
+      serviceLocator<AcceptJoinGroupRequestUsecase>(),
+      serviceLocator<DeclineJoinGroupRequestUsecase>(),
     ),
   );
   serviceLocator.registerFactory(
@@ -211,7 +226,7 @@ Future<void> initCubs() async {
   );
   serviceLocator.registerFactory(() => QuestionCreationCubit());
   serviceLocator.registerFactory(() => GamePreviewCubit(serviceLocator<GetGameByIdUsecase>()));
-  serviceLocator.registerFactory(() => GamePlayCubit(getCurrentUserUsecase));
+  serviceLocator.registerFactory(() => GamePlayCubit(getCurrentUserUsecase, serviceLocator<RateGameUsecase>()));
   serviceLocator.registerFactory(() => GroupsBloc(
         getCurrentUserUsecase,
         serviceLocator<GetAllGroupsForCurrentUserUsecase>(),

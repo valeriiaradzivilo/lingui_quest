@@ -1,4 +1,3 @@
-import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
@@ -35,7 +34,13 @@ class GameBox extends StatelessWidget {
               ),
               Spacer(),
               Row(
-                children: [for (int i = 0; i < 5; i++) Icon(FeatherIcons.star)],
+                children: [
+                  for (int i = 0; i < 5; i++)
+                    Icon(
+                      i <= (game.rate ?? -1) ? Icons.star_rate_rounded : Icons.star_outline_rounded,
+                      color: i <= (game.rate ?? -1) ? Colors.orangeAccent : null,
+                    )
+                ],
               ),
             ]),
           )),

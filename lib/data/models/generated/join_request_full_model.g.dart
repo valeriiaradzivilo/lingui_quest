@@ -11,6 +11,7 @@ _$JoinRequestFullModelImpl _$$JoinRequestFullModelImplFromJson(
     _$JoinRequestFullModelImpl(
       group: GroupModel.fromJson(json['group'] as Map<String, dynamic>),
       user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
+      id: json['id'] as String,
       requestDate: fromTimestamp(json['request_date'] as Timestamp),
     );
 
@@ -19,5 +20,6 @@ Map<String, dynamic> _$$JoinRequestFullModelImplToJson(
     <String, dynamic>{
       'group': instance.group.toJson(),
       'user': instance.user.toJson(),
+      'id': instance.id,
       'request_date': Timestamp.fromDate(instance.requestDate),
     };

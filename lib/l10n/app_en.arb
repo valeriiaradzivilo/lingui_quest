@@ -94,6 +94,7 @@
   "requestToJoinGroupSuccessful":"Request to join the group was sent successfully!",
   "couldNotRequestToJoinGroup":"Could not send your request. Try again later!",
   "rateTheGame":"Rate the game you have just played!",
+  "rate":"Rate",
 
 
 
@@ -144,6 +145,7 @@
   "decline":"Decline",
   "joinRequests":"Join Requests",
   "wantsToJoinTheGroup":"wants to joint the group",
+  "noRequestsFound":"No requests to join were found",
 
 
   "myGroups":"My Groups",

@@ -8,21 +8,25 @@ import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'game_play_state.dart';
 
 class GamePlayCubit extends Cubit<GamePlayState> {
-  GamePlayCubit(this._currentUserUsecase) : super(GamePlayState.initial());
+  GamePlayCubit(this._currentUserUsecase, this._rateGameUsecase) : super(GamePlayState.initial());
 
   late final ValueStream<int> remainingTimeStream = _remainingTimeController.stream;
 
   void init(GameModel game) async {
+    emit(state.copyWith(status: GamePlayStatus.progress));
     final myUser = await _currentUserUsecase(NoParams());
 
     if (myUser.isRight()) {
+      _remainingTimeController.add(game.time * 60);
       final shuffledQuestions = [...game.questions];
       shuffledQuestions.shuffle();
+      startTimer();
       emit(state.copyWith(
         status: GamePlayStatus.success,
         currentUser: myUser.foldRight(UserModel.empty(), (r, previous) => r),
@@ -30,22 +34,18 @@ class GamePlayCubit extends Cubit<GamePlayState> {
         currentQuestion: shuffledQuestions.first,
         questionNumber: 0,
         shuffledQuestions: shuffledQuestions,
-        remainingTime: game.time * 60,
-        // game time in creation is set in minutes
-        // the timer should update each second
       ));
-      startTimer();
     } else {
       emit(state.copyWith(status: GamePlayStatus.notLoggedIn));
     }
   }
 
   void startTimer() {
-    Timer.periodic(const Duration(milliseconds: 1050), (timer) {
+    timer?.cancel();
+    timer = Timer.periodic(const Duration(milliseconds: 1050), (_) {
       if (_remainingTimeController.value > 0) {
         _remainingTimeController.add(_remainingTimeController.value - 1);
       } else {
-        timer.cancel();
         emit(state.copyWith(status: GamePlayStatus.result));
         // Calculate and show the test result
       }
@@ -86,8 +86,21 @@ class GamePlayCubit extends Cubit<GamePlayState> {
     }
   }
 
-  void deleteResults() => emit(GamePlayState.initial());
+  void deleteResults() {
+    _remainingTimeController.add(state.currentGame.time);
+    timer?.cancel;
+    emit(GamePlayState.initial());
+  }
 
-  late final _remainingTimeController = BehaviorSubject.seeded(state.currentGame.time);
+  Future<bool> rateTheGame(double rate) async {
+    final res = await _rateGameUsecase(GameRate(state.currentGame.id, rate));
+    return res.isRight();
+  }
+
+  // game time in creation is set in minutes
+  // the timer should update each second
+  late final _remainingTimeController = BehaviorSubject.seeded(state.currentGame.time * 60);
+  Timer? timer;
   final GetCurrentUserUsecase _currentUserUsecase;
+  final RateGameUsecase _rateGameUsecase;
 }

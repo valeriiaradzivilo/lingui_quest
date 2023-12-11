@@ -7,7 +7,6 @@ class GamePlayState extends Equatable {
   final String? errorMessage;
   final QuestionModel currentQuestion;
   final UserModel currentUser;
-  final int remainingTime;
   final GameModel currentGame;
   final List<int> selectedAnswers;
   final List<QuestionModel> shuffledQuestions;
@@ -21,7 +20,6 @@ class GamePlayState extends Equatable {
     this.errorMessage,
     required this.currentQuestion,
     required this.currentUser,
-    required this.remainingTime,
     required this.currentGame,
     required this.selectedAnswers,
     required this.shuffledQuestions,
@@ -33,7 +31,6 @@ class GamePlayState extends Equatable {
         status: GamePlayStatus.progress,
         currentQuestion: QuestionModel.empty(),
         currentUser: UserModel.empty(),
-        remainingTime: 3600,
         currentGame: GameModel.empty(),
         selectedAnswers: const [],
         shuffledQuestions: [],
@@ -42,14 +39,13 @@ class GamePlayState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, _time, currentQuestion, currentUser, remainingTime, currentGame, selectedAnswers];
+  List<Object?> get props => [status, _time, currentQuestion, currentUser, currentGame, selectedAnswers];
 
   GamePlayState copyWith({
     GamePlayStatus? status,
     String? errorMessage,
     QuestionModel? currentQuestion,
     UserModel? currentUser,
-    int? remainingTime,
     GameModel? currentGame,
     List<int>? selectedAnswers,
     List<QuestionModel>? shuffledQuestions,
@@ -62,7 +58,6 @@ class GamePlayState extends Equatable {
       currentGame: currentGame ?? this.currentGame,
       currentQuestion: currentQuestion ?? this.currentQuestion,
       currentUser: currentUser ?? this.currentUser,
-      remainingTime: remainingTime ?? this.remainingTime,
       selectedAnswers: selectedAnswers ?? this.selectedAnswers,
       shuffledQuestions: shuffledQuestions ?? this.shuffledQuestions,
       questionNumber: questionNumber ?? this.questionNumber,

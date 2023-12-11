@@ -22,6 +22,7 @@ JoinRequestFullModel _$JoinRequestFullModelFromJson(Map<String, dynamic> json) {
 mixin _$JoinRequestFullModel {
   GroupModel get group => throw _privateConstructorUsedError;
   UserModel get user => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
   DateTime get requestDate => throw _privateConstructorUsedError;
 
@@ -40,6 +41,7 @@ abstract class $JoinRequestFullModelCopyWith<$Res> {
   $Res call(
       {GroupModel group,
       UserModel user,
+      String id,
       @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
       DateTime requestDate});
 
@@ -62,6 +64,7 @@ class _$JoinRequestFullModelCopyWithImpl<$Res,
   $Res call({
     Object? group = null,
     Object? user = null,
+    Object? id = null,
     Object? requestDate = null,
   }) {
     return _then(_value.copyWith(
@@ -73,6 +76,10 @@ class _$JoinRequestFullModelCopyWithImpl<$Res,
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as UserModel,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       requestDate: null == requestDate
           ? _value.requestDate
           : requestDate // ignore: cast_nullable_to_non_nullable
@@ -100,6 +107,7 @@ abstract class _$$JoinRequestFullModelImplCopyWith<$Res>
   $Res call(
       {GroupModel group,
       UserModel user,
+      String id,
       @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
       DateTime requestDate});
 
@@ -120,6 +128,7 @@ class __$$JoinRequestFullModelImplCopyWithImpl<$Res>
   $Res call({
     Object? group = null,
     Object? user = null,
+    Object? id = null,
     Object? requestDate = null,
   }) {
     return _then(_$JoinRequestFullModelImpl(
@@ -131,6 +140,10 @@ class __$$JoinRequestFullModelImplCopyWithImpl<$Res>
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
               as UserModel,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       requestDate: null == requestDate
           ? _value.requestDate
           : requestDate // ignore: cast_nullable_to_non_nullable
@@ -145,6 +158,7 @@ class _$JoinRequestFullModelImpl extends _JoinRequestFullModel {
   const _$JoinRequestFullModelImpl(
       {required this.group,
       required this.user,
+      required this.id,
       @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
       required this.requestDate})
       : super._();
@@ -157,12 +171,14 @@ class _$JoinRequestFullModelImpl extends _JoinRequestFullModel {
   @override
   final UserModel user;
   @override
+  final String id;
+  @override
   @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
   final DateTime requestDate;
 
   @override
   String toString() {
-    return 'JoinRequestFullModel(group: $group, user: $user, requestDate: $requestDate)';
+    return 'JoinRequestFullModel(group: $group, user: $user, id: $id, requestDate: $requestDate)';
   }
 
   @override
@@ -172,13 +188,14 @@ class _$JoinRequestFullModelImpl extends _JoinRequestFullModel {
             other is _$JoinRequestFullModelImpl &&
             (identical(other.group, group) || other.group == group) &&
             (identical(other.user, user) || other.user == user) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.requestDate, requestDate) ||
                 other.requestDate == requestDate));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, group, user, requestDate);
+  int get hashCode => Object.hash(runtimeType, group, user, id, requestDate);
 
   @JsonKey(ignore: true)
   @override
@@ -200,6 +217,7 @@ abstract class _JoinRequestFullModel extends JoinRequestFullModel {
   const factory _JoinRequestFullModel(
       {required final GroupModel group,
       required final UserModel user,
+      required final String id,
       @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
       required final DateTime requestDate}) = _$JoinRequestFullModelImpl;
   const _JoinRequestFullModel._() : super._();
@@ -211,6 +229,8 @@ abstract class _JoinRequestFullModel extends JoinRequestFullModel {
   GroupModel get group;
   @override
   UserModel get user;
+  @override
+  String get id;
   @override
   @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate)
   DateTime get requestDate;

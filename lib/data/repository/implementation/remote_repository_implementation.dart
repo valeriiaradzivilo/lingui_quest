@@ -3,6 +3,7 @@ import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/data/data_source/firebase_remote_data_source.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
@@ -10,6 +11,7 @@ import 'package:lingui_quest/data/models/level_test_task_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/repository/remote_repository.dart';
+import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
 
@@ -170,7 +172,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   }
 
   @override
-  Future<Either<Failure, Stream<List<JoinRequestFullModel>>>> getJoinRequests() async {
+  Future<Either<Failure, Stream<List<JoinRequestFullModel>?>>> getJoinRequests() async {
     try {
       return Right(await _database.getJoinRequests());
     } catch (e) {
@@ -203,5 +205,38 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }
+  }
+
+  @override
+  Future<Either<Failure, void>> rateTheGame(GameRate rate) async {
+    try {
+      return Right(await _database.rateTheGame(rate));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> acceptRequestToJoinTheGroup(JoinRequestFullModel model) async {
+    try {
+      return Right(await _database.acceptRequestToJoinTheGroup(model));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> declineRequestToJoinTheGroup(String id) async {
+    try {
+      return Right(await _database.declineRequestToJoinTheGroup(id));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GameModel>>> searchGame(GameSearchModel searchModel) {
+    // TODO: implement searchGame
+    throw UnimplementedError();
   }
 }
