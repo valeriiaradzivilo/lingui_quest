@@ -10,7 +10,7 @@ class LinButton extends StatelessWidget {
       this.isEnabled = true,
       this.isTransparentBack = false});
   final String label;
-  final Function() onTap;
+  final Function()? onTap;
   final bool isEnabled;
   final IconData? icon;
   final bool isTransparentBack;

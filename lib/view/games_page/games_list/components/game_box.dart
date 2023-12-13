@@ -22,27 +22,41 @@ class GameBox extends StatelessWidget {
                 color: theme.colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: theme.colorScheme.onBackground)),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                game.name,
-                style: theme.textTheme.headlineMedium,
-              ),
-              MaxGap(20),
-              Text(
-                '${context.loc.gameTheme}: ${game.theme}',
-                overflow: TextOverflow.ellipsis,
-              ),
-              Spacer(),
-              Row(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  for (int i = 0; i < 5; i++)
-                    Icon(
-                      i <= (game.rate ?? -1) ? Icons.star_rate_rounded : Icons.star_outline_rounded,
-                      color: i <= (game.rate ?? -1) ? Colors.orangeAccent : null,
-                    )
-                ],
-              ),
-            ]),
+                  Flexible(
+                    flex: 2,
+                    child: Text(
+                      game.name,
+                      style: theme.textTheme.headlineSmall,
+                      overflow: TextOverflow.visible,
+                      maxLines: 3,
+                    ),
+                  ),
+                  Gap(PaddingConst.small),
+                  Flexible(
+                    child: Text(
+                      '${context.loc.gameTheme}: ${game.theme}',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Flexible(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        for (int i = 0; i < 5; i++)
+                          Icon(
+                            i <= (game.rate ?? -1) - 1 ? Icons.star_rate_rounded : Icons.star_outline_rounded,
+                            color: i <= (game.rate ?? -1) - 1 ? Colors.orangeAccent : null,
+                          )
+                      ],
+                    ),
+                  ),
+                ]),
           )),
     );
   }

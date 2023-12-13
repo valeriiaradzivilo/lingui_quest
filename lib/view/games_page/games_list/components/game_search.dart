@@ -31,7 +31,19 @@ class _GameSearchState extends State<GameSearch> {
             Flexible(
                 child: TextFormField(
               controller: _controller,
-              decoration: InputDecoration(label: Text(context.loc.search)),
+              textInputAction: TextInputAction.search,
+              onFieldSubmitted: (value) => bloc.add(FindGames()),
+              decoration: InputDecoration(
+                label: Text(context.loc.search),
+                suffixIcon: state.status == GamesUploadStatus.search
+                    ? IconButton(
+                        onPressed: () {
+                          bloc.add(StopSearch());
+                          _controller.text = '';
+                        },
+                        icon: Icon(FeatherIcons.x))
+                    : null,
+              ),
               maxLines: 1,
               onChanged: (value) => bloc.add(ChangeSearchText(text: value)),
             )),
@@ -55,7 +67,7 @@ class _GameSearchState extends State<GameSearch> {
                                 Padding(
                                   padding: EdgeInsets.all(PaddingConst.small),
                                   child: CheckboxListTile(
-                                    value: state.searchModel.level?.contains(level),
+                                    value: state.searchModel.level.contains(level),
                                     onChanged: (_) => bloc.add(ChangeLevel(level: level)),
                                     title: Text(level.levelName),
                                   ),
@@ -68,21 +80,19 @@ class _GameSearchState extends State<GameSearch> {
                                   Padding(
                                     padding: EdgeInsets.all(PaddingConst.small),
                                     child: CheckboxListTile(
-                                      value: state.searchModel.theme?.contains(theme.label),
+                                      value: state.searchModel.theme.contains(theme.label),
                                       onChanged: (_) => bloc.add(ChangeTheme(theme: theme)),
                                       title: Text(theme.label),
                                     ),
                                   ),
                               Gap(PaddingConst.medium),
-                              OutlinedButton(
-                                  onPressed: () => bloc.add(FindGames()), child: Text(context.loc.applyFilters))
                             ],
                           ),
                         ),
                       ),
                     )
                   ],
-                  child: Icon(FeatherIcons.filter),
+                  child: Center(child: Icon(FeatherIcons.filter)),
                 ),
               ],
             )

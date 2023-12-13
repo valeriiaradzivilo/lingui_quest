@@ -20,7 +20,7 @@ class GameCreationCubit extends Cubit<GameCreationState> {
   final GetCreatedGroupsByCurrentUserUsecase _getCreatedGroupsByCurrentUserUsecase;
 
   void setTheme(String? theme) {
-    emit(state.copyWith(game: state.game.copyWith(theme: theme ?? '')));
+    emit(state.copyWith(game: state.game.copyWith(theme: theme ?? ''), customTheme: false));
   }
 
   void setLevel(EnglishLevel? level) {
@@ -30,7 +30,7 @@ class GameCreationCubit extends Cubit<GameCreationState> {
   void setTime(String time) {
     final t = int.tryParse(time);
     if (t != null) {
-      emit(state.copyWith(game: state.game.copyWith(time: t * 60)));
+      emit(state.copyWith(game: state.game.copyWith(time: t)));
     }
   }
 

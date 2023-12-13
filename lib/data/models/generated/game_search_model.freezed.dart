@@ -16,10 +16,10 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$GameSearchModel {
-  String? get name =>
+  String get name =>
       throw _privateConstructorUsedError; // text that will be looked up in a name or description
-  List<EnglishLevel>? get level => throw _privateConstructorUsedError;
-  List<String>? get theme => throw _privateConstructorUsedError;
+  List<EnglishLevel> get level => throw _privateConstructorUsedError;
+  List<String> get theme => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GameSearchModelCopyWith<GameSearchModel> get copyWith =>
@@ -32,7 +32,7 @@ abstract class $GameSearchModelCopyWith<$Res> {
           GameSearchModel value, $Res Function(GameSearchModel) then) =
       _$GameSearchModelCopyWithImpl<$Res, GameSearchModel>;
   @useResult
-  $Res call({String? name, List<EnglishLevel>? level, List<String>? theme});
+  $Res call({String name, List<EnglishLevel> level, List<String> theme});
 }
 
 /// @nodoc
@@ -48,23 +48,23 @@ class _$GameSearchModelCopyWithImpl<$Res, $Val extends GameSearchModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = freezed,
-    Object? level = freezed,
-    Object? theme = freezed,
+    Object? name = null,
+    Object? level = null,
+    Object? theme = null,
   }) {
     return _then(_value.copyWith(
-      name: freezed == name
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      level: freezed == level
+              as String,
+      level: null == level
           ? _value.level
           : level // ignore: cast_nullable_to_non_nullable
-              as List<EnglishLevel>?,
-      theme: freezed == theme
+              as List<EnglishLevel>,
+      theme: null == theme
           ? _value.theme
           : theme // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
     ) as $Val);
   }
 }
@@ -77,7 +77,7 @@ abstract class _$$GameSearchModelImplCopyWith<$Res>
       __$$GameSearchModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? name, List<EnglishLevel>? level, List<String>? theme});
+  $Res call({String name, List<EnglishLevel> level, List<String> theme});
 }
 
 /// @nodoc
@@ -91,23 +91,23 @@ class __$$GameSearchModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = freezed,
-    Object? level = freezed,
-    Object? theme = freezed,
+    Object? name = null,
+    Object? level = null,
+    Object? theme = null,
   }) {
     return _then(_$GameSearchModelImpl(
-      name: freezed == name
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      level: freezed == level
+              as String,
+      level: null == level
           ? _value._level
           : level // ignore: cast_nullable_to_non_nullable
-              as List<EnglishLevel>?,
-      theme: freezed == theme
+              as List<EnglishLevel>,
+      theme: null == theme
           ? _value._theme
           : theme // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
     ));
   }
 }
@@ -116,33 +116,31 @@ class __$$GameSearchModelImplCopyWithImpl<$Res>
 
 class _$GameSearchModelImpl extends _GameSearchModel {
   const _$GameSearchModelImpl(
-      {this.name, final List<EnglishLevel>? level, final List<String>? theme})
+      {required this.name,
+      required final List<EnglishLevel> level,
+      required final List<String> theme})
       : _level = level,
         _theme = theme,
         super._();
 
   @override
-  final String? name;
+  final String name;
 // text that will be looked up in a name or description
-  final List<EnglishLevel>? _level;
+  final List<EnglishLevel> _level;
 // text that will be looked up in a name or description
   @override
-  List<EnglishLevel>? get level {
-    final value = _level;
-    if (value == null) return null;
+  List<EnglishLevel> get level {
     if (_level is EqualUnmodifiableListView) return _level;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_level);
   }
 
-  final List<String>? _theme;
+  final List<String> _theme;
   @override
-  List<String>? get theme {
-    final value = _theme;
-    if (value == null) return null;
+  List<String> get theme {
     if (_theme is EqualUnmodifiableListView) return _theme;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_theme);
   }
 
   @override
@@ -177,17 +175,17 @@ class _$GameSearchModelImpl extends _GameSearchModel {
 
 abstract class _GameSearchModel extends GameSearchModel {
   const factory _GameSearchModel(
-      {final String? name,
-      final List<EnglishLevel>? level,
-      final List<String>? theme}) = _$GameSearchModelImpl;
+      {required final String name,
+      required final List<EnglishLevel> level,
+      required final List<String> theme}) = _$GameSearchModelImpl;
   const _GameSearchModel._() : super._();
 
   @override
-  String? get name;
+  String get name;
   @override // text that will be looked up in a name or description
-  List<EnglishLevel>? get level;
+  List<EnglishLevel> get level;
   @override
-  List<String>? get theme;
+  List<String> get theme;
   @override
   @JsonKey(ignore: true)
   _$$GameSearchModelImplCopyWith<_$GameSearchModelImpl> get copyWith =>

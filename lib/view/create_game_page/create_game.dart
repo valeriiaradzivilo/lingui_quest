@@ -12,6 +12,7 @@ import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_number_editing_field.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/start/app_routes.dart';
+import 'package:lingui_quest/start/components/home_icon_button.dart';
 import 'package:lingui_quest/view/create_game_page/bloc/create_game_bloc.dart';
 import 'package:lingui_quest/view/create_game_page/create_question/create_question.dart';
 
@@ -67,6 +68,12 @@ class _CreateGamePageState extends State<CreateGamePage> {
     final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: HomeIconButton(
+            onTap: () => Navigator.of(context).pushReplacementNamed(AppRoutes.initial.path),
+          ),
+        ),
         body: SingleChildScrollView(
           child: BlocBuilder<GameCreationCubit, GameCreationState>(
             builder: (_, state) => Form(
@@ -107,15 +114,13 @@ class _CreateGamePageState extends State<CreateGamePage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           if (state.game.questions.isNotEmpty)
-                            Container(
-                              height: 300,
-                              child: ListView.builder(
-                                itemBuilder: (_, index) => _QuestionTile(
-                                  question: state.game.questions[index],
-                                  index: index,
-                                ),
-                                itemCount: state.game.questions.length,
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemBuilder: (_, index) => _QuestionTile(
+                                question: state.game.questions[index],
+                                index: index,
                               ),
+                              itemCount: state.game.questions.length,
                             ),
                           LinButton(
                             label: context.loc.gameAddQuestion,

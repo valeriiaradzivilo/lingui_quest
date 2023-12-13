@@ -43,7 +43,7 @@ enum TextTaskType {
   colonText; //'Fill in the gap : I ___ you.
 
   factory TextTaskType.getType(String text) {
-    final matchOneMissedText = RegExp(r'(^[a-zA-Z0-9 :]*(_+[a-zA-Z0-9 ]*){1}$)');
+    final matchOneMissedText = RegExp(r"(^[a-zA-Z0-9 :.,']*(_+[a-zA-Z0-9 ]*){1}[^_]*$)");
     // TODO: Fix or fully delete dotted text
     final matchOneMissedDottedText = RegExp(r'\b[A-Za-z0-9 ]*[\.]{2,100}\b');
 

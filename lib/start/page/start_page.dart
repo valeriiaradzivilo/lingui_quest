@@ -2,14 +2,14 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
+import 'package:lingui_quest/start/components/home_icon_button.dart';
 import 'package:lingui_quest/start/components/join_requests_alert_dialog.dart';
 import 'package:lingui_quest/start/components/tab_bar.dart';
 import 'package:lingui_quest/start/components/user_widget.dart';
-import 'package:lingui_quest/view/games_page/games_list/games_list.dart';
+import 'package:lingui_quest/view/games_page/games_list/games_list_page.dart';
 import 'package:lingui_quest/view/groups/all_groups/groups_screen.dart';
 import 'package:lingui_quest/view/home_page/home_page.dart';
 import 'package:lingui_quest/view/level_test/main_info_screen/level_test_screen.dart';
@@ -67,18 +67,7 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   toolbarHeight: 60,
-                  leading: Padding(
-                    padding: EdgeInsets.all(PaddingConst.small),
-                    child: InkWell(
-                      onTap: () => tabController.animateTo(TabBarOption.values.length),
-                      child: SvgPicture.asset(
-                        allowDrawingOutsideViewBox: true,
-                        'assets/logo/logo.svg',
-                        width: kIsWeb ? 200 : 50,
-                        height: kIsWeb ? 200 : 50,
-                      ),
-                    ),
-                  ),
+                  leading: HomeIconButton(onTap: () => tabController.animateTo(TabBarOption.values.length)),
                   actions: [
                     if (state.currentUser.isTutor)
                       Padding(

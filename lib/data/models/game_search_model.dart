@@ -6,14 +6,16 @@ part 'generated/game_search_model.freezed.dart';
 @freezed
 class GameSearchModel with _$GameSearchModel {
   const factory GameSearchModel({
-    String? name, // text that will be looked up in a name or description
-    List<EnglishLevel>? level,
-    List<String>? theme,
+    required String name, // text that will be looked up in a name or description
+    required List<EnglishLevel> level,
+    required List<String> theme,
   }) = _GameSearchModel;
 
   const GameSearchModel._();
 
-  bool validate() => name != null || level != null || theme != null;
+  bool validate() => name.isNotEmpty || level.isNotEmpty || theme.isNotEmpty;
 
-  bool isEmpty() => (name?.isEmpty ?? true) && (level?.isEmpty ?? true) && (theme?.isEmpty ?? true);
+  bool isEmpty() => name.isEmpty && level.isEmpty && theme.isEmpty;
+
+  factory GameSearchModel.empty() => GameSearchModel(name: '', level: [], theme: []);
 }

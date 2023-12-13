@@ -435,16 +435,16 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
         await firestore.collection(FirebaseCollection.games.collectionName).where('groups', isEqualTo: []).get();
     final List<GameModel> allGames = gamesRes.docs.map((e) => GameModel.fromJson(e.data())).toList();
     final List<GameModel> games = [];
-    if (searchModel.name != null) {
+    if (searchModel.name.isNotEmpty) {
       games.addAll(allGames.where((element) =>
-          element.name.toLowerCase().contains(searchModel.name!.toLowerCase()) ||
-          searchModel.name!.toLowerCase().contains(element.name.toLowerCase())));
+          element.name.toLowerCase().contains(searchModel.name.toLowerCase()) ||
+          searchModel.name.toLowerCase().contains(element.name.toLowerCase())));
     }
-    if (searchModel.theme != null) {
-      games.addAll(allGames.where((element) => searchModel.theme!.contains(element.theme)));
+    if (searchModel.theme.isNotEmpty) {
+      games.addAll(allGames.where((element) => searchModel.theme.contains(element.theme)));
     }
-    if (searchModel.level != null) {
-      games.addAll(allGames.where((element) => searchModel.level!.contains(element.level)));
+    if (searchModel.level.isNotEmpty) {
+      games.addAll(allGames.where((element) => searchModel.level.contains(element.level)));
     }
     return games;
   }

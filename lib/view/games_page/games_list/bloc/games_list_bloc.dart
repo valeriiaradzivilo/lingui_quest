@@ -10,13 +10,15 @@ import 'package:lingui_quest/data/usecase/search_games_usecase.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/enums/game_theme_enum.dart';
 
-part 'games_state.dart';
+part 'games_list_state.dart';
 
 sealed class GameListEvent {}
 
 final class FindAllGames extends GameListEvent {}
 
 final class FindGames extends GameListEvent {}
+
+final class StopSearch extends GameListEvent {}
 
 final class ChangeSearchText extends GameListEvent {
   final String text;
@@ -49,7 +51,7 @@ class GamesListBloc extends Bloc<GameListEvent, GamesListState> {
       final allGamesListResult = await _getAllPublicGamesUsecase(state.page);
       allGamesListResult.fold(
           (_) => emit(state.copyWith(status: GamesUploadStatus.error, errorMessage: 'Error getting games. Try again!')),
-          (games) => emit(state.copyWith(gamesList: games)));
+          (games) => emit(state.copyWith(gamesList: games, status: GamesUploadStatus.initial)));
     });
     on<FindCurrentUser>(
       (event, emit) async {
@@ -59,17 +61,63 @@ class GamesListBloc extends Bloc<GameListEvent, GamesListState> {
         allGamesListResult.fold(
             (_) =>
                 emit(state.copyWith(status: GamesUploadStatus.error, errorMessage: 'Error getting games. Try again!')),
-            (games) => emit(state.copyWith(gamesList: games)));
+            (games) => emit(state.copyWith(gamesList: games, status: GamesUploadStatus.initial)));
       },
     );
     on<FindGames>(
       (event, emit) async {
         final getGames = await _searchGamesUsecase(state.searchModel);
-        getGames.fold((l) => emit(state.copyWith(searchResult: [])), (r) => emit(state.copyWith(searchResult: r)));
+        getGames.fold(
+            (l) =>
+                emit(state.copyWith(status: GamesUploadStatus.error, searchResult: [], errorMessage: l.failureMessage)),
+            (r) => emit(
+                  state.copyWith(
+                    searchResult: r,
+                    status: GamesUploadStatus.search,
+                  ),
+                ));
       },
     );
     on<ChangeSearchText>(
-      (event, emit) => emit(state.copyWith(searchModel: state.searchModel.copyWith(name: event.text))),
+      (event, emit) async {
+        emit(state.copyWith(searchModel: state.searchModel.copyWith(name: event.text), searchResult: []));
+      },
     );
+    on<ChangeLevel>(
+      (event, emit) async {
+        final newLevelList = [...state.searchModel.level];
+        if (newLevelList.contains(event.level)) {
+          newLevelList.remove(event.level);
+        } else {
+          newLevelList.add(event.level);
+        }
+        emit(state.copyWith(
+            status: newLevelList.isNotEmpty ? GamesUploadStatus.search : GamesUploadStatus.initial,
+            searchModel: state.searchModel.copyWith(level: newLevelList),
+            searchResult: []));
+        final getGames = await _searchGamesUsecase(state.searchModel);
+        getGames.fold((l) => emit(state.copyWith(searchResult: [])), (r) => emit(state.copyWith(searchResult: r)));
+      },
+    );
+    on<ChangeTheme>((event, emit) async {
+      final newThemeList = [...state.searchModel.theme];
+      if (newThemeList.contains(event.theme.label)) {
+        newThemeList.remove(event.theme.label);
+      } else {
+        newThemeList.add(event.theme.label);
+      }
+      emit(state.copyWith(
+          status: newThemeList.isNotEmpty ? GamesUploadStatus.search : GamesUploadStatus.initial,
+          searchModel: state.searchModel.copyWith(theme: newThemeList),
+          searchResult: []));
+      final getGames = await _searchGamesUsecase(state.searchModel);
+      getGames.fold((l) => emit(state.copyWith(searchResult: [])), (r) => emit(state.copyWith(searchResult: r)));
+    });
+
+    on<StopSearch>((event, emit) => emit(state.copyWith(
+          status: GamesUploadStatus.initial,
+          searchModel: GameSearchModel.empty(),
+          searchResult: [],
+        )));
   }
 }

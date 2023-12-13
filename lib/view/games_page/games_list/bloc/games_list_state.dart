@@ -1,6 +1,6 @@
 part of 'games_list_bloc.dart';
 
-enum GamesUploadStatus { initial, progress, error }
+enum GamesUploadStatus { initial, progress, error, search }
 
 class GamesListState extends Equatable {
   final GamesUploadStatus status;
@@ -28,7 +28,7 @@ class GamesListState extends Equatable {
       currentUser: UserModel.empty(),
       gamesList: Stream.empty(),
       page: 0,
-      searchModel: GameSearchModel(),
+      searchModel: GameSearchModel.empty(),
     );
   }
 
