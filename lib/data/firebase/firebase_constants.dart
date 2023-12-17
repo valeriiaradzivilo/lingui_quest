@@ -1,5 +1,6 @@
 enum FirebaseCollection {
   games,
+  gameResult,
   groups,
   testTasks,
   tutor,
@@ -12,6 +13,7 @@ enum FirebaseCollection {
         testTasks => 'testTasks',
         tutor => 'tutorInfo',
         userData => 'userData',
-        joinRequest => 'joinRequest'
+        joinRequest => 'joinRequest',
+        gameResult => 'gameResult',
       };
 }

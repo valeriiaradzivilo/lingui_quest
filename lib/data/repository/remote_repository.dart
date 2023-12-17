@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/game_result_full_model.dart';
+import 'package:lingui_quest/data/models/game_result_model.dart';
 import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
@@ -122,4 +124,17 @@ abstract class RemoteRepository {
   ///
   /// [id] - The unique identifier of the game.
   Future<Either<Failure, void>> rateTheGame(GameRate rate);
+
+  /// Retrieves the list of games for the current user.
+  Future<Either<Failure, void>> getMyPassedGames();
+
+  /// Posts the result of a game.
+  ///
+  /// [id] - The unique identifier of the game.
+  Future<Either<Failure, void>> postGameResult(GameResultModel result);
+
+  /// Gets all results of a game.
+  ///
+  /// [gameId] - The unique identifier of the game.
+  Future<Either<Failure, List<GameResultFullModel>>> getAllGameResults(String gameId);
 }

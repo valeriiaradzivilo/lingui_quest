@@ -32,7 +32,7 @@ class GroupsBloc extends Cubit<GroupsState> {
   final GetFullGroupInfoUsecase _getFullGroupInfoUsecase;
   final RequestToJoinGroupUsecase _requestToJoinGroupUsecase;
 
-  Future getCurrentUser() async {
+  void getCurrentUser() async {
     final user = await _getCurrentUserUsecase(NoParams());
     if (user.isRight()) {
       final allGroups = await _getAllGroupsForCurrentUserUsecase(NoParams());
@@ -68,25 +68,28 @@ class GroupsBloc extends Cubit<GroupsState> {
   }
 
   void findChosenGroupByCode(String codeFromPath) async {
-    if (state.chosenGroup == null) {
-      if (state.currentUser.userId.isEmpty) {
-        await getCurrentUser();
-      }
-      final code = codeFromPath.replaceAll(AppRoutes.group.path, '');
-      final groupFromCodeRes = await _getGroupByCodeUsecase(code);
-      groupFromCodeRes.fold((l) {
-        emit(state.copyWith(chosenGroup: null, errorMessage: 'Could not find the group'));
-        return;
-      }, (r) async {
-        if (r.creatorId == state.currentUser.userId || r.students.contains(state.currentUser.userId)) {
-          final fullInfoRes = await _getFullGroupInfoUsecase(r);
-          emit(state.copyWith(chosenGroup: fullInfoRes.foldRight(null, (r, previous) => r)));
-          return;
-        }
-      });
+    emit(state.copyWith(status: GroupsStatus.progress));
 
-      emit(state.copyWith(errorMessage: 'You do not have access to this group. Join the group firstly.'));
+    if (state.currentUser.userId.isEmpty) {
+      final user = await _getCurrentUserUsecase(NoParams());
+      emit(state.copyWith(currentUser: user.foldRight(UserModel.empty(), (r, previous) => r)));
     }
+    final code = codeFromPath.replaceAll(AppRoutes.group.path, '');
+    final groupFromCodeRes = await _getGroupByCodeUsecase(code);
+    groupFromCodeRes.fold((l) {
+      emit(state.copyWith(status: GroupsStatus.error, chosenGroup: null, errorMessage: 'Could not find the group'));
+      return;
+    }, (r) async {
+      if (r.creatorId == state.currentUser.userId || r.students.contains(state.currentUser.userId)) {
+        final fullInfoRes = await _getFullGroupInfoUsecase(r);
+        emit(
+            state.copyWith(status: GroupsStatus.initial, chosenGroup: fullInfoRes.foldRight(null, (r, previous) => r)));
+        return;
+      }
+    });
+
+    emit(state.copyWith(
+        status: GroupsStatus.error, errorMessage: 'You do not have access to this group. Join the group firstly.'));
   }
 
   void deleteChosenGroup() {

@@ -4,17 +4,21 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
+import 'package:lingui_quest/data/models/game_error_model.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/game_result_model.dart';
 import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:lingui_quest/data/usecase/post_game_result_usecase.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'game_play_state.dart';
 
 class GamePlayCubit extends Cubit<GamePlayState> {
-  GamePlayCubit(this._currentUserUsecase, this._rateGameUsecase) : super(GamePlayState.initial());
+  GamePlayCubit(this._currentUserUsecase, this._rateGameUsecase, this._postGameResultUsecase)
+      : super(GamePlayState.initial());
 
   late final ValueStream<int> remainingTimeStream = _remainingTimeController.stream;
 
@@ -68,17 +72,36 @@ class GamePlayCubit extends Cubit<GamePlayState> {
     }
   }
 
-  void loadNextTask() {
+  void loadNextTask() async {
     Function unOrdDeepEq = DeepCollectionEquality.unordered().equals;
     final isCorrectAnswer = unOrdDeepEq(state.currentQuestion.correctAnswers, state.selectedAnswers);
     if (state.shuffledQuestions.length > state.questionNumber + 1) {
+      final errors = [...state.errors];
+      if (!isCorrectAnswer) {
+        errors.add(GameErrorModel(
+            question: state.currentQuestion,
+            expectedResult: state.currentQuestion.correctAnswers.join(','),
+            actualResult: state.selectedAnswers.join(',')));
+      }
       emit(state.copyWith(
         questionNumber: state.questionNumber + 1,
         currentQuestion: state.shuffledQuestions[state.questionNumber + 1],
         selectedAnswers: [],
+        errors: errors,
         amountOfCorrectlyAnsweredQuestions: state.amountOfCorrectlyAnsweredQuestions + (isCorrectAnswer ? 1 : 0),
       ));
     } else {
+      emit(state.copyWith(status: GamePlayStatus.progress));
+      if (state.currentUser.userId.isNotEmpty) {
+        await _postGameResultUsecase(
+          GameResultModel(
+              userId: state.currentUser.userId,
+              gameId: state.currentGame.id,
+              result: (state.amountOfCorrectlyAnsweredQuestions + (isCorrectAnswer ? 1 : 0)) * 100,
+              timeFinished: DateTime.now().millisecondsSinceEpoch,
+              errors: state.errors),
+        );
+      }
       emit(state.copyWith(
         status: GamePlayStatus.result,
         amountOfCorrectlyAnsweredQuestions: state.amountOfCorrectlyAnsweredQuestions + (isCorrectAnswer ? 1 : 0),
@@ -103,4 +126,5 @@ class GamePlayCubit extends Cubit<GamePlayState> {
   Timer? timer;
   final GetCurrentUserUsecase _currentUserUsecase;
   final RateGameUsecase _rateGameUsecase;
+  final PostGameResultUsecase _postGameResultUsecase;
 }

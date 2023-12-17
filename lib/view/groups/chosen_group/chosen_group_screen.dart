@@ -23,7 +23,9 @@ class ChosenGroupScreen extends StatelessWidget {
       body: BlocBuilder<GroupsBloc, GroupsState>(
           bloc: bloc..findChosenGroupByCode(groupCode ?? ''),
           builder: (context, state) {
-            if (state.chosenGroup == null) {
+            if (state.status != GroupsStatus.initial && state.status != GroupsStatus.error) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state.status == GroupsStatus.error || state.chosenGroup == null) {
               return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -33,85 +35,88 @@ class ChosenGroupScreen extends StatelessWidget {
             }
             final group = state.chosenGroup!.group;
             final tutor = state.chosenGroup!.tutor;
-            return Padding(
-              padding: EdgeInsets.all(PaddingConst.medium),
-              child: Column(
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Row(
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(PaddingConst.medium),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                context.loc.group,
-                                style: theme.textTheme.displaySmall,
-                              ),
-                              Text('${context.loc.groupName}: ${group.name}'),
-                              Text('${context.loc.groupDescription}: ${group.description}'),
-                              LinMainButton(
-                                  label: context.loc.showCode,
-                                  onTap: () => showDialog(
-                                        context: context,
-                                        builder: (context) => Center(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: theme.cardColor,
-                                              borderRadius: BorderRadius.circular(20),
-                                              border: Border.all(color: theme.highlightColor),
-                                            ),
-                                            width: MediaQuery.of(context).size.width * 0.7,
-                                            padding: EdgeInsets.all(PaddingConst.medium),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  context.loc.code,
-                                                  style: theme.textTheme.titleLarge,
-                                                ),
-                                                Divider(),
-                                                Row(
-                                                  children: [
-                                                    Expanded(child: Text(group.code)),
-                                                    IconButton(
-                                                      icon: Icon(FeatherIcons.copy),
-                                                      onPressed: () async {
-                                                        await Clipboard.setData(ClipboardData(text: group.code));
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                          child: Padding(
+                            padding: EdgeInsets.all(PaddingConst.medium),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(context.loc.group, style: theme.textTheme.displaySmall),
+                                Gap(PaddingConst.medium),
+                                Text('${context.loc.groupName}: ${group.name}'),
+                                Gap(PaddingConst.medium),
+                                Text('${context.loc.groupDescription}: ${group.description}'),
+                                Gap(PaddingConst.medium),
+                                LinMainButton(
+                                    label: context.loc.showCode,
+                                    onTap: () => showDialog(
+                                          context: context,
+                                          builder: (context) => Center(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: theme.cardColor,
+                                                borderRadius: BorderRadius.circular(20),
+                                                border: Border.all(color: theme.highlightColor),
+                                              ),
+                                              width: MediaQuery.of(context).size.width * 0.7,
+                                              padding: EdgeInsets.all(PaddingConst.medium),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    context.loc.code,
+                                                    style: theme.textTheme.titleLarge,
+                                                  ),
+                                                  Divider(),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(child: Text(group.code)),
+                                                      IconButton(
+                                                        icon: Icon(FeatherIcons.copy),
+                                                        onPressed: () async {
+                                                          await Clipboard.setData(ClipboardData(text: group.code));
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ))
-                            ],
+                                        ))
+                              ],
+                            ),
                           ),
                         ),
                         Flexible(child: LinTutorInfoSection(tutor: tutor))
                       ],
                     ),
-                  ),
-                  Gap(PaddingConst.medium),
-                  Text(
-                    context.loc.games.toUpperCase(),
-                    style: theme.textTheme.displaySmall,
-                  ),
-                  Expanded(
-                    child: ReactiveWidget(
-                      stream: state.chosenGroup!.games,
-                      widget: (games) => GridView.builder(
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 300),
-                        itemBuilder: (_, index) => GameBox(game: games[index]),
-                        itemCount: games.length,
-                      ),
+                    Gap(PaddingConst.medium),
+                    Text(
+                      context.loc.games.toUpperCase(),
+                      style: theme.textTheme.displaySmall,
                     ),
-                  )
-                ],
+                    ReactiveWidget(
+                      stream: state.chosenGroup!.games,
+                      widget: (games) => games.isNotEmpty
+                          ? GridView.builder(
+                              shrinkWrap: true,
+                              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 300),
+                              itemBuilder: (_, index) => GameBox(game: games[index]),
+                              itemCount: games.length,
+                            )
+                          : Text(context.loc.noResults),
+                    )
+                  ],
+                ),
               ),
             );
           }),

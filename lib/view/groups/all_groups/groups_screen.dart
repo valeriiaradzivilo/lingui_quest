@@ -1,6 +1,7 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
@@ -48,27 +49,21 @@ class GroupsScreen extends StatelessWidget {
                 ),
                 SizedBox(height: PaddingConst.large),
                 Expanded(
-                    child: SingleChildScrollView(
                   child: Container(
                     padding: EdgeInsets.all(PaddingConst.medium),
-                    width: double.infinity,
                     child: ReactiveWidget(
                       stream: state.allGroups,
-                      widget: (groups) => Wrap(
-                          alignment: WrapAlignment.start,
-                          runAlignment: WrapAlignment.start,
-                          spacing: PaddingConst.medium,
-                          runSpacing: PaddingConst.medium,
-                          children: [
-                            for (int index = 0; index < groups.length; index++)
-                              GroupBoxWidget(
-                                group: groups[index],
-                                isCreator: groups[index].creatorId == state.currentUser.userId,
-                              ),
-                          ]),
+                      widget: (groups) => ListView.separated(
+                        itemBuilder: (context, index) => GroupBoxWidget(
+                          group: groups[index],
+                          isCreator: groups[index].creatorId == state.currentUser.userId,
+                        ),
+                        itemCount: groups.length,
+                        separatorBuilder: (__, _) => Gap(PaddingConst.medium),
+                      ),
                     ),
                   ),
-                )),
+                )
               ],
             );
           } else {

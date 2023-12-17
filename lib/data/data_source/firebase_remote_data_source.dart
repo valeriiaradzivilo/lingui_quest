@@ -1,4 +1,6 @@
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/game_result_full_model.dart';
+import 'package:lingui_quest/data/models/game_result_model.dart';
 import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
@@ -136,10 +138,15 @@ abstract class FirebaseRemoteDatasource {
   Future<void> rateTheGame(GameRate rate);
 
   /// Retrieves the list of games for the current user.
-  Future<void> getMyGames();
+  Future<void> getMyPassedGames();
 
   /// Posts the result of a game.
   ///
   /// [id] - The unique identifier of the game.
-  Future<void> postGameResult(String id);
+  Future<void> postGameResult(GameResultModel result);
+
+  /// Gets all results of a game.
+  ///
+  /// [gameId] - The unique identifier of the game.
+  Future<List<GameResultFullModel>> getAllGameResults(String gameId);
 }

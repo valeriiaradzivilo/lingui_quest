@@ -12,6 +12,7 @@ class GamePlayState extends Equatable {
   final List<QuestionModel> shuffledQuestions;
   final int questionNumber;
   final int amountOfCorrectlyAnsweredQuestions;
+  final List<GameErrorModel> errors;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
@@ -25,21 +26,24 @@ class GamePlayState extends Equatable {
     required this.shuffledQuestions,
     required this.questionNumber,
     required this.amountOfCorrectlyAnsweredQuestions,
+    required this.errors,
   });
   factory GamePlayState.initial() {
     return GamePlayState(
-        status: GamePlayStatus.progress,
-        currentQuestion: QuestionModel.empty(),
-        currentUser: UserModel.empty(),
-        currentGame: GameModel.empty(),
-        selectedAnswers: const [],
-        shuffledQuestions: [],
-        questionNumber: 0,
-        amountOfCorrectlyAnsweredQuestions: 0);
+      status: GamePlayStatus.progress,
+      currentQuestion: QuestionModel.empty(),
+      currentUser: UserModel.empty(),
+      currentGame: GameModel.empty(),
+      selectedAnswers: const [],
+      shuffledQuestions: [],
+      questionNumber: 0,
+      amountOfCorrectlyAnsweredQuestions: 0,
+      errors: [],
+    );
   }
 
   @override
-  List<Object?> get props => [status, _time, currentQuestion, currentUser, currentGame, selectedAnswers];
+  List<Object?> get props => [status, _time, currentQuestion, currentUser, currentGame, selectedAnswers, errors];
 
   GamePlayState copyWith({
     GamePlayStatus? status,
@@ -51,6 +55,7 @@ class GamePlayState extends Equatable {
     List<QuestionModel>? shuffledQuestions,
     int? questionNumber,
     int? amountOfCorrectlyAnsweredQuestions,
+    List<GameErrorModel>? errors,
   }) {
     return GamePlayState(
       status: status ?? this.status,
@@ -61,6 +66,7 @@ class GamePlayState extends Equatable {
       selectedAnswers: selectedAnswers ?? this.selectedAnswers,
       shuffledQuestions: shuffledQuestions ?? this.shuffledQuestions,
       questionNumber: questionNumber ?? this.questionNumber,
+      errors: errors ?? this.errors,
       amountOfCorrectlyAnsweredQuestions: amountOfCorrectlyAnsweredQuestions ?? this.amountOfCorrectlyAnsweredQuestions,
     );
   }

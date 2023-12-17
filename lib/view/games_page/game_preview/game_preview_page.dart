@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
+import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/view/game_play_page/game_play_page.dart';
@@ -35,6 +36,13 @@ class GamePreviewPage extends StatelessWidget {
                         Text('${context.loc.theme}: ${state.game.theme}'),
                         Gap(PaddingConst.medium),
                         Text('${context.loc.gameDescriptionLabel}: ${state.game.description}'),
+                        if (state.currentUser == UserModel.empty()) ...[
+                          Gap(PaddingConst.medium),
+                          Text(
+                            context.loc.gameNoteNotLoggedIn,
+                            style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.error),
+                          ),
+                        ],
                         Gap(PaddingConst.large),
                         LinMainButton(
                             label: context.loc.startGame,

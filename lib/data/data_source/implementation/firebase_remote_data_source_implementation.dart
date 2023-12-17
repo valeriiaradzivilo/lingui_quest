@@ -5,6 +5,8 @@ import 'package:lingui_quest/core/helper/serializable_interface.dart';
 import 'package:lingui_quest/data/data_source/firebase_remote_data_source.dart';
 import 'package:lingui_quest/data/firebase/firebase_constants.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/game_result_full_model.dart';
+import 'package:lingui_quest/data/models/game_result_model.dart';
 import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
@@ -409,18 +411,6 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
-  Future<void> getMyGames() {
-    // TODO: implement getMyGames
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> postGameResult(String id) {
-    // TODO: implement postGameResult
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> rateTheGame(GameRate rate) async {
     final game =
         await firestore.collection(FirebaseCollection.games.collectionName).where('id', isEqualTo: rate.gameId).get();
@@ -459,5 +449,42 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     final games =
         await firestore.collection(FirebaseCollection.games.collectionName).where('groups', isEqualTo: []).get();
     return games.size;
+  }
+
+  @override
+  Future<List<GameResultFullModel>> getAllGameResults(String gameId) async {
+    final results = await firestore
+        .collection(FirebaseCollection.gameResult.collectionName)
+        .where('game_id', isEqualTo: gameId)
+        .get();
+    final List<GameResultFullModel> answer = [];
+
+    for (final doc in results.docs) {
+      final model = GameResultModel.fromJson(doc.data());
+      final UserModel user = await _getUserByUserId(model.userId);
+      final GameModel game = await getGameById(model.gameId);
+      answer.add(GameResultFullModel(
+        user: user,
+        game: game,
+        result: model.result,
+        timeFinished: model.timeFinished,
+        errors: model.errors,
+      ));
+    }
+
+    return answer;
+  }
+
+  @override
+  Future<void> postGameResult(GameResultModel result) async {
+    final CollectionReference gameResultsTable = firestore.collection(FirebaseCollection.gameResult.collectionName);
+    await gameResultsTable.add(result.toJson());
+    print('Game result is posted');
+  }
+
+  @override
+  Future<void> getMyPassedGames() {
+    // TODO: implement getMyPassedGames
+    throw UnimplementedError();
   }
 }

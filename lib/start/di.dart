@@ -21,6 +21,7 @@ import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_join_requests_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_public_games_count.dart';
+import 'package:lingui_quest/data/usecase/post_game_result_usecase.dart';
 import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/request_to_join_group_usecase.dart';
@@ -165,6 +166,10 @@ Future<void> initUseCases() async {
   serviceLocator.registerLazySingleton<GetPublicGamesCount>(
     () => GetPublicGamesCount(repository: remoteRepository),
   );
+
+  serviceLocator.registerLazySingleton<PostGameResultUsecase>(
+    () => PostGameResultUsecase(repository: remoteRepository),
+  );
 }
 
 Future<void> initRepository() async {
@@ -237,8 +242,15 @@ Future<void> initCubs() async {
     ),
   );
   serviceLocator.registerFactory(() => QuestionCreationCubit());
-  serviceLocator.registerFactory(() => GamePreviewCubit(serviceLocator<GetGameByIdUsecase>()));
-  serviceLocator.registerFactory(() => GamePlayCubit(getCurrentUserUsecase, serviceLocator<RateGameUsecase>()));
+  serviceLocator.registerFactory(() => GamePreviewCubit(
+        serviceLocator<GetGameByIdUsecase>(),
+        getCurrentUserUsecase,
+      ));
+  serviceLocator.registerFactory(() => GamePlayCubit(
+        getCurrentUserUsecase,
+        serviceLocator<RateGameUsecase>(),
+        serviceLocator<PostGameResultUsecase>(),
+      ));
   serviceLocator.registerFactory(() => GroupsBloc(
         getCurrentUserUsecase,
         serviceLocator<GetAllGroupsForCurrentUserUsecase>(),

@@ -3,6 +3,8 @@ import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/data/data_source/firebase_remote_data_source.dart';
 import 'package:lingui_quest/data/level_test_logic/level_test_tree.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
+import 'package:lingui_quest/data/models/game_result_full_model.dart';
+import 'package:lingui_quest/data/models/game_result_model.dart';
 import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
@@ -247,6 +249,33 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   Future<Either<Failure, int>> publicGamesCount() async {
     try {
       return Right(await _database.publicGamesCount());
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GameResultFullModel>>> getAllGameResults(String gameId) async {
+    try {
+      return Right(await _database.getAllGameResults(gameId));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> getMyPassedGames() async {
+    try {
+      return Right(await _database.getMyPassedGames());
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> postGameResult(GameResultModel result) async {
+    try {
+      return Right(await _database.postGameResult(result));
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }

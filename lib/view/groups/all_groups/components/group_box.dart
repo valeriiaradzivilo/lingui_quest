@@ -16,51 +16,66 @@ class GroupBoxWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cubit = BlocProvider.of<GroupsBloc>(context);
-    return Container(
-      decoration: BoxDecoration(border: Border.all(color: theme.colorScheme.onBackground)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          RotatedBox(
-            quarterTurns: 3,
-            child: isCreator
-                ? Container(
-                    padding: EdgeInsets.all(PaddingConst.extraSmall),
-                    color: theme.colorScheme.errorContainer,
-                    child: Text(context.loc.tutor),
-                  )
-                : Container(
-                    padding: EdgeInsets.all(PaddingConst.extraSmall),
-                    color: Colors.cyan[800],
-                    child: Text(context.loc.student),
-                  ),
-          ),
-          Gap(PaddingConst.medium),
-          Flexible(
-            child: Column(
-              children: [
-                Text(
-                  group.name,
-                  maxLines: 5,
-                  overflow: TextOverflow.fade,
+    return InkWell(
+      onTap: () async {
+        await cubit.chosenGroup(group);
+        Navigator.pushNamed(context, AppRoutes.group.path + group.code);
+      },
+      child: Container(
+        decoration: BoxDecoration(border: Border.all(color: theme.colorScheme.onBackground)),
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: PaddingConst.medium),
+                child: RotatedBox(
+                  quarterTurns: 3,
+                  child: isCreator
+                      ? Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(PaddingConst.extraSmall),
+                          color: theme.colorScheme.errorContainer,
+                          child: Center(child: Text(context.loc.tutor)),
+                        )
+                      : Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(PaddingConst.extraSmall),
+                          color: Colors.cyan[800],
+                          child: Center(child: Text(context.loc.student)),
+                        ),
                 ),
-                Text(
-                  group.description,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                )
-              ],
-            ),
+              ),
+              Flexible(
+                flex: 3,
+                child: Column(
+                  children: [
+                    Text(
+                      group.name,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                    Gap(PaddingConst.small),
+                    Text(
+                      '${context.loc.groupDescription}: ${group.description}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    )
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Icon(FeatherIcons.arrowRight),
+                onPressed: () async {
+                  await cubit.chosenGroup(group);
+                  Navigator.pushNamed(context, AppRoutes.group.path + group.code);
+                },
+              ),
+            ],
           ),
-          Gap(PaddingConst.medium),
-          IconButton(
-            icon: Icon(FeatherIcons.arrowRight),
-            onPressed: () async {
-              await cubit.chosenGroup(group);
-              Navigator.pushNamed(context, AppRoutes.group.path + group.code);
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
