@@ -21,7 +21,7 @@ class GamesListScreen extends StatelessWidget {
     final bloc = BlocProvider.of<GamesListBloc>(context);
     return SingleChildScrollView(
       child: BlocBuilder<GamesListBloc, GamesListState>(
-          bloc: bloc..add(FindCurrentUser()),
+          bloc: bloc..add(Init()),
           builder: (_, state) {
             if (state.status == GamesUploadStatus.initial || state.status == GamesUploadStatus.search) {
               return Column(
@@ -43,34 +43,40 @@ class GamesListScreen extends StatelessWidget {
                   state.status == GamesUploadStatus.initial
                       ? ReactiveWidget(stream: state.gamesList, widget: (list) => _GridGames(list: list))
                       : _GridGames(list: state.searchResult),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (state.page != 0)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: InkWell(
-                            onTap: () {},
-                            child: Container(
-                              padding: EdgeInsets.all(PaddingConst.small),
-                              decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                              child: Icon(FeatherIcons.arrowLeft),
+                  if (state.status != GamesUploadStatus.search)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (state.page != 0)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: () {
+                                if (state.page - 1 >= 0) {
+                                  bloc.add(SwitchPage(page: state.page - 1));
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(PaddingConst.small),
+                                decoration: BoxDecoration(border: Border.all(color: Colors.white)),
+                                child: Icon(FeatherIcons.arrowLeft),
+                              ),
                             ),
                           ),
-                        ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Container(
-                            padding: EdgeInsets.all(PaddingConst.small),
-                            decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                            child: Icon(FeatherIcons.arrowRight),
+                        if (state.page + 1 < state.totalPageCount)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: () => bloc.add(SwitchPage(page: state.page + 1)),
+                              child: Container(
+                                padding: EdgeInsets.all(PaddingConst.small),
+                                decoration: BoxDecoration(border: Border.all(color: Colors.white)),
+                                child: Icon(FeatherIcons.arrowRight),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  )
+                      ],
+                    )
                 ],
               );
             } else if (state.status == GamesUploadStatus.progress) {
@@ -98,6 +104,7 @@ class _GridGames extends StatelessWidget {
         ? GridView.builder(
             shrinkWrap: true,
             itemCount: list.length,
+            physics: NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 400),
             itemBuilder: (_, index) => GameBox(game: list[index]))
         : Center(child: Text(context.loc.noResults));

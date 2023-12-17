@@ -63,12 +63,6 @@ class _LinTextFieldState extends State<LinTextField> {
   }
 
   @override
-  void dispose() {
-    widget.controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(maxWidth: widget.option.maxFieldWidth ?? double.infinity),

@@ -15,6 +15,7 @@ import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
+import 'package:lingui_quest/shared/constants/games_constants.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:simple_logger/simple_logger.dart';
@@ -190,20 +191,23 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
 
   @override
   Future<Stream<List<GameModel>>> getAllPublicGames(int page) async {
-    try {
-      //game is considered public when groups list is empty
-      final Stream<QuerySnapshot<Json>> resultStream = firestore
-          .collection(FirebaseCollection.games.collectionName)
-          .where('groups', isEqualTo: [])
-          .snapshots()
-          .skip(page * 5)
-          .take(5);
-      return resultStream.map((event) => event.docs.map((doc) {
-            return GameModel.fromJson(doc.data());
-          }).toList());
-    } catch (e) {
-      rethrow;
+    //game is considered public when groups list is empty
+    final games = firestore.collection(FirebaseCollection.games.collectionName).where('groups', isEqualTo: []);
+
+    final snapshot = await games.get();
+    final count = snapshot.size;
+    var amountOfFilesToTake = GameConstants.gamesPerPage;
+    if (count < page * GameConstants.gamesPerPage + GameConstants.gamesPerPage) {
+      amountOfFilesToTake = count - (page * GameConstants.gamesPerPage);
     }
+    final resultStream = games
+        .startAtDocument(snapshot.docs.elementAt(page * GameConstants.gamesPerPage))
+        .endAtDocument(snapshot.docs.elementAt(page * GameConstants.gamesPerPage + amountOfFilesToTake - 1))
+        .snapshots();
+
+    return resultStream.map((event) => event.docs.map((doc) {
+          return GameModel.fromJson(doc.data());
+        }).toList());
   }
 
   @override
@@ -447,5 +451,13 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
       games.addAll(allGames.where((element) => searchModel.level.contains(element.level)));
     }
     return games;
+  }
+
+  @override
+  Future<int> publicGamesCount() async {
+    //game is considered public when groups list is empty
+    final games =
+        await firestore.collection(FirebaseCollection.games.collectionName).where('groups', isEqualTo: []).get();
+    return games.size;
   }
 }

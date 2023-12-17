@@ -10,18 +10,19 @@ class GamesListState extends Equatable {
   final int page;
   final List<GameModel> searchResult;
   final GameSearchModel searchModel;
+  final int totalPageCount;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
-  const GamesListState({
-    required this.status,
-    this.errorMessage,
-    required this.currentUser,
-    required this.gamesList,
-    required this.page,
-    this.searchResult = const [],
-    required this.searchModel,
-  });
+  const GamesListState(
+      {required this.status,
+      this.errorMessage,
+      required this.currentUser,
+      required this.gamesList,
+      required this.page,
+      this.searchResult = const [],
+      required this.searchModel,
+      required this.totalPageCount});
   factory GamesListState.initial() {
     return GamesListState(
       status: GamesUploadStatus.progress,
@@ -29,11 +30,21 @@ class GamesListState extends Equatable {
       gamesList: Stream.empty(),
       page: 0,
       searchModel: GameSearchModel.empty(),
+      totalPageCount: 1,
     );
   }
 
   @override
-  List<Object?> get props => [status, _time, currentUser, gamesList, searchResult, searchModel];
+  List<Object?> get props => [
+        status,
+        _time,
+        currentUser,
+        gamesList,
+        searchResult,
+        searchModel,
+        totalPageCount,
+        page,
+      ];
 
   GamesListState copyWith({
     GamesUploadStatus? status,
@@ -43,6 +54,7 @@ class GamesListState extends Equatable {
     int? page,
     List<GameModel>? searchResult,
     GameSearchModel? searchModel,
+    int? totalPageCount,
   }) {
     return GamesListState(
       status: status ?? this.status,
@@ -52,6 +64,7 @@ class GamesListState extends Equatable {
       page: page ?? this.page,
       searchResult: searchResult ?? this.searchResult,
       searchModel: searchModel ?? this.searchModel,
+      totalPageCount: totalPageCount ?? this.totalPageCount,
     );
   }
 }

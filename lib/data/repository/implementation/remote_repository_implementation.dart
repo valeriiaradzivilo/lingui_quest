@@ -242,4 +242,13 @@ class RemoteRepositoryImplementation implements RemoteRepository {
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, int>> publicGamesCount() async {
+    try {
+      return Right(await _database.publicGamesCount());
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
 }

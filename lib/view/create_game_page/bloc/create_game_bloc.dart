@@ -19,8 +19,12 @@ class GameCreationCubit extends Cubit<GameCreationState> {
   final CreateNewGameUsecase _createNewGameUsecase;
   final GetCreatedGroupsByCurrentUserUsecase _getCreatedGroupsByCurrentUserUsecase;
 
-  void setTheme(String? theme) {
-    emit(state.copyWith(game: state.game.copyWith(theme: theme ?? ''), customTheme: false));
+  void setTheme(GameTheme? theme, {String? customTheme}) {
+    if (theme != GameTheme.custom) {
+      emit(state.copyWith(game: state.game.copyWith(theme: theme?.label ?? ''), customTheme: false));
+    } else {
+      emit(state.copyWith(game: state.game.copyWith(theme: customTheme ?? ''), customTheme: true));
+    }
   }
 
   void setLevel(EnglishLevel? level) {
@@ -37,11 +41,14 @@ class GameCreationCubit extends Cubit<GameCreationState> {
   void setName(String name) => emit(state.copyWith(game: state.game.copyWith(name: name)));
   void setDescription(String description) => emit(state.copyWith(game: state.game.copyWith(description: description)));
 
-  void setThemeDropdown(String? theme) {
-    if (theme == GameTheme.custom.label) {
-      emit(state.copyWith(customTheme: true, game: state.game.copyWith(theme: '')));
-    } else {
-      setTheme(theme);
+  void setThemeDropdown(String? themeString) {
+    if (themeString != null) {
+      final GameTheme theme = GameTheme.fromLabelString(themeString);
+      if (theme == GameTheme.custom) {
+        emit(state.copyWith(customTheme: true, game: state.game.copyWith(theme: '')));
+      } else {
+        setTheme(theme);
+      }
     }
   }
 

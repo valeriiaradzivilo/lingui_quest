@@ -6,7 +6,9 @@ import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/get_all_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_public_games_count.dart';
 import 'package:lingui_quest/data/usecase/search_games_usecase.dart';
+import 'package:lingui_quest/shared/constants/games_constants.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:lingui_quest/shared/enums/game_theme_enum.dart';
 
@@ -14,7 +16,10 @@ part 'games_list_state.dart';
 
 sealed class GameListEvent {}
 
-final class FindAllGames extends GameListEvent {}
+final class SwitchPage extends GameListEvent {
+  final int page;
+  SwitchPage({required this.page});
+}
 
 final class FindGames extends GameListEvent {}
 
@@ -38,30 +43,47 @@ final class ChangeTheme extends GameListEvent {
   ChangeTheme({required this.theme});
 }
 
-final class FindCurrentUser extends GameListEvent {}
+final class Init extends GameListEvent {}
 
 class GamesListBloc extends Bloc<GameListEvent, GamesListState> {
   final GetAllGamesUsecase _getAllPublicGamesUsecase;
   final GetCurrentUserUsecase _getCurrentUserUsecase;
   final SearchGamesUsecase _searchGamesUsecase;
+  final GetPublicGamesCount _getPublicGamesCount;
 
-  GamesListBloc(this._getAllPublicGamesUsecase, this._getCurrentUserUsecase, this._searchGamesUsecase)
+  GamesListBloc(
+      this._getAllPublicGamesUsecase, this._getCurrentUserUsecase, this._searchGamesUsecase, this._getPublicGamesCount)
       : super(GamesListState.initial()) {
-    on<FindAllGames>((event, emit) async {
-      final allGamesListResult = await _getAllPublicGamesUsecase(state.page);
+    on<SwitchPage>((event, emit) async {
+      emit(state.copyWith(status: GamesUploadStatus.progress));
+      final allGamesListResult = await _getAllPublicGamesUsecase(event.page);
       allGamesListResult.fold(
           (_) => emit(state.copyWith(status: GamesUploadStatus.error, errorMessage: 'Error getting games. Try again!')),
-          (games) => emit(state.copyWith(gamesList: games, status: GamesUploadStatus.initial)));
+          (games) => emit(state.copyWith(gamesList: games, status: GamesUploadStatus.initial, page: event.page)));
     });
-    on<FindCurrentUser>(
+    on<Init>(
       (event, emit) async {
         final getCurrentUserRes = await _getCurrentUserUsecase(NoParams());
-        getCurrentUserRes.fold((l) => null, (r) => emit(state.copyWith(currentUser: r)));
-        final allGamesListResult = await _getAllPublicGamesUsecase(state.page);
-        allGamesListResult.fold(
-            (_) =>
+        getCurrentUserRes.fold((___) => null, (currentUser) => emit(state.copyWith(currentUser: currentUser)));
+
+        final publicGamesCountRes = await _getPublicGamesCount(NoParams());
+        publicGamesCountRes.fold(
+            (__) =>
                 emit(state.copyWith(status: GamesUploadStatus.error, errorMessage: 'Error getting games. Try again!')),
-            (games) => emit(state.copyWith(gamesList: games, status: GamesUploadStatus.initial)));
+            (gamesCount) async {
+          var pageDivisionRes = gamesCount ~/ GameConstants.gamesPerPage;
+          if (gamesCount - pageDivisionRes > 0) {
+            pageDivisionRes++;
+          }
+          emit(state.copyWith(totalPageCount: pageDivisionRes));
+        });
+        if (publicGamesCountRes.isRight()) {
+          final allGamesListResult = await _getAllPublicGamesUsecase(state.page);
+          allGamesListResult.fold(
+              (_) => emit(
+                  state.copyWith(status: GamesUploadStatus.error, errorMessage: 'Error getting games. Try again!')),
+              (games) async => emit(state.copyWith(gamesList: games, status: GamesUploadStatus.initial)));
+        }
       },
     );
     on<FindGames>(

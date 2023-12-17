@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 enum GameTheme {
   presentSimple,
   presentContinuous,
@@ -32,4 +34,9 @@ enum GameTheme {
         pronouns => 'Pronouns',
         custom => 'Custom Theme',
       };
+
+  static GameTheme fromLabelString(String val) {
+    final GameTheme? res = GameTheme.values.firstWhereOrNull((element) => element.label == val);
+    return res ?? GameTheme.custom;
+  }
 }

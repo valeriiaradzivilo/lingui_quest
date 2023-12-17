@@ -61,6 +61,16 @@ class _CreateGamePageState extends State<CreateGamePage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _themeController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _themeController.dispose();
+    _timeController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final GameCreationCubit bloc = BlocProvider.of<GameCreationCubit>(context);
@@ -84,7 +94,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                   bloc.setName(_nameController.text);
                   bloc.setDescription(_descriptionController.text);
                   if (state.customTheme) {
-                    bloc.setTheme(_themeController.text);
+                    bloc.setTheme(GameTheme.custom, customTheme: _themeController.text);
                   }
                   bloc.setTime(_timeController.text);
                 }

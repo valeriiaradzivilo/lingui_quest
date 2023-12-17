@@ -26,10 +26,10 @@ class MissedTextBox extends StatelessWidget {
     final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(2),
-      color: theme.colorScheme.surfaceTint.withOpacity(0.5),
+      decoration: BoxDecoration(border: Border.all(color: theme.highlightColor)),
       child: Text(insertedText != null && (insertedText?.isNotEmpty ?? false)
           ? insertedText!.map((e) => e != insertedText!.last ? '$e/' : e).join()
-          : '                '),
+          : '__________'),
     );
   }
 }
@@ -74,7 +74,8 @@ enum TextTaskType {
 
         return Wrap(
           direction: Axis.horizontal,
-          alignment: WrapAlignment.start,
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(textBefore),
             MissedTextBox(
@@ -89,7 +90,8 @@ enum TextTaskType {
 
         return Wrap(
           direction: Axis.horizontal,
-          alignment: WrapAlignment.start,
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(textBefore),
             MissedTextBox(
@@ -106,6 +108,7 @@ enum TextTaskType {
         final String textAfterMissed = textAfterColon.substring(textAfterColon.lastIndexOf('_') + 1);
 
         return Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(
               textBeforeColon.toUpperCase(),

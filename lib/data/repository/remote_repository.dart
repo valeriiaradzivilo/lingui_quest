@@ -61,6 +61,9 @@ abstract class RemoteRepository {
   /// [page] - The page of games to get.
   Future<Either<Failure, Stream<List<GameModel>>>> getAllPublicGames(int page);
 
+  /// Gets count of all public games from the repository
+  Future<Either<Failure, int>> publicGamesCount();
+
   /// Gets a game by its ID.
   ///
   /// [gameId] - The ID of the game.

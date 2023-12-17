@@ -66,6 +66,9 @@ abstract class FirebaseRemoteDatasource {
   /// Returns a stream of lists of game models.
   Future<Stream<List<GameModel>>> getAllPublicGames(int page);
 
+  /// Gets count of all public games from Firebase, paginated.
+  Future<int> publicGamesCount();
+
   /// Gets a game by its ID from Firebase.
   ///
   /// [id] - The ID of the game.
