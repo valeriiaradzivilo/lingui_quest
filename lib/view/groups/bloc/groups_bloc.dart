@@ -87,9 +87,6 @@ class GroupsBloc extends Cubit<GroupsState> {
         return;
       }
     });
-
-    emit(state.copyWith(
-        status: GroupsStatus.error, errorMessage: 'You do not have access to this group. Join the group firstly.'));
   }
 
   void deleteChosenGroup() {

@@ -8,7 +8,7 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_tutor_info_section.dart';
 import 'package:lingui_quest/view/games_page/games_list/components/game_box.dart';
-import 'package:lingui_quest/view/groups/all_groups/bloc/groups_bloc.dart';
+import 'package:lingui_quest/view/groups/bloc/groups_bloc.dart';
 import 'package:rx_widgets/rx_widgets.dart';
 
 class ChosenGroupScreen extends StatelessWidget {
@@ -35,6 +35,7 @@ class ChosenGroupScreen extends StatelessWidget {
             }
             final group = state.chosenGroup!.group;
             final tutor = state.chosenGroup!.tutor;
+            final students = state.chosenGroup!.students;
             return SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(PaddingConst.medium),
@@ -107,14 +108,55 @@ class ChosenGroupScreen extends StatelessWidget {
                     ReactiveWidget(
                       stream: state.chosenGroup!.games,
                       widget: (games) => games.isNotEmpty
-                          ? GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 300),
-                              itemBuilder: (_, index) => GameBox(game: games[index]),
-                              itemCount: games.length,
+                          ? Container(
+                              height: 200,
+                              decoration: BoxDecoration(border: Border.all(color: theme.colorScheme.onBackground)),
+                              child: GridView.builder(
+                                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 300),
+                                itemBuilder: (_, index) => GameBox(game: games[index]),
+                                itemCount: games.length,
+                                scrollDirection: Axis.horizontal,
+                              ),
                             )
                           : Text(context.loc.noResults),
-                    )
+                    ),
+                    Gap(PaddingConst.large),
+                    if (group.creatorId == state.currentUser.userId) ...[
+                      Text(
+                        context.loc.students.toUpperCase(),
+                        style: theme.textTheme.displaySmall,
+                      ),
+                      if (students.isNotEmpty)
+                        Container(
+                          decoration: BoxDecoration(border: Border.all(color: theme.colorScheme.onBackground)),
+                          padding: EdgeInsets.all(PaddingConst.medium),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) => Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('${index + 1}. '),
+                                Flexible(
+                                    child: Text(
+                                  '${students[index].firstName} ${students[index].lastName}',
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                                Gap(PaddingConst.medium),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      FeatherIcons.trash,
+                                      color: theme.colorScheme.error,
+                                    ))
+                              ],
+                            ),
+                            itemCount: students.length,
+                          ),
+                        )
+                      else
+                        Text(context.loc.noResults)
+                    ]
                   ],
                 ),
               ),

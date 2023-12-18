@@ -8,6 +8,7 @@ class GroupFullInfoModel {
   final TutorModel tutor;
   final UserModel tutorUserData;
   final Stream<List<GameModel>> games;
+  final List<UserModel> students;
 
-  GroupFullInfoModel(this.group, this.tutor, this.tutorUserData, this.games);
+  GroupFullInfoModel(this.group, this.tutor, this.tutorUserData, this.games, this.students);
 }

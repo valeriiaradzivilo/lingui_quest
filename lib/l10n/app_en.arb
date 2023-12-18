@@ -99,6 +99,7 @@
   "noGroupsFound":"No groups were found",
   "requestToJoinGroupSuccessful":"Request to join the group was sent successfully!",
   "couldNotRequestToJoinGroup":"Could not send your request. Try again later!",
+  "students":"Students",
 
   "gameDoesNotExist":"Such game does not exist. Maybe it was deleted by creator.",
   "gameNoteNotLoggedIn":"Note: You are not logged in so your result will not be stored in any way. Please log in if you want the data to be stored.",

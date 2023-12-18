@@ -37,14 +37,25 @@ class GamePreviewPage extends StatelessWidget {
                         Text('${context.loc.theme}: ${state.game.theme}'),
                         Gap(PaddingConst.medium),
                         Text('${context.loc.gameDescriptionLabel}: ${state.game.description}'),
+                        Gap(PaddingConst.medium),
+                        Row(
+                          children: [
+                            Text('${context.loc.rate}: '),
+                            for (int i = 0; i < 5; i++)
+                              Icon(
+                                i <= (state.game.rate ?? -1) - 1 ? Icons.star_rate_rounded : Icons.star_outline_rounded,
+                                color: i <= (state.game.rate ?? -1) - 1 ? Colors.orangeAccent : null,
+                              )
+                          ],
+                        ),
                         if (state.currentUser == UserModel.empty()) ...[
                           Gap(PaddingConst.medium),
                           Text(
                             context.loc.gameNoteNotLoggedIn,
                             style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.error),
                           ),
+                          Gap(PaddingConst.medium),
                         ],
-                        Gap(PaddingConst.large),
                         LinMainButton(
                             label: context.loc.startGame,
                             onTap: () => Navigator.of(context)

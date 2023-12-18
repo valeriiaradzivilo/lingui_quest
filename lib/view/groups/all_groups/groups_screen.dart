@@ -6,10 +6,10 @@ import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
-import 'package:lingui_quest/view/groups/all_groups/bloc/groups_bloc.dart';
 import 'package:lingui_quest/view/groups/all_groups/components/create_group_alert.dart';
 import 'package:lingui_quest/view/groups/all_groups/components/group_box.dart';
 import 'package:lingui_quest/view/groups/all_groups/components/join_group_alert.dart';
+import 'package:lingui_quest/view/groups/bloc/groups_bloc.dart';
 import 'package:rx_widgets/rx_widgets.dart';
 
 class GroupsScreen extends StatelessWidget {

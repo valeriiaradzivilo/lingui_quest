@@ -6,7 +6,7 @@ import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/start/app_routes.dart';
-import 'package:lingui_quest/view/groups/all_groups/bloc/groups_bloc.dart';
+import 'package:lingui_quest/view/groups/bloc/groups_bloc.dart';
 
 class GroupBoxWidget extends StatelessWidget {
   const GroupBoxWidget({required this.group, required this.isCreator});

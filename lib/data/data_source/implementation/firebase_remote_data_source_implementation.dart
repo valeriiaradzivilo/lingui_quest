@@ -315,11 +315,17 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
         .where('user_id', isEqualTo: group.creatorId)
         .limit(1)
         .get();
+
+    final List<UserModel> students = [];
+    for (final studentId in group.students) {
+      students.add(await _getUserByUserId(studentId));
+    }
     return GroupFullInfoModel(
       group,
       TutorModel.fromJson(resTutor.docs.first.data()),
       UserModel.fromJson(resUser.docs.first.data()),
       await getGameByGroupCode(group.code),
+      students,
     );
   }
 

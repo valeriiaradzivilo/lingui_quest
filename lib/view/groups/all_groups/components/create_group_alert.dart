@@ -5,7 +5,7 @@ import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
-import 'package:lingui_quest/view/groups/all_groups/bloc/groups_bloc.dart';
+import 'package:lingui_quest/view/groups/bloc/groups_bloc.dart';
 
 class CreateGroupAlert extends StatefulWidget {
   const CreateGroupAlert({super.key});

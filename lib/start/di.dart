@@ -38,7 +38,7 @@ import 'package:lingui_quest/view/create_game_page/create_question/bloc/create_q
 import 'package:lingui_quest/view/game_play_page/bloc/game_play_bloc.dart';
 import 'package:lingui_quest/view/games_page/game_preview/bloc/game_preview_cubit.dart';
 import 'package:lingui_quest/view/games_page/games_list/bloc/games_list_bloc.dart';
-import 'package:lingui_quest/view/groups/all_groups/bloc/groups_bloc.dart';
+import 'package:lingui_quest/view/groups/bloc/groups_bloc.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/bloc/create_task_bloc.dart';
 import 'package:lingui_quest/view/level_test/main_info_screen/bloc/level_test_bloc.dart';
 import 'package:lingui_quest/view/level_test/test_play_screen/bloc/level_test_play_bloc.dart';
