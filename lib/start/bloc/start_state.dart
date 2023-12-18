@@ -10,6 +10,8 @@ class StartState extends Equatable {
   final TabBarOption currentTab;
   final TutorModel tutorModel;
   final Stream<List<JoinRequestFullModel>> joinRequests;
+  final List<GameModel> createdGames;
+  final List<GameModel> passedGames;
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
   const StartState({
@@ -20,6 +22,8 @@ class StartState extends Equatable {
     required this.currentTab,
     required this.tutorModel,
     required this.joinRequests,
+    required this.createdGames,
+    required this.passedGames,
   });
   factory StartState.initial() {
     return StartState(
@@ -29,6 +33,8 @@ class StartState extends Equatable {
       currentTab: TabBarOption.level,
       tutorModel: TutorModel.empty(),
       joinRequests: Stream.empty(),
+      createdGames: [],
+      passedGames: [],
     );
   }
 
@@ -41,6 +47,8 @@ class StartState extends Equatable {
         currentTab,
         tutorModel,
         joinRequests,
+        createdGames,
+        passedGames,
       ];
 
   StartState copyWith({
@@ -51,6 +59,8 @@ class StartState extends Equatable {
     TabBarOption? currentTab,
     TutorModel? tutorModel,
     Stream<List<JoinRequestFullModel>>? joinRequests,
+    List<GameModel>? createdGames,
+    List<GameModel>? passedGames,
   }) {
     return StartState(
       status: status ?? this.status,
@@ -60,6 +70,8 @@ class StartState extends Equatable {
       currentTab: currentTab ?? this.currentTab,
       tutorModel: tutorModel ?? this.tutorModel,
       joinRequests: joinRequests ?? this.joinRequests,
+      createdGames: createdGames ?? this.createdGames,
+      passedGames: passedGames ?? this.passedGames,
     );
   }
 }

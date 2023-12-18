@@ -4,7 +4,7 @@ import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/game_search_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
-import 'package:lingui_quest/data/usecase/get_all_games_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_all_public_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_public_games_count.dart';
 import 'package:lingui_quest/data/usecase/search_games_usecase.dart';
@@ -46,7 +46,7 @@ final class ChangeTheme extends GameListEvent {
 final class Init extends GameListEvent {}
 
 class GamesListBloc extends Bloc<GameListEvent, GamesListState> {
-  final GetAllGamesUsecase _getAllPublicGamesUsecase;
+  final GetAllPublicGamesUsecase _getAllPublicGamesUsecase;
   final GetCurrentUserUsecase _getCurrentUserUsecase;
   final SearchGamesUsecase _searchGamesUsecase;
   final GetPublicGamesCount _getPublicGamesCount;

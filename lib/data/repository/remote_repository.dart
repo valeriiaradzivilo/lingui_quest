@@ -126,7 +126,7 @@ abstract class RemoteRepository {
   Future<Either<Failure, void>> rateTheGame(GameRate rate);
 
   /// Retrieves the list of games for the current user.
-  Future<Either<Failure, void>> getMyPassedGames();
+  Future<Either<Failure, List<GameModel>>> getPassedGames();
 
   /// Posts the result of a game.
   ///
@@ -137,4 +137,7 @@ abstract class RemoteRepository {
   ///
   /// [gameId] - The unique identifier of the game.
   Future<Either<Failure, List<GameResultFullModel>>> getAllGameResults(String gameId);
+
+  /// Gets all games created by current user
+  Future<Either<Failure, List<GameModel>>> getCreatedGames();
 }

@@ -138,7 +138,7 @@ abstract class FirebaseRemoteDatasource {
   Future<void> rateTheGame(GameRate rate);
 
   /// Retrieves the list of games for the current user.
-  Future<void> getMyPassedGames();
+  Future<List<GameModel>> getPassedGames();
 
   /// Posts the result of a game.
   ///
@@ -149,4 +149,7 @@ abstract class FirebaseRemoteDatasource {
   ///
   /// [gameId] - The unique identifier of the game.
   Future<List<GameResultFullModel>> getAllGameResults(String gameId);
+
+  /// Gets all games created by current user
+  Future<List<GameModel>> getCreatedGames();
 }

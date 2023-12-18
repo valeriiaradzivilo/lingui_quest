@@ -264,9 +264,9 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   }
 
   @override
-  Future<Either<Failure, void>> getMyPassedGames() async {
+  Future<Either<Failure, List<GameModel>>> getPassedGames() async {
     try {
-      return Right(await _database.getMyPassedGames());
+      return Right(await _database.getPassedGames());
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }
@@ -276,6 +276,15 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   Future<Either<Failure, void>> postGameResult(GameResultModel result) async {
     try {
       return Right(await _database.postGameResult(result));
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GameModel>>> getCreatedGames() async {
+    try {
+      return Right(await _database.getCreatedGames());
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }

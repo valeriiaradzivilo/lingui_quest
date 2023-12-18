@@ -4,13 +4,13 @@ import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/repository/remote_repository.dart';
 
-class GetAllGamesUsecase extends UseCaseFutureEither<void, int> {
+class GetPassedGamesUsecase extends UseCaseFutureEither<void, NoParams> {
   final RemoteRepository repository;
 
-  GetAllGamesUsecase({required this.repository});
+  GetPassedGamesUsecase({required this.repository});
 
   @override
-  Future<Either<Failure, Stream<List<GameModel>>>> call(int params) async {
-    return await repository.getAllPublicGames(params);
+  Future<Either<Failure, List<GameModel>>> call(NoParams params) async {
+    return await repository.getPassedGames();
   }
 }

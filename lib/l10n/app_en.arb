@@ -141,6 +141,11 @@
   "tutorOnlyZone":"This is tutor only zone, you should not have access to it unless you are a tutor.",
   "tutorProfile":"Tutor Profile",
 
+  "createdGames":"Created Games",
+  "passedGames":"Passed Games",
+  "noCreatedGames":"You have not created a game. Go to 'Game' tab to create one!",
+  "noPassedGames":"You have not played a game. Go to 'Game' tab to play one!",
+
   "couldNotOpenTheLink":"Could not open this link ",
 
   "accept":"Accept",

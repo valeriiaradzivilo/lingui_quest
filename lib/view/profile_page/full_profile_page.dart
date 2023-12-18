@@ -10,6 +10,7 @@ import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_round_photo.dart';
 import 'package:lingui_quest/shared/widgets/lin_tutor_info_section.dart';
 import 'package:lingui_quest/start/bloc/start_cubit.dart';
+import 'package:lingui_quest/view/games_page/games_list/components/game_box.dart';
 import 'package:lingui_quest/view/profile_page/become_tutor/alert_tutor.dart';
 
 class FullProfilePage extends StatelessWidget {
@@ -22,7 +23,7 @@ class FullProfilePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: BlocBuilder<StartCubit, StartState>(
-            bloc: cubit..findTutorProfile(),
+            bloc: cubit..initProfile(),
             builder: (context, state) {
               if (state.currentUser != UserModel.empty()) {
                 return Padding(
@@ -53,8 +54,34 @@ class FullProfilePage extends StatelessWidget {
                               onTap: () => _becomeTutor(context, user: state.currentUser))
                         else if (state.tutorModel != TutorModel.empty()) ...[
                           Gap(PaddingConst.large),
-                          LinTutorInfoSection(tutor: state.tutorModel)
-                        ]
+                          LinTutorInfoSection(tutor: state.tutorModel),
+                          Gap(PaddingConst.large),
+                          Text(context.loc.createdGames),
+                          if (state.createdGames.isEmpty)
+                            Text(context.loc.noCreatedGames)
+                          else
+                            SizedBox(
+                              height: 200,
+                              child: ListView.builder(
+                                itemBuilder: (context, index) => GameBox(game: state.createdGames[index]),
+                                itemCount: state.createdGames.length,
+                                scrollDirection: Axis.horizontal,
+                              ),
+                            ),
+                        ],
+                        Gap(PaddingConst.large),
+                        Text(context.loc.passedGames),
+                        if (state.passedGames.isEmpty)
+                          Text(context.loc.noPassedGames)
+                        else
+                          SizedBox(
+                            height: 200,
+                            child: ListView.builder(
+                              itemBuilder: (context, index) => GameBox(game: state.passedGames[index]),
+                              itemCount: state.passedGames.length,
+                              scrollDirection: Axis.horizontal,
+                            ),
+                          ),
                       ],
                     ),
                   ),

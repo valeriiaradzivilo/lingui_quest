@@ -3,14 +3,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
+import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/accept_join_group_request_usecase.dart';
 import 'package:lingui_quest/data/usecase/decline_join_group_request_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_created_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_join_requests_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_passed_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
 import 'package:lingui_quest/start/page/start_page.dart';
 
@@ -24,6 +27,8 @@ class StartCubit extends Cubit<StartState> {
     this._getJoinRequestsUsecase,
     this._acceptJoinGroupRequestUsecase,
     this._declineJoinGroupRequestUsecase,
+    this._getCreatedGamesUsecase,
+    this._getPassedGamesUsecase,
   ) : super(StartState.initial());
 
   final GetCurrentUserUsecase _getCurrentUserUsecase;
@@ -32,7 +37,8 @@ class StartCubit extends Cubit<StartState> {
   final GetJoinRequestsUsecase _getJoinRequestsUsecase;
   final AcceptJoinGroupRequestUsecase _acceptJoinGroupRequestUsecase;
   final DeclineJoinGroupRequestUsecase _declineJoinGroupRequestUsecase;
-
+  final GetCreatedGamesUsecase _getCreatedGamesUsecase;
+  final GetPassedGamesUsecase _getPassedGamesUsecase;
   void init() async {
     await checkLoggedIn();
     await getInitials();
@@ -48,6 +54,16 @@ class StartCubit extends Cubit<StartState> {
         tutorModel: tutor.foldRight(TutorModel.empty(), (r, previous) => r),
       ));
     }
+  }
+
+  Future initProfile() async {
+    await findTutorProfile();
+    if (state.currentUser.isTutor) {
+      final createdGamesRes = await _getCreatedGamesUsecase(NoParams());
+      emit(state.copyWith(createdGames: createdGamesRes.foldRight([], (r, previous) => r)));
+    }
+    final passedGamesRes = await _getPassedGamesUsecase(NoParams());
+    emit(state.copyWith(passedGames: passedGamesRes.foldRight([], (r, previous) => r)));
   }
 
   _findJoinRequests() async {

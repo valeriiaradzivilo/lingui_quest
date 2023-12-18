@@ -9,9 +9,10 @@ import 'package:lingui_quest/data/usecase/create_new_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_new_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_test_tasks_tree_usecase.dart';
 import 'package:lingui_quest/data/usecase/decline_join_group_request_usecase.dart';
-import 'package:lingui_quest/data/usecase/get_all_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_all_public_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_created_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_created_groups_by_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
@@ -20,6 +21,7 @@ import 'package:lingui_quest/data/usecase/get_game_by_group_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_game_by_id_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_group_by_code_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_join_requests_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_passed_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_public_games_count.dart';
 import 'package:lingui_quest/data/usecase/post_game_result_usecase.dart';
 import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
@@ -101,8 +103,8 @@ Future<void> initUseCases() async {
     () => CreateNewGameUsecase(repository: remoteRepository),
   );
 
-  serviceLocator.registerLazySingleton<GetAllGamesUsecase>(
-    () => GetAllGamesUsecase(repository: remoteRepository),
+  serviceLocator.registerLazySingleton<GetAllPublicGamesUsecase>(
+    () => GetAllPublicGamesUsecase(repository: remoteRepository),
   );
 
   serviceLocator.registerLazySingleton<GetGameByIdUsecase>(
@@ -170,6 +172,12 @@ Future<void> initUseCases() async {
   serviceLocator.registerLazySingleton<PostGameResultUsecase>(
     () => PostGameResultUsecase(repository: remoteRepository),
   );
+  serviceLocator.registerLazySingleton<GetCreatedGamesUsecase>(
+    () => GetCreatedGamesUsecase(repository: remoteRepository),
+  );
+  serviceLocator.registerLazySingleton<GetPassedGamesUsecase>(
+    () => GetPassedGamesUsecase(repository: remoteRepository),
+  );
 }
 
 Future<void> initRepository() async {
@@ -192,6 +200,8 @@ Future<void> initCubs() async {
       serviceLocator<GetJoinRequestsUsecase>(),
       serviceLocator<AcceptJoinGroupRequestUsecase>(),
       serviceLocator<DeclineJoinGroupRequestUsecase>(),
+      serviceLocator<GetCreatedGamesUsecase>(),
+      serviceLocator<GetPassedGamesUsecase>(),
     ),
   );
   serviceLocator.registerFactory(
@@ -223,7 +233,7 @@ Future<void> initCubs() async {
   );
   serviceLocator.registerFactory(
     () => GamesListBloc(
-      serviceLocator<GetAllGamesUsecase>(),
+      serviceLocator<GetAllPublicGamesUsecase>(),
       getCurrentUserUsecase,
       serviceLocator<SearchGamesUsecase>(),
       serviceLocator<GetPublicGamesCount>(),

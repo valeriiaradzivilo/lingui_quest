@@ -483,8 +483,30 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
-  Future<void> getMyPassedGames() {
-    // TODO: implement getMyPassedGames
-    throw UnimplementedError();
+  Future<List<GameModel>> getPassedGames() async {
+    final gameResults = await firestore
+        .collection(FirebaseCollection.gameResult.collectionName)
+        .where('user_id', isEqualTo: _firebaseAuth.currentUser!.uid)
+        .get();
+
+    final List<GameModel> answer = [];
+    for (final game in gameResults.docs) {
+      answer.add(await getGameById(game.data()['game_id']));
+    }
+    print('There was ${gameResults.docs.length} passed by this user games');
+
+    return answer;
+  }
+
+  @override
+  Future<List<GameModel>> getCreatedGames() async {
+    final games = await firestore
+        .collection(FirebaseCollection.games.collectionName)
+        .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
+        .get();
+
+    print('There was ${games.docs.length} created by this user games');
+
+    return games.docs.map((e) => GameModel.fromJson(e.data())).toList();
   }
 }
