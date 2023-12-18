@@ -4,7 +4,9 @@ import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
+import 'package:lingui_quest/data/models/student_group_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
+import 'package:lingui_quest/data/usecase/delete_student_from_group_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_full_group_info.dart';
@@ -23,6 +25,7 @@ class GroupsBloc extends Cubit<GroupsState> {
     this._postGroupUsecase,
     this._getFullGroupInfoUsecase,
     this._requestToJoinGroupUsecase,
+    this._deleteStudentFromGroupUsecase,
   ) : super(GroupsState.initial());
 
   final GetCurrentUserUsecase _getCurrentUserUsecase;
@@ -31,6 +34,7 @@ class GroupsBloc extends Cubit<GroupsState> {
   final PostGroupUsecase _postGroupUsecase;
   final GetFullGroupInfoUsecase _getFullGroupInfoUsecase;
   final RequestToJoinGroupUsecase _requestToJoinGroupUsecase;
+  final DeleteStudentFromGroupUsecase _deleteStudentFromGroupUsecase;
 
   void getCurrentUser() async {
     final user = await _getCurrentUserUsecase(NoParams());
@@ -99,5 +103,15 @@ class GroupsBloc extends Cubit<GroupsState> {
       return requestRes.isRight();
     }
     return false;
+  }
+
+  void deleteStudentFromGroup(String userId) async {
+    final deleteStudentRes =
+        await _deleteStudentFromGroupUsecase(StudentGroupModel(userId, state.chosenGroup!.group.code));
+    if (deleteStudentRes.isLeft()) {
+      emit(state.copyWith(status: GroupsStatus.error, errorMessage: 'Could not delete the student'));
+    } else {
+      await findGroupByCode(state.chosenGroup!.group.code);
+    }
   }
 }

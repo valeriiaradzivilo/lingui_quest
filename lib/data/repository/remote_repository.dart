@@ -9,6 +9,7 @@ import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
+import 'package:lingui_quest/data/models/student_group_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
@@ -140,4 +141,9 @@ abstract class RemoteRepository {
 
   /// Gets all games created by current user
   Future<Either<Failure, List<GameModel>>> getCreatedGames();
+
+  /// Delete a student
+  ///
+  /// [model] - user id + group id
+  Future<Either<Failure, void>> deleteStudentFromGroup(StudentGroupModel model);
 }

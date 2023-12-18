@@ -10,6 +10,7 @@ import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
+import 'package:lingui_quest/data/models/student_group_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/repository/remote_repository.dart';
@@ -285,6 +286,15 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   Future<Either<Failure, List<GameModel>>> getCreatedGames() async {
     try {
       return Right(await _database.getCreatedGames());
+    } catch (e) {
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteStudentFromGroup(StudentGroupModel model) async {
+    try {
+      return Right(await _database.deleteStudentFromGroup(model));
     } catch (e) {
       return Left(UndefinedFailure(message: e.toString()));
     }

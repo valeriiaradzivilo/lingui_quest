@@ -13,6 +13,7 @@ import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/join_request_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
+import 'package:lingui_quest/data/models/student_group_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
@@ -514,5 +515,19 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     print('There was ${games.docs.length} created by this user games');
 
     return games.docs.map((e) => GameModel.fromJson(e.data())).toList();
+  }
+
+  @override
+  Future<void> deleteStudentFromGroup(StudentGroupModel model) async {
+    final userDataDocToEdit = await firestore
+        .collection(FirebaseCollection.groups.collectionName)
+        .where('code', isEqualTo: model.groupId)
+        .limit(1)
+        .get();
+    final oldGroupData = GroupModel.fromJson(userDataDocToEdit.docs.first.data());
+    final id = userDataDocToEdit.docs.first.id;
+    final oldStudentList = [...oldGroupData.students];
+    oldStudentList.remove(model.userId);
+    await firestore.collection(FirebaseCollection.groups.collectionName).doc(id).update({'students': oldStudentList});
   }
 }

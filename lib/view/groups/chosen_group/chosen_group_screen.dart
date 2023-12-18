@@ -144,7 +144,7 @@ class ChosenGroupScreen extends StatelessWidget {
                                 )),
                                 Gap(PaddingConst.medium),
                                 IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => bloc.deleteStudentFromGroup(students[index].userId),
                                     icon: Icon(
                                       FeatherIcons.trash,
                                       color: theme.colorScheme.error,
