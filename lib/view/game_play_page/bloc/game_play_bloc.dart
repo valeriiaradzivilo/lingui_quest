@@ -75,37 +75,39 @@ class GamePlayCubit extends Cubit<GamePlayState> {
   void loadNextTask() async {
     Function unOrdDeepEq = DeepCollectionEquality.unordered().equals;
     final isCorrectAnswer = unOrdDeepEq(state.currentQuestion.correctAnswers, state.selectedAnswers);
+    final errors = [...state.errors];
+    if (!isCorrectAnswer) {
+      errors.add(GameErrorModel(
+          question: state.currentQuestion,
+          expectedResult: state.currentQuestion.correctAnswers.join(','),
+          actualResult: state.selectedAnswers.join(',')));
+    }
+    emit(state.copyWith(errors: errors));
     if (state.shuffledQuestions.length > state.questionNumber + 1) {
-      final errors = [...state.errors];
-      if (!isCorrectAnswer) {
-        errors.add(GameErrorModel(
-            question: state.currentQuestion,
-            expectedResult: state.currentQuestion.correctAnswers.join(','),
-            actualResult: state.selectedAnswers.join(',')));
-      }
       emit(state.copyWith(
         questionNumber: state.questionNumber + 1,
         currentQuestion: state.shuffledQuestions[state.questionNumber + 1],
         selectedAnswers: [],
-        errors: errors,
         amountOfCorrectlyAnsweredQuestions: state.amountOfCorrectlyAnsweredQuestions + (isCorrectAnswer ? 1 : 0),
       ));
     } else {
       emit(state.copyWith(status: GamePlayStatus.progress));
+
+      emit(state.copyWith(
+        amountOfCorrectlyAnsweredQuestions: state.amountOfCorrectlyAnsweredQuestions + (isCorrectAnswer ? 1 : 0),
+      ));
       if (state.currentUser.userId.isNotEmpty) {
         await _postGameResultUsecase(
           GameResultModel(
               userId: state.currentUser.userId,
               gameId: state.currentGame.id,
-              result: (state.amountOfCorrectlyAnsweredQuestions + (isCorrectAnswer ? 1 : 0)) * 100,
+              result:
+                  (state.currentGame.questions.length - state.errors.length) * 100 / state.currentGame.questions.length,
               timeFinished: DateTime.now().millisecondsSinceEpoch,
               errors: state.errors),
         );
       }
-      emit(state.copyWith(
-        status: GamePlayStatus.result,
-        amountOfCorrectlyAnsweredQuestions: state.amountOfCorrectlyAnsweredQuestions + (isCorrectAnswer ? 1 : 0),
-      ));
+      emit(state.copyWith(status: GamePlayStatus.result));
     }
   }
 

@@ -9,6 +9,7 @@ import 'package:lingui_quest/data/usecase/create_new_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_new_tutor_usecase.dart';
 import 'package:lingui_quest/data/usecase/create_test_tasks_tree_usecase.dart';
 import 'package:lingui_quest/data/usecase/decline_join_group_request_usecase.dart';
+import 'package:lingui_quest/data/usecase/get_all_game_results_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_groups_for_current_user_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_public_games_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks_usecase.dart';
@@ -178,6 +179,9 @@ Future<void> initUseCases() async {
   serviceLocator.registerLazySingleton<GetPassedGamesUsecase>(
     () => GetPassedGamesUsecase(repository: remoteRepository),
   );
+  serviceLocator.registerLazySingleton<GetAllGameResults>(
+    () => GetAllGameResults(repository: remoteRepository),
+  );
 }
 
 Future<void> initRepository() async {
@@ -255,6 +259,7 @@ Future<void> initCubs() async {
   serviceLocator.registerFactory(() => GamePreviewCubit(
         serviceLocator<GetGameByIdUsecase>(),
         getCurrentUserUsecase,
+        serviceLocator<GetAllGameResults>(),
       ));
   serviceLocator.registerFactory(() => GamePlayCubit(
         getCurrentUserUsecase,

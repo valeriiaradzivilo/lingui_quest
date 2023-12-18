@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
+import 'package:lingui_quest/data/models/game_error_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
@@ -47,7 +48,54 @@ class GamePreviewPage extends StatelessWidget {
                         LinMainButton(
                             label: context.loc.startGame,
                             onTap: () => Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(builder: (_) => GamePlayPage(game: state.game))))
+                                .pushReplacement(MaterialPageRoute(builder: (_) => GamePlayPage(game: state.game)))),
+                        if (state.game.creatorId == state.currentUser.userId) ...[
+                          Gap(PaddingConst.immense),
+                          Text(context.loc.youCreatedThisGame),
+                          if (state.gameResults.isNotEmpty)
+                            DataTable(columns: [
+                              DataColumn(label: Text('Student')),
+                              DataColumn(label: Text('Mark (%)')),
+                              DataColumn(label: Text('Errors')),
+                            ], rows: [
+                              for (final result in state.gameResults)
+                                DataRow(cells: [
+                                  DataCell(Text('${result.user.firstName} ${result.user.lastName}')),
+                                  DataCell(Text(result.result
+                                      .toString()
+                                      .substring(0, result.result.toString().length > 4 ? 4 : null))),
+                                  DataCell(result.errors.isNotEmpty
+                                      ? TextButton(
+                                          onPressed: () => showAdaptiveDialog(
+                                            context: context,
+                                            useSafeArea: true,
+                                            builder: (context) => Padding(
+                                              padding: EdgeInsets.all(PaddingConst.immense),
+                                              child: Container(
+                                                padding: EdgeInsets.all(PaddingConst.medium),
+                                                color: theme.cardColor,
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      for (final mistake in result.errors) ...[
+                                                        _MistakeWidget(mistake),
+                                                        Divider()
+                                                      ]
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          child: Text('Tap to see the mistakes'),
+                                        )
+                                      : Text('No mistakes!')),
+                                ])
+                            ])
+                        ]
                       ],
                     ),
                   );
@@ -73,6 +121,23 @@ class GamePreviewPage extends StatelessWidget {
               }),
         ),
       ),
+    );
+  }
+}
+
+class _MistakeWidget extends StatelessWidget {
+  const _MistakeWidget(this.model);
+  final GameErrorModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('Question: ${model.question.question}'),
+        Text('Expected: ${model.question.correctAnswers.map((e) => model.question.options[e]).join(',')}'),
+        Text(
+            'Actual: ${model.actualResult.split(',').map((e) => model.question.options[int.tryParse(e) ?? 0]).join(',')}'),
+      ],
     );
   }
 }
