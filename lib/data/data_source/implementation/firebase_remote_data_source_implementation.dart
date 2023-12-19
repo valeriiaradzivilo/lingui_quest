@@ -72,7 +72,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     try {
       final CollectionReference userData = firestore.collection(FirebaseCollection.userData.collectionName);
       await userData.add(user.toJson());
-      print('User added');
+      SimpleLogger().info('User added');
     } catch (e) {
       rethrow;
     }
@@ -109,7 +109,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     try {
       final CollectionReference testTasks = firestore.collection(FirebaseCollection.testTasks.collectionName);
       await testTasks.add(task.toJson());
-      print('Task added');
+      SimpleLogger().info('Task added');
     } catch (e) {
       rethrow;
     }
@@ -166,7 +166,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     try {
       final CollectionReference tutorInfoTable = firestore.collection(FirebaseCollection.tutor.collectionName);
       await tutorInfoTable.add(tutor.copyWith(userId: _firebaseAuth.currentUser!.uid).toJson());
-      print('Tutor added');
+      SimpleLogger().info('Tutor added');
       final userDataDocToEdit = await firestore
           .collection(FirebaseCollection.userData.collectionName)
           .where('user_id', isEqualTo: _firebaseAuth.currentUser?.uid)
@@ -175,7 +175,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
       final id = userDataDocToEdit.docs.first.id;
 
       await firestore.collection(FirebaseCollection.userData.collectionName).doc(id).update({'is_tutor': true});
-      print('User was edited');
+      SimpleLogger().info('User was edited');
     } catch (e) {
       rethrow;
     }
@@ -186,7 +186,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     try {
       final CollectionReference gamesTable = firestore.collection(FirebaseCollection.games.collectionName);
       await gamesTable.add(model.copyWith(creatorId: _firebaseAuth.currentUser!.uid, id: Uuid().v1()).toJson());
-      print('Game added');
+      SimpleLogger().info('Game added');
     } catch (e) {
       rethrow;
     }
@@ -382,7 +382,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
       requestDate: DateTime.now(),
       id: Uuid().v1(),
     ).toJson());
-    print('Request to join the channel is created');
+    SimpleLogger().info('Request to join the channel is created');
   }
 
   @override
@@ -486,7 +486,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   Future<void> postGameResult(GameResultModel result) async {
     final CollectionReference gameResultsTable = firestore.collection(FirebaseCollection.gameResult.collectionName);
     await gameResultsTable.add(result.toJson());
-    print('Game result is posted');
+    SimpleLogger().info('Game result is posted');
   }
 
   @override
@@ -500,7 +500,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     for (final game in gameResults.docs) {
       answer.add(await getGameById(game.data()['game_id']));
     }
-    print('There was ${gameResults.docs.length} passed by this user games');
+    SimpleLogger().info('There was ${gameResults.docs.length} passed by this user games');
 
     return answer;
   }
@@ -512,7 +512,7 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
         .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
         .get();
 
-    print('There was ${games.docs.length} created by this user games');
+    SimpleLogger().info('There was ${games.docs.length} created by this user games');
 
     return games.docs.map((e) => GameModel.fromJson(e.data())).toList();
   }

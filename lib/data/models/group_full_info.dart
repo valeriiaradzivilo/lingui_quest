@@ -11,4 +11,13 @@ class GroupFullInfoModel {
   final List<UserModel> students;
 
   GroupFullInfoModel(this.group, this.tutor, this.tutorUserData, this.games, this.students);
+
+  factory GroupFullInfoModel.empty() =>
+      GroupFullInfoModel(GroupModel.empty(), TutorModel.empty(), UserModel.empty(), Stream.empty(), []);
+
+  bool get isEmpty =>
+      group == GroupModel.empty() &&
+      tutor == TutorModel.empty() &&
+      tutorUserData == UserModel.empty() &&
+      students.isEmpty;
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/game_error_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -39,6 +40,8 @@ class GamePreviewPage extends StatelessWidget {
                         Text('${context.loc.gameDescriptionLabel}: ${state.game.description}'),
                         Gap(PaddingConst.medium),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text('${context.loc.rate}: '),
                             for (int i = 0; i < 5; i++)
@@ -68,6 +71,7 @@ class GamePreviewPage extends StatelessWidget {
                               DataColumn(label: Text('Student')),
                               DataColumn(label: Text('Mark (%)')),
                               DataColumn(label: Text('Errors')),
+                              DataColumn(label: Text('Time')),
                             ], rows: [
                               for (final result in state.gameResults)
                                 DataRow(cells: [
@@ -104,6 +108,8 @@ class GamePreviewPage extends StatelessWidget {
                                           child: Text('Tap to see the mistakes'),
                                         )
                                       : Text('No mistakes!')),
+                                  DataCell(Text(DateFormat('yyyy-MM-dd – kk:mm')
+                                      .format(DateTime.fromMillisecondsSinceEpoch(result.timeFinished))))
                                 ])
                             ])
                         ]

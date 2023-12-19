@@ -36,7 +36,11 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    tabController = TabController(initialIndex: 0, length: TabBarOption.values.length + 1, vsync: this);
+    tabController = TabController(
+        initialIndex: 0,
+        length: TabBarOption.values.length + 1,
+        vsync: this,
+        animationDuration: Duration(milliseconds: 10));
     super.initState();
   }
 
@@ -58,9 +62,9 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
         child: BlocConsumer<StartCubit, StartState>(
             bloc: bloc..init(),
             listener: (context, state) {
-              if (state.status == StartStatus.initial) {
-                tabController.animateTo(state.currentTab.index);
-              }
+              // if (state.status == StartStatus.initial && tabController != null && state.currentTab.index >= 0) {
+              //   tabController?.animateTo(state.currentTab.index, curve: Curves.bounceOut);
+              // }
             },
             builder: (context, state) {
               return Scaffold(
@@ -121,7 +125,10 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                                 preferredSize: Size.fromHeight(size.height - 100),
                                 child: RotatedBox(
                                     quarterTurns: 3,
-                                    child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
+                                    child: RallyTabBar(
+                                      tabs: _buildListTabButtons(),
+                                      tabController: tabController,
+                                    )),
                               ),
                               Expanded(
                                 child: TabBarView(
@@ -166,7 +173,11 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                     ? BottomAppBar(
                         elevation: PaddingConst.immense,
                         color: Theme.of(context).cardColor,
-                        child: Center(child: RallyTabBar(tabs: _buildListTabButtons(), tabController: tabController)),
+                        child: Center(
+                            child: RallyTabBar(
+                          tabs: _buildListTabButtons(),
+                          tabController: tabController,
+                        )),
                       )
                     : null,
               );

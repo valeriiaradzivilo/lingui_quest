@@ -26,7 +26,7 @@ class GamePreviewState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, game, gameResults];
+  List<Object?> get props => [status, game, gameResults, currentUser];
 
   GamePreviewState copyWith({
     GamePreviewStatus? status,

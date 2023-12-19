@@ -10,8 +10,7 @@ import 'package:lingui_quest/start/app_routes.dart';
 import 'package:lingui_quest/view/game_play_page/bloc/game_play_bloc.dart';
 
 class GamePlayResultPage extends StatefulWidget {
-  const GamePlayResultPage({super.key, required this.percentResult});
-  final double percentResult;
+  const GamePlayResultPage({super.key});
 
   @override
   State<GamePlayResultPage> createState() => _GamePlayResultPageState();
@@ -39,9 +38,9 @@ class _GamePlayResultPageState extends State<GamePlayResultPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('${context.loc.resultGame} ${widget.percentResult * 100}%'),
+              Text('${context.loc.resultGame} ${state.resultInPercents}%'),
               Gap(PaddingConst.medium),
-              Text(switch (widget.percentResult) {
+              Text(switch (state.resultInPercents / 100) {
                 > 0.8 => context.loc.highScoreMessageGame,
                 > 0.5 => context.loc.averageScoreMessageGame,
                 _ => context.loc.lowScoreMessageGame,

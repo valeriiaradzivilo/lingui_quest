@@ -17,6 +17,7 @@ import 'package:lingui_quest/data/repository/remote_repository.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
+import 'package:simple_logger/simple_logger.dart';
 
 class RemoteRepositoryImplementation implements RemoteRepository {
   final FirebaseRemoteDatasource _database;
@@ -26,9 +27,9 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   @override
   Future<Either<Failure, void>> signUpWithEmail(SignUpParams params) async {
     try {
-      await _database.createUserWithEmailAndPassword(params);
-      return const Right(null);
+      return Right(await _database.createUserWithEmailAndPassword(params));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -36,9 +37,9 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   @override
   Future<Either<Failure, void>> signIn(SignInParams params) async {
     try {
-      await _database.signInWithEmailAndPassword(params.email, params.password);
-      return const Right(null);
+      return Right(await _database.signInWithEmailAndPassword(params.email, params.password));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -46,9 +47,9 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   @override
   Future<Either<Failure, void>> signOut() async {
     try {
-      await _database.signOut();
-      return const Right(null);
+      return Right(await _database.signOut());
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -59,6 +60,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
       final UserModel currentUser = await _database.getCurrentUserData();
       return Right(currentUser);
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -66,9 +68,9 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   @override
   Future<Either<Failure, void>> addTestTask(LevelTestTaskModel task) async {
     try {
-      await _database.crateNewTestTask(task);
-      return const Right(null);
+      return Right(await _database.crateNewTestTask(task));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -79,6 +81,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
       final res = await _database.readTasks();
       return Right(res);
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -89,6 +92,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
       final LevelTestTasksTree myTree = LevelTestTasksTree();
       return Right(await myTree.startTree(allTasks));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -98,6 +102,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.createNewTutor(tutor));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -107,6 +112,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getCurrentTutor());
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -116,6 +122,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.createNewGame(game));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -125,6 +132,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getAllPublicGames(page));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -134,6 +142,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getGameById(gameId));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -143,6 +152,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getGroupByCode(code));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -152,6 +162,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getAllGroupsForCurrentUser());
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -161,6 +172,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.postGroup(group));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -170,6 +182,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getFullGroupInfo(group));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -179,6 +192,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getJoinRequests());
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -188,6 +202,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getCreatedGroupsByCurrentUser());
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -197,6 +212,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getGameByGroupCode(code));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -206,6 +222,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.requestToJoinTheGroup(code));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -215,6 +232,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.rateTheGame(rate));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -224,6 +242,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.acceptRequestToJoinTheGroup(model));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -233,6 +252,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.declineRequestToJoinTheGroup(id));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -242,6 +262,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.searchGame(searchModel));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -251,6 +272,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.publicGamesCount());
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -260,6 +282,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getAllGameResults(gameId));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -269,6 +292,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getPassedGames());
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -278,6 +302,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.postGameResult(result));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -287,6 +312,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.getCreatedGames());
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }
@@ -296,6 +322,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
     try {
       return Right(await _database.deleteStudentFromGroup(model));
     } catch (e) {
+      SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));
     }
   }

@@ -8,7 +8,7 @@ class GroupsState extends Equatable {
   final UserModel currentUser;
   final Stream<List<GroupModel>> allGroups;
   final GroupModel? searchResultGroup;
-  final GroupFullInfoModel? chosenGroup;
+  final GroupFullInfoModel chosenGroup;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
@@ -26,7 +26,7 @@ class GroupsState extends Equatable {
       currentUser: UserModel.empty(),
       allGroups: Stream.empty(),
       searchResultGroup: null,
-      chosenGroup: null,
+      chosenGroup: GroupFullInfoModel.empty(),
     );
   }
 
@@ -55,7 +55,7 @@ class GroupsState extends Equatable {
       currentUser: currentUser ?? this.currentUser,
       allGroups: allGroups ?? this.allGroups,
       searchResultGroup: searchResultGroup,
-      chosenGroup: chosenGroup,
+      chosenGroup: chosenGroup ?? this.chosenGroup,
     );
   }
 }

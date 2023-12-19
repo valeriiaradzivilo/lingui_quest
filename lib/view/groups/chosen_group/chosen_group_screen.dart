@@ -25,7 +25,7 @@ class ChosenGroupScreen extends StatelessWidget {
           builder: (context, state) {
             if (state.status != GroupsStatus.initial && state.status != GroupsStatus.error) {
               return Center(child: CircularProgressIndicator());
-            } else if (state.status == GroupsStatus.error || state.chosenGroup == null) {
+            } else if (state.status == GroupsStatus.error || state.chosenGroup.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -33,9 +33,9 @@ class ChosenGroupScreen extends StatelessWidget {
                 ),
               );
             }
-            final group = state.chosenGroup!.group;
-            final tutor = state.chosenGroup!.tutor;
-            final students = state.chosenGroup!.students;
+            final group = state.chosenGroup.group;
+            final tutor = state.chosenGroup.tutor;
+            final students = state.chosenGroup.students;
             return SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(PaddingConst.medium),
@@ -71,6 +71,8 @@ class ChosenGroupScreen extends StatelessWidget {
                                               padding: EdgeInsets.all(PaddingConst.medium),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     context.loc.code,
@@ -78,8 +80,9 @@ class ChosenGroupScreen extends StatelessWidget {
                                                   ),
                                                   Divider(),
                                                   Row(
+                                                    mainAxisSize: MainAxisSize.min,
                                                     children: [
-                                                      Expanded(child: Text(group.code)),
+                                                      Flexible(child: Text(group.code)),
                                                       IconButton(
                                                         icon: Icon(FeatherIcons.copy),
                                                         onPressed: () async {
@@ -97,7 +100,11 @@ class ChosenGroupScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Flexible(child: LinTutorInfoSection(tutor: tutor))
+                        Flexible(
+                            child: LinTutorInfoSection(
+                          tutor: tutor,
+                          user: state.chosenGroup.tutorUserData,
+                        ))
                       ],
                     ),
                     Gap(PaddingConst.medium),
@@ -106,7 +113,7 @@ class ChosenGroupScreen extends StatelessWidget {
                       style: theme.textTheme.displaySmall,
                     ),
                     ReactiveWidget(
-                      stream: state.chosenGroup!.games,
+                      stream: state.chosenGroup.games,
                       widget: (games) => games.isNotEmpty
                           ? Container(
                               height: 200,
@@ -144,7 +151,20 @@ class ChosenGroupScreen extends StatelessWidget {
                                 )),
                                 Gap(PaddingConst.medium),
                                 IconButton(
-                                    onPressed: () => bloc.deleteStudentFromGroup(students[index].userId),
+                                    onPressed: () async {
+                                      final deletedUser = await bloc.deleteStudentFromGroup(students[index].userId);
+                                      if (deletedUser) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: deletedUser
+                                                ? Text(context.loc.deletedStudentSuccessfully)
+                                                : Text(context.loc.couldNotDeleteStudent),
+                                            backgroundColor:
+                                                deletedUser ? theme.colorScheme.primary : theme.colorScheme.error,
+                                          ),
+                                        );
+                                      }
+                                    },
                                     icon: Icon(
                                       FeatherIcons.trash,
                                       color: theme.colorScheme.error,

@@ -105,13 +105,22 @@ class GroupsBloc extends Cubit<GroupsState> {
     return false;
   }
 
-  void deleteStudentFromGroup(String userId) async {
+  Future<bool> deleteStudentFromGroup(String userId) async {
+    emit(state.copyWith(status: GroupsStatus.progress));
     final deleteStudentRes =
-        await _deleteStudentFromGroupUsecase(StudentGroupModel(userId, state.chosenGroup!.group.code));
+        await _deleteStudentFromGroupUsecase(StudentGroupModel(userId, state.chosenGroup.group.code));
     if (deleteStudentRes.isLeft()) {
       emit(state.copyWith(status: GroupsStatus.error, errorMessage: 'Could not delete the student'));
+      return false;
     } else {
-      await findGroupByCode(state.chosenGroup!.group.code);
+      final searchGroupByCodeResult = await _getGroupByCodeUsecase(state.chosenGroup.group.code);
+
+      return searchGroupByCodeResult.fold((l) => false, (r) {
+        final newStudents = [...r.students];
+        newStudents.remove(userId);
+        emit(state.copyWith(searchResultGroup: r.copyWith(students: newStudents), status: GroupsStatus.initial));
+        return true;
+      });
     }
   }
 }

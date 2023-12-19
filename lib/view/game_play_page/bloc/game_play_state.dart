@@ -11,7 +11,7 @@ class GamePlayState extends Equatable {
   final List<int> selectedAnswers;
   final List<QuestionModel> shuffledQuestions;
   final int questionNumber;
-  final int amountOfCorrectlyAnsweredQuestions;
+  final double resultInPercents;
   final List<GameErrorModel> errors;
 
   int get _time => DateTime.now().microsecondsSinceEpoch;
@@ -25,7 +25,7 @@ class GamePlayState extends Equatable {
     required this.selectedAnswers,
     required this.shuffledQuestions,
     required this.questionNumber,
-    required this.amountOfCorrectlyAnsweredQuestions,
+    required this.resultInPercents,
     required this.errors,
   });
   factory GamePlayState.initial() {
@@ -37,7 +37,7 @@ class GamePlayState extends Equatable {
       selectedAnswers: const [],
       shuffledQuestions: [],
       questionNumber: 0,
-      amountOfCorrectlyAnsweredQuestions: 0,
+      resultInPercents: 0,
       errors: [],
     );
   }
@@ -54,7 +54,7 @@ class GamePlayState extends Equatable {
     List<int>? selectedAnswers,
     List<QuestionModel>? shuffledQuestions,
     int? questionNumber,
-    int? amountOfCorrectlyAnsweredQuestions,
+    double? resultInPercents,
     List<GameErrorModel>? errors,
   }) {
     return GamePlayState(
@@ -67,7 +67,7 @@ class GamePlayState extends Equatable {
       shuffledQuestions: shuffledQuestions ?? this.shuffledQuestions,
       questionNumber: questionNumber ?? this.questionNumber,
       errors: errors ?? this.errors,
-      amountOfCorrectlyAnsweredQuestions: amountOfCorrectlyAnsweredQuestions ?? this.amountOfCorrectlyAnsweredQuestions,
+      resultInPercents: resultInPercents ?? this.resultInPercents,
     );
   }
 }

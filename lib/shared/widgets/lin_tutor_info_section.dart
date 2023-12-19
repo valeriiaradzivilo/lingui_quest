@@ -31,6 +31,13 @@ class LinTutorInfoSection extends StatelessWidget {
             context.loc.tutorProfile.toUpperCase(),
             style: theme.textTheme.displaySmall,
           ),
+          if (user != null) ...[
+            Gap(PaddingConst.medium),
+            Text(
+              '${user!.firstName} ${user!.lastName}',
+              style: theme.textTheme.headlineSmall,
+            ),
+          ],
           Gap(PaddingConst.medium),
           Text('${context.loc.aboutTutor} : ${tutor.about}'),
           Gap(PaddingConst.medium),

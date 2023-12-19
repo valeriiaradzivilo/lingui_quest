@@ -53,9 +53,7 @@ class _GamePlayPageState extends State<GamePlayPage> {
                       isOneAnswer: state.currentQuestion.correctAnswers.length == 1,
                     ));
                   case GamePlayStatus.result:
-                    return GamePlayResultPage(
-                      percentResult: state.amountOfCorrectlyAnsweredQuestions / state.currentGame.questions.length,
-                    );
+                    return GamePlayResultPage();
 
                   case GamePlayStatus.notLoggedIn:
                     return Center(child: Text(context.loc.notLoggedIn));

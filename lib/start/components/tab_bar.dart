@@ -25,6 +25,7 @@ class RallyTabBar extends StatelessWidget {
       labelPadding: EdgeInsets.zero,
       tabs: tabs,
       controller: tabController,
+      tabAlignment: TabAlignment.center,
       // This hides the tab indicator.
       indicatorColor: Colors.transparent,
       onTap: (value) {
@@ -75,6 +76,9 @@ class RallyTab extends StatelessWidget {
       return ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 56),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               width: unitWidth,

@@ -100,6 +100,8 @@
   "requestToJoinGroupSuccessful":"Request to join the group was sent successfully!",
   "couldNotRequestToJoinGroup":"Could not send your request. Try again later!",
   "students":"Students",
+  "deletedStudentSuccessfully":"The student was successfully removed from the group.",
+  "couldNotDeleteStudent":"Error while removing student. Try again later!",
 
   "gameDoesNotExist":"Such game does not exist. Maybe it was deleted by creator.",
   "gameNoteNotLoggedIn":"Note: You are not logged in so your result will not be stored in any way. Please log in if you want the data to be stored.",

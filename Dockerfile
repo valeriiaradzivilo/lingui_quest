@@ -24,3 +24,4 @@ COPY --from=build-env /app/build/web /usr/share/nginx/html
 #https://medium.com/@kevinwilliams.dev/building-a-flutter-web-container-3b13f4b2bd0c
 #docker build --no-cache -t lingui-quest-web .
 #docker run -d -p 8080:80 --name lingui-quest-web lingui-quest-web
+#docker stop lingui-quest-web 
