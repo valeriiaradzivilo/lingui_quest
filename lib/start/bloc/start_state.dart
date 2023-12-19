@@ -11,7 +11,7 @@ class StartState extends Equatable {
   final TutorModel tutorModel;
   final Stream<List<JoinRequestFullModel>> joinRequests;
   final List<GameModel> createdGames;
-  final List<GameModel> passedGames;
+  final List<PassedGameModel> passedGames;
   int get _time => DateTime.now().microsecondsSinceEpoch;
 
   const StartState({
@@ -60,7 +60,7 @@ class StartState extends Equatable {
     TutorModel? tutorModel,
     Stream<List<JoinRequestFullModel>>? joinRequests,
     List<GameModel>? createdGames,
-    List<GameModel>? passedGames,
+    List<PassedGameModel>? passedGames,
   }) {
     return StartState(
       status: status ?? this.status,

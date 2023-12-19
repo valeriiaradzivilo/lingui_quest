@@ -5,6 +5,7 @@ import 'package:lingui_quest/core/base/failure.dart';
 import 'package:lingui_quest/core/usecase/usecase.dart';
 import 'package:lingui_quest/data/models/game_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
+import 'package:lingui_quest/data/models/passed_game_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/accept_join_group_request_usecase.dart';
@@ -42,28 +43,29 @@ class StartCubit extends Cubit<StartState> {
   void init() async {
     await checkLoggedIn();
     await getInitials();
-    await findTutorProfile();
+    if (state.currentUser.isTutor) {
+      await findTutorProfile();
+    }
     emit(state.copyWith(status: StartStatus.initial));
   }
 
   Future findTutorProfile() async {
-    if (state.currentUser.isTutor) {
-      final tutor = await _getCurrentTutorUsecase(NoParams());
-      await _findJoinRequests();
-      emit(state.copyWith(
-        tutorModel: tutor.foldRight(TutorModel.empty(), (r, previous) => r),
-      ));
-    }
+    final tutor = await _getCurrentTutorUsecase(NoParams());
+    await _findJoinRequests();
+    emit(state.copyWith(
+      tutorModel: tutor.foldRight(TutorModel.empty(), (r, previous) => r),
+    ));
   }
 
   Future initProfile() async {
+    emit(state.copyWith(status: StartStatus.progress));
     await findTutorProfile();
-    if (state.currentUser.isTutor) {
-      final createdGamesRes = await _getCreatedGamesUsecase(NoParams());
-      emit(state.copyWith(createdGames: createdGamesRes.foldRight([], (r, previous) => r)));
-    }
+
+    final createdGamesRes = await _getCreatedGamesUsecase(NoParams());
+    emit(state.copyWith(createdGames: createdGamesRes.foldRight([], (r, previous) => r)));
+
     final passedGamesRes = await _getPassedGamesUsecase(NoParams());
-    emit(state.copyWith(passedGames: passedGamesRes.foldRight([], (r, previous) => r)));
+    emit(state.copyWith(status: StartStatus.initial, passedGames: passedGamesRes.foldRight([], (r, previous) => r)));
   }
 
   _findJoinRequests() async {

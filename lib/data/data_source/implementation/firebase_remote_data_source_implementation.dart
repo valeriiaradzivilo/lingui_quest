@@ -13,6 +13,7 @@ import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/join_request_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
+import 'package:lingui_quest/data/models/passed_game_model.dart';
 import 'package:lingui_quest/data/models/student_group_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -490,15 +491,15 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
   }
 
   @override
-  Future<List<GameModel>> getPassedGames() async {
+  Future<List<PassedGameModel>> getPassedGames() async {
     final gameResults = await firestore
         .collection(FirebaseCollection.gameResult.collectionName)
         .where('user_id', isEqualTo: _firebaseAuth.currentUser!.uid)
         .get();
 
-    final List<GameModel> answer = [];
+    final List<PassedGameModel> answer = [];
     for (final game in gameResults.docs) {
-      answer.add(await getGameById(game.data()['game_id']));
+      answer.add(PassedGameModel(game: await getGameById(game.data()['game_id']), result: game.data()['result']));
     }
     SimpleLogger().info('There was ${gameResults.docs.length} passed by this user games');
 

@@ -10,6 +10,7 @@ import 'package:lingui_quest/data/models/group_full_info.dart';
 import 'package:lingui_quest/data/models/group_model.dart';
 import 'package:lingui_quest/data/models/join_request_full_model.dart';
 import 'package:lingui_quest/data/models/level_test_task_model.dart';
+import 'package:lingui_quest/data/models/passed_game_model.dart';
 import 'package:lingui_quest/data/models/student_group_model.dart';
 import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
@@ -288,7 +289,7 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   }
 
   @override
-  Future<Either<Failure, List<GameModel>>> getPassedGames() async {
+  Future<Either<Failure, List<PassedGameModel>>> getPassedGames() async {
     try {
       return Right(await _database.getPassedGames());
     } catch (e) {

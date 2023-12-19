@@ -26,6 +26,11 @@ class FullProfilePage extends StatelessWidget {
             bloc: cubit..initProfile(),
             builder: (context, state) {
               if (state.currentUser != UserModel.empty()) {
+                if (state.status == StartStatus.progress) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
                 return Padding(
                   padding: EdgeInsets.all(PaddingConst.large),
                   child: Container(
@@ -77,7 +82,19 @@ class FullProfilePage extends StatelessWidget {
                           SizedBox(
                             height: 200,
                             child: ListView.builder(
-                              itemBuilder: (context, index) => GameBox(game: state.passedGames[index]),
+                              itemBuilder: (context, index) => Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  GameBox(game: state.passedGames[index].game),
+                                  Container(
+                                      padding: EdgeInsets.all(PaddingConst.medium),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: theme.colorScheme.errorContainer,
+                                      ),
+                                      child: Text('${state.passedGames[index].result.round()}%'))
+                                ],
+                              ),
                               itemCount: state.passedGames.length,
                               scrollDirection: Axis.horizontal,
                             ),
