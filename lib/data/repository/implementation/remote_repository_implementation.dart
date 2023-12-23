@@ -18,6 +18,7 @@ import 'package:lingui_quest/data/repository/remote_repository.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
+import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:simple_logger/simple_logger.dart';
 
 class RemoteRepositoryImplementation implements RemoteRepository {
@@ -322,6 +323,16 @@ class RemoteRepositoryImplementation implements RemoteRepository {
   Future<Either<Failure, void>> deleteStudentFromGroup(StudentGroupModel model) async {
     try {
       return Right(await _database.deleteStudentFromGroup(model));
+    } catch (e) {
+      SimpleLogger().shout(e.toString());
+      return Left(UndefinedFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> setNewEnglishLevel(EnglishLevel level) async {
+    try {
+      return Right(await _database.setNewEnglishLevel(level));
     } catch (e) {
       SimpleLogger().shout(e.toString());
       return Left(UndefinedFailure(message: e.toString()));

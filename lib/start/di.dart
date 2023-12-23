@@ -30,6 +30,7 @@ import 'package:lingui_quest/data/usecase/post_group_usecase.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/request_to_join_group_usecase.dart';
 import 'package:lingui_quest/data/usecase/search_games_usecase.dart';
+import 'package:lingui_quest/data/usecase/set_new_english_level_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_out_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
@@ -186,6 +187,10 @@ Future<void> initUseCases() async {
   serviceLocator.registerLazySingleton<DeleteStudentFromGroupUsecase>(
     () => DeleteStudentFromGroupUsecase(repository: remoteRepository),
   );
+
+  serviceLocator.registerLazySingleton<SetNewEnglishLevelUsecase>(
+    () => SetNewEnglishLevelUsecase(repository: remoteRepository),
+  );
 }
 
 Future<void> initRepository() async {
@@ -237,6 +242,7 @@ Future<void> initCubs() async {
       getCurrentUserUsecase,
       serviceLocator<CreateTestTaskTreeUsecase>(),
       serviceLocator<GetAllTestTasksUsecase>(),
+      serviceLocator<SetNewEnglishLevelUsecase>(),
     ),
   );
   serviceLocator.registerFactory(

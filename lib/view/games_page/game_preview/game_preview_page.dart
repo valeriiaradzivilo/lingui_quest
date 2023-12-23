@@ -67,11 +67,11 @@ class GamePreviewPage extends StatelessWidget {
                           Gap(PaddingConst.immense),
                           Text(context.loc.youCreatedThisGame),
                           if (state.gameResults.isNotEmpty)
-                            DataTable(columns: [
-                              DataColumn(label: Text('Student')),
-                              DataColumn(label: Text('Mark (%)')),
-                              DataColumn(label: Text('Errors')),
-                              DataColumn(label: Text('Time')),
+                            DataTable(dataRowMaxHeight: 200, headingRowHeight: 100, columns: [
+                              DataColumn(label: Expanded(child: Text('Student'))),
+                              DataColumn(label: Expanded(child: Text('Mark (%)'))),
+                              DataColumn(label: Expanded(child: Text('Errors'))),
+                              DataColumn(label: Expanded(child: Text('Time'))),
                             ], rows: [
                               for (final result in state.gameResults)
                                 DataRow(cells: [

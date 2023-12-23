@@ -17,7 +17,7 @@ class SignInCubit extends Cubit<SignInState> {
     final Either<Failure, void> result = await _signInUseCase(SignInParams(email, password));
 
     result.fold((l) {
-      emit(state.copyWith(status: SignInStatus.error, errorMessage: l.failureMessage));
+      emit(state.copyWith(status: SignInStatus.error));
     }, (r) {});
     return result.isRight();
   }

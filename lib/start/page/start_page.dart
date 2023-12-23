@@ -24,8 +24,7 @@ enum TabBarOption {
 }
 
 class StartPage extends StatefulWidget {
-  const StartPage({super.key, required this.changeTheme});
-  final Function() changeTheme;
+  const StartPage({super.key});
 
   @override
   State<StartPage> createState() => _StartPageState();
@@ -52,7 +51,6 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
     final StartCubit bloc = BlocProvider.of<StartCubit>(context);
     final isDesktop = MediaQuery.of(context).size.width > 600;
@@ -100,16 +98,6 @@ class _StartPageState extends State<StartPage> with TickerProviderStateMixin {
                     Padding(
                       padding: EdgeInsets.only(right: PaddingConst.medium),
                       child: const UserAvatarWidget(),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: PaddingConst.medium),
-                      child: IconButton(
-                        icon: Icon(
-                          isDarkMode ? FeatherIcons.sun : FeatherIcons.moon,
-                          size: 40,
-                        ),
-                        onPressed: widget.changeTheme,
-                      ),
                     ),
                   ],
                 ),

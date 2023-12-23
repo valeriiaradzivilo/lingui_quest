@@ -6,6 +6,7 @@ import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
+import 'package:lingui_quest/shared/widgets/lin_question.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/view/create_game_page/create_question/bloc/create_question_bloc.dart';
 
@@ -22,6 +23,7 @@ class CreateQuestionState extends State<CreateQuestionPage> {
   late final List<TextEditingController> _optionsControllers;
   final _formKey = GlobalKey<FormState>();
   bool _forgotToChooseRightAnswer = false;
+  bool _showPreview = false;
 
   @override
   void initState() {
@@ -48,7 +50,7 @@ class CreateQuestionState extends State<CreateQuestionPage> {
         bloc: cubit..init(widget.questionToEdit),
         builder: (context, state) {
           return SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: PaddingConst.immense, vertical: PaddingConst.medium),
+            padding: EdgeInsets.symmetric(horizontal: PaddingConst.medium, vertical: PaddingConst.medium),
             child: Container(
               constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - PaddingConst.immense),
               child: Form(
@@ -63,10 +65,29 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Question'),
-                    LinTextField(
-                      controller: _questionController,
-                      initialValue: widget.questionToEdit?.question,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: LinTextField(
+                            controller: _questionController,
+                            initialValue: widget.questionToEdit?.question,
+                          ),
+                        ),
+                        Tooltip(
+                          message:
+                              'Try adding ___ for missing text. Student will be able to see his input when they choose an option. ',
+                          child: const Icon(Icons.info_outline_rounded),
+                        ),
+                      ],
                     ),
+                    LinButton(
+                        label: _showPreview ? 'Hide preview' : 'Check how it will look for your students',
+                        onTap: () => setState(() => _showPreview = !_showPreview)),
+                    if (_showPreview)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: LinQuestionText(textTask: _questionController.text, answer: []),
+                      ),
                     const SizedBox(height: 16),
                     const Text(
                         'Options (to choose the correct option - click on number of option, click again to deselect)'),

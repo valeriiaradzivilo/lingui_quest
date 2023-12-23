@@ -10,19 +10,20 @@ import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/create_test_tasks_tree_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_all_test_tasks_usecase.dart';
 import 'package:lingui_quest/data/usecase/get_current_user_usecase.dart';
+import 'package:lingui_quest/data/usecase/set_new_english_level_usecase.dart';
 import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'level_test_play_state.dart';
 
 class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
-  LevelTestPlayCubit(this._currentUserUsecase, this._createTestTaskTreeUsecase, this._getAllTestTasksUsecase)
+  LevelTestPlayCubit(this._currentUserUsecase, this._createTestTaskTreeUsecase, this._getAllTestTasksUsecase,
+      this._setNewEnglishLevelUsecase)
       : super(LevelTestPlayState.initial());
 
   late final ValueStream<int> remainingTimeStream = _remainingTimeController.stream;
 
   void init() async {
-    //TODO: Clean
     final myUser = await _currentUserUsecase(NoParams());
 
     if (myUser.isRight()) {
@@ -90,6 +91,7 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
               currentTest: state.currentTest?.rightChild, selectedAnswers: [], currentLevel: state.currentTest?.level));
           return;
         } else {
+          _setNewEnglishLevelUsecase(state.currentLevel);
           emit(state.copyWith(status: TestStatus.result));
           return;
         }
@@ -101,11 +103,13 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
               currentTest: state.currentTest?.leftChild, selectedAnswers: [], currentLevel: state.currentTest?.level));
           return;
         } else {
+          _setNewEnglishLevelUsecase(state.currentLevel);
           emit(state.copyWith(status: TestStatus.result));
           return;
         }
       }
     }
+    _setNewEnglishLevelUsecase(state.currentLevel);
     emit(state.copyWith(status: TestStatus.result));
     return;
   }
@@ -119,4 +123,5 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
   final GetCurrentUserUsecase _currentUserUsecase;
   final CreateTestTaskTreeUsecase _createTestTaskTreeUsecase;
   final GetAllTestTasksUsecase _getAllTestTasksUsecase;
+  final SetNewEnglishLevelUsecase _setNewEnglishLevelUsecase;
 }

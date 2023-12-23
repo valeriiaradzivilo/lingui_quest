@@ -88,8 +88,6 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
       SimpleLogger().shout('Could not sign in');
       if (e.code == 'user-not-found') {
         throw NoUserFoundException();
-      } else if (e.code == 'wrong-password') {
-        throw WrongPasswordException();
       } else {
         rethrow;
       }
@@ -530,5 +528,17 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
     final oldStudentList = [...oldGroupData.students];
     oldStudentList.remove(model.userId);
     await firestore.collection(FirebaseCollection.groups.collectionName).doc(id).update({'students': oldStudentList});
+  }
+
+  @override
+  Future<void> setNewEnglishLevel(EnglishLevel level) async {
+    final userDataDocToEdit = await firestore
+        .collection(FirebaseCollection.userData.collectionName)
+        .where('user_id', isEqualTo: _firebaseAuth.currentUser?.uid)
+        .limit(1)
+        .get();
+    final id = userDataDocToEdit.docs.first.id;
+
+    await firestore.collection(FirebaseCollection.userData.collectionName).doc(id).update({'level': level.name});
   }
 }

@@ -12,6 +12,7 @@ import 'package:lingui_quest/data/models/tutor_model.dart';
 import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
+import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 
 abstract class FirebaseRemoteDatasource {
   /// Creates a new user in Firebase with an email and password.
@@ -159,4 +160,7 @@ abstract class FirebaseRemoteDatasource {
   ///
   /// [model] - user id + group id
   Future<void> deleteStudentFromGroup(StudentGroupModel model);
+
+  /// Sets a new level for the student
+  Future<void> setNewEnglishLevel(EnglishLevel level);
 }

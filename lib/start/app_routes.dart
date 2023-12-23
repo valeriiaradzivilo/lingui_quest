@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lingui_quest/main.dart';
 import 'package:lingui_quest/start/page/start_page.dart';
 import 'package:lingui_quest/view/create_game_page/create_game.dart';
 import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.dart';
@@ -31,19 +30,13 @@ enum AppRoutes {
         group => '/group',
       };
 
-  static Map<String, Widget Function(BuildContext)> routes(ThemeModel model) {
-    return {
-      initial.path: (context) => StartPage(
-            changeTheme: () {
-              model.toggleMode();
-            },
-          ),
-      signIn.path: (context) => const SignInPage(),
-      signUp.path: (context) => const SignUpPage(),
-      createTestTask.path: (context) => const CreateTestTaskPopup(),
-      test.path: (context) => const LevelTestPlayScreen(),
-      profile.path: (context) => const FullProfilePage(),
-      createGame.path: (context) => const CreateGamePage(),
-    };
-  }
+  static Map<String, Widget Function(BuildContext)> get routes => {
+        initial.path: (context) => StartPage(),
+        signIn.path: (context) => const SignInPage(),
+        signUp.path: (context) => const SignUpPage(),
+        createTestTask.path: (context) => const CreateTestTaskPopup(),
+        test.path: (context) => const LevelTestPlayScreen(),
+        profile.path: (context) => const FullProfilePage(),
+        createGame.path: (context) => const CreateGamePage(),
+      };
 }

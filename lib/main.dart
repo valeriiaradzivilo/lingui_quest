@@ -22,7 +22,6 @@ import 'package:lingui_quest/view/level_test/test_play_screen/bloc/level_test_pl
 import 'package:lingui_quest/view/profile_page/become_tutor/bloc/become_tutor_cubit.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
 import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,49 +54,32 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => serviceLocator<GamePlayCubit>()),
         BlocProvider(create: (_) => serviceLocator<GroupsBloc>()),
       ],
-      child: ChangeNotifierProvider<ThemeModel>(
-        create: (_) => ThemeModel(),
-        child: Consumer<ThemeModel>(builder: (_, model, __) {
-          return Portal(
-            child: MaterialApp(
-              title: 'LinguiQuest',
-              theme: GalleryOptionTheme.lightThemeData,
-              darkTheme: GalleryOptionTheme.darkThemeData,
-              themeMode: model.mode,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              initialRoute: '/',
-              routes: AppRoutes.routes(model),
-              onGenerateRoute: (settings) {
-                if (settings.name != null && settings.name!.startsWith(AppRoutes.game.path)) {
-                  return MaterialPageRoute(
-                    builder: (context) => GamePreviewPage(),
-                    settings: settings,
-                  );
-                } else if (settings.name != null && settings.name!.startsWith(AppRoutes.group.path)) {
-                  return MaterialPageRoute(
-                    builder: (context) => ChosenGroupScreen(),
-                    settings: settings,
-                  );
-                }
-                return null;
-              },
-            ),
-          );
-        }),
+      child: Portal(
+        child: MaterialApp(
+          title: 'LinguiQuest',
+          theme: GalleryOptionTheme.lightThemeData,
+          darkTheme: GalleryOptionTheme.darkThemeData,
+          themeMode: ThemeMode.dark,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          initialRoute: '/',
+          routes: AppRoutes.routes,
+          onGenerateRoute: (settings) {
+            if (settings.name != null && settings.name!.startsWith(AppRoutes.game.path)) {
+              return MaterialPageRoute(
+                builder: (context) => GamePreviewPage(),
+                settings: settings,
+              );
+            } else if (settings.name != null && settings.name!.startsWith(AppRoutes.group.path)) {
+              return MaterialPageRoute(
+                builder: (context) => ChosenGroupScreen(),
+                settings: settings,
+              );
+            }
+            return null;
+          },
+        ),
       ),
     );
-  }
-}
-
-class ThemeModel with ChangeNotifier {
-  ThemeMode _mode;
-  ThemeMode get mode => _mode;
-
-  ThemeModel({ThemeMode mode = ThemeMode.dark}) : _mode = mode;
-
-  void toggleMode() {
-    _mode = _mode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-    notifyListeners();
   }
 }

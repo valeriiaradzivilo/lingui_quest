@@ -16,6 +16,7 @@ import 'package:lingui_quest/data/models/user_model.dart';
 import 'package:lingui_quest/data/usecase/rate_game_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_in_usecase.dart';
 import 'package:lingui_quest/data/usecase/sign_up_email_usecase.dart';
+import 'package:lingui_quest/shared/enums/english_level_enum.dart';
 
 abstract class RemoteRepository {
   /// Signs up a user with an email.
@@ -147,4 +148,7 @@ abstract class RemoteRepository {
   ///
   /// [model] - user id + group id
   Future<Either<Failure, void>> deleteStudentFromGroup(StudentGroupModel model);
+
+  /// Sets a new level for current user
+  Future<Either<Failure, void>> setNewEnglishLevel(EnglishLevel level);
 }
