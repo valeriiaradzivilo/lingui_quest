@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingui_quest/start/page/start_page.dart';
 import 'package:lingui_quest/view/create_game_page/create_game.dart';
-import 'package:lingui_quest/view/level_test/create_test_task.dart/create_task.dart';
+import 'package:lingui_quest/view/level_test/create_test_task/create_task.dart';
 import 'package:lingui_quest/view/level_test/test_play_screen/level_test_play_screen.dart';
 import 'package:lingui_quest/view/profile_page/full_profile_page.dart';
 import 'package:lingui_quest/view/sign_in_page/sign_in_page.dart';

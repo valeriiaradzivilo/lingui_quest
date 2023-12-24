@@ -9,6 +9,7 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_number_editing_field.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
+import 'package:lingui_quest/start/bloc/start_cubit.dart';
 import 'package:lingui_quest/view/profile_page/become_tutor/bloc/become_tutor_cubit.dart';
 
 class TutorForm extends StatefulWidget {
@@ -33,108 +34,119 @@ class _TutorFormState extends State<TutorForm> {
   @override
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<BecomeTutorCubit>(context);
+    final startBloc = BlocProvider.of<StartCubit>(context);
     final theme = Theme.of(context);
-    return AlertDialog(
-      title: Text(context.loc.tutorFormTitle),
-      actions: [
-        LinButton(
-          label: context.loc.cancel,
-          onTap: () => Navigator.maybePop(context),
-          isTransparentBack: true,
-          icon: FeatherIcons.x,
-        ),
-        LinButton(
-          label: context.loc.save,
-          onTap: () async {
-            final formValidation = _formKey.currentState?.validate() ?? false;
-            if (formValidation) {
-              final validate = _validate;
-              if (validate) {
-                final Map<String, String> contacts = _contacts.map((key, value) => MapEntry(key.text, value.text));
-                final Map<String, double> prices =
-                    _price.map((key, value) => MapEntry(key.text, double.parse(value.text)));
-                final res = await bloc.create(
-                    about: _aboutController.text,
-                    preferences: _preferencesController.text,
-                    currency: _currency!,
-                    contacts: contacts,
-                    price: prices);
-                Navigator.of(context).maybePop();
-                if (res) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(context.loc.youAreTutorNow),
-                      backgroundColor: theme.colorScheme.primary,
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(context.loc.tryAgainTutor),
-                      backgroundColor: theme.colorScheme.error,
-                    ),
-                  );
+    return Scaffold(
+      body: AlertDialog(
+        title: Text(context.loc.tutorFormTitle),
+        actions: [
+          LinButton(
+            label: context.loc.cancel,
+            onTap: () => Navigator.maybePop(context),
+            isTransparentBack: true,
+            icon: FeatherIcons.x,
+          ),
+          LinButton(
+            label: context.loc.save,
+            onTap: () async {
+              final formValidation = _formKey.currentState?.validate() ?? false;
+              if (formValidation) {
+                final validate = _validate;
+                if (validate) {
+                  final Map<String, String> contacts = _contacts.map((key, value) => MapEntry(key.text, value.text));
+                  final Map<String, double> prices =
+                      _price.map((key, value) => MapEntry(key.text, double.parse(value.text)));
+                  final res = await bloc.create(
+                      about: _aboutController.text,
+                      preferences: _preferencesController.text,
+                      currency: _currency!,
+                      contacts: contacts,
+                      price: prices);
+                  Navigator.of(context).maybePop();
+                  if (res) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(context.loc.youAreTutorNow),
+                        backgroundColor: theme.colorScheme.primary,
+                      ),
+                    );
+                    startBloc.initProfile();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(context.loc.tryAgainTutor),
+                        backgroundColor: theme.colorScheme.error,
+                      ),
+                    );
+                  }
                 }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(context.loc.allFieldsMustBeFilled),
+                    backgroundColor: theme.colorScheme.error,
+                  ),
+                );
               }
-            }
-          },
-          icon: FeatherIcons.check,
-        ),
-      ],
-      content: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(PaddingConst.large),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _MainText(context.loc.aboutTutorInfo),
-                Gap(PaddingConst.large),
-                LinTextField(
-                  controller: _aboutController,
-                  label: context.loc.aboutTutor,
-                ),
-                Gap(PaddingConst.large),
-                _MainText(context.loc.contactsTutor),
-                Gap(PaddingConst.large),
-                _TwoTextFormFieldsFromMap(
-                  map: _contacts,
-                  keyHint: context.loc.contactsType,
-                  valueHint: context.loc.contactsLink,
-                  isValueNumberType: false,
-                ),
-                Gap(PaddingConst.large),
-                _MainText(context.loc.currencyTutor),
-                Gap(PaddingConst.large),
-                ElevatedButton(
-                    onPressed: () => showCurrencyPicker(
-                          context: context,
-                          showFlag: true,
-                          showCurrencyName: true,
-                          showCurrencyCode: true,
-                          onSelect: (Currency currency) {
-                            setState(() => _currency = currency);
-                          },
-                        ),
-                    child: _MainText(_currency == null ? context.loc.tapToChangeCurrency : _currency!.name)),
-                Gap(PaddingConst.large),
-                _MainText(context.loc.priceTutor),
-                Gap(PaddingConst.large),
-                _TwoTextFormFieldsFromMap(
-                  map: _price,
-                  keyHint: context.loc.lessonType,
-                  valueHint: context.loc.price,
-                  isValueNumberType: true,
-                ),
-                Gap(PaddingConst.large),
-                _MainText(context.loc.preferencesTutorInfo),
-                Gap(PaddingConst.large),
-                LinTextField(
-                  controller: _preferencesController,
-                  label: context.loc.preferencesTutor,
-                ),
-              ],
+            },
+            icon: FeatherIcons.check,
+          ),
+        ],
+        content: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(PaddingConst.large),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _MainText(context.loc.aboutTutorInfo),
+                  Gap(PaddingConst.large),
+                  LinTextField(
+                    controller: _aboutController,
+                    label: context.loc.aboutTutor,
+                  ),
+                  Gap(PaddingConst.large),
+                  _MainText(context.loc.contactsTutor),
+                  Gap(PaddingConst.large),
+                  _TwoTextFormFieldsFromMap(
+                    map: _contacts,
+                    keyHint: context.loc.contactsType,
+                    valueHint: context.loc.contactsLink,
+                    isValueNumberType: false,
+                  ),
+                  Gap(PaddingConst.large),
+                  _MainText(context.loc.currencyTutor),
+                  Gap(PaddingConst.large),
+                  ElevatedButton(
+                      onPressed: () => showCurrencyPicker(
+                            context: context,
+                            showFlag: true,
+                            showCurrencyName: true,
+                            showCurrencyCode: true,
+                            onSelect: (Currency currency) {
+                              setState(() => _currency = currency);
+                            },
+                          ),
+                      child: _MainText(_currency == null ? context.loc.tapToChangeCurrency : _currency!.name)),
+                  Gap(PaddingConst.large),
+                  _MainText(context.loc.priceTutor),
+                  Gap(PaddingConst.large),
+                  _TwoTextFormFieldsFromMap(
+                    map: _price,
+                    keyHint: context.loc.lessonType,
+                    valueHint: context.loc.price,
+                    isValueNumberType: true,
+                  ),
+                  Gap(PaddingConst.large),
+                  _MainText(context.loc.preferencesTutorInfo),
+                  Gap(PaddingConst.large),
+                  LinTextField(
+                    controller: _preferencesController,
+                    label: context.loc.preferencesTutor,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -220,6 +232,7 @@ class _TwoTextFormFieldsFromMapState extends State<_TwoTextFormFieldsFromMap> {
                       ? LinNumberEditingField(
                           controller: widget.map.values.elementAt(i),
                           label: widget.valueHint,
+                          isRequired: true,
                         )
                       : LinTextField(
                           controller: widget.map.values.elementAt(i),

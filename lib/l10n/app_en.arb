@@ -1,11 +1,11 @@
 {
   "@@locale": "en",
-  "appTitle": "Lingui quest",
+  "appTitle": "Lingui Quest",
   "shortTitle": "LinguiQuest",
+  "mainWebsiteDescription":"English is one of the most popular languages ​​in the world. It is the language of international communication, education and business. Therefore, the ability to speak English well is important for many people. Global trends in English language learning indicate that this language continues to grow in popularity. According to the British Council, in 2023 there will be more than 1.5 billion people learning English worldwide. This is 20% more than in 2010.\n\nAt the same time, the need to check acquired knowledge also increases. In order to assess the level of your knowledge of the English language in general or individual topics, you can take a test.\n\nThanks to the tests, you can keep an objective assessment of the student's knowledge and skills, identify strengths and weaknesses in language learning, monitor learning progress over a certain period of time, and adjust the learning process in time to make it more effective.",
   "welcomeMessage": "Welcome!",
   "username": "Username",
   "password": "Password",
-  "forgotPassword": "Forgot Password",
   "signIn": "Sign In",
   "signUp": "Sign Up",
   "signOut": "Sign Out",
@@ -30,8 +30,6 @@
   "settings": "Settings",
   "language": "Language",
   "theme": "Theme",
-  "darkMode": "Dark Mode",
-  "lightMode": "Light Mode",
   "chooseTheme": "Choose Theme",
   "selectLanguage": "Select Language",
   "search": "Search",
@@ -39,17 +37,16 @@
   "noResults": "No Results Found",
   "retry": "Retry",
   "loading": "Loading...",
-  "firstName": "First name",
-  "lastName": "Last name",
+  "firstName": "First Name",
+  "lastName": "Last Name",
   "emptyStateMessage": "No items to display",
   "itemCount": "{count, plural, =0{No items} =1{1 item} other{{count} items}}",
 
 
   "games":"Games",
   "groups":"Groups",
-  "levelTest":"Level test",
-  "mainDescription":"",
-  "searchTutor":"Search tutor",
+  "levelTest":"Level Test",
+
 
   "signedInSuccessfully":"You signed in successfully. Return to home page to continue your journey.",
   "goToMainPage":"Go back",
@@ -59,7 +56,7 @@
   "createTestTask":"Create test task",
   "difficultyLevel":"Difficulty level",
 
-  "noProfileYet":"no profile yet, sign up",
+  "noProfileYet":"No profile yet, sign up",
   "enterValidEmail":"Enter valid email",
   "passwordMinLength":"Password must have at least 8 characters",
   "fieldShouldNotBeEmpty":"This field should not be empty",
@@ -144,6 +141,7 @@
   "tryAgainTutor":"There was an error creating your user. Try again later!",
   "tutorOnlyZone":"This is tutor only zone, you should not have access to it unless you are a tutor.",
   "tutorProfile":"Tutor Profile",
+  "allFieldsMustBeFilled":"All fields must be filled in",
 
   "createdGames":"Created Games",
   "passedGames":"Passed Games",

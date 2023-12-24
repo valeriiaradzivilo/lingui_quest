@@ -17,27 +17,33 @@ class CreateGroupAlert extends StatefulWidget {
 class _CreateGroupAlertState extends State<CreateGroupAlert> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<GroupsBloc>(context);
     final theme = Theme.of(context);
     return AlertDialog(
       title: Text(context.loc.createGroup),
-      content: Column(
-        children: [
-          LinTextField(
-            controller: _nameController,
-            label: context.loc.groupName,
-          ),
-          Gap(PaddingConst.medium),
-          LinTextField(
-            controller: _descriptionController,
-            label: context.loc.groupDescription,
-          ),
-          Gap(PaddingConst.medium),
-          Text(context.loc.createGroupInfo),
-        ],
+      content: Form(
+        key: formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Column(
+          children: [
+            LinTextField(
+              controller: _nameController,
+              label: context.loc.groupName,
+              isRequired: true,
+            ),
+            Gap(PaddingConst.medium),
+            LinTextField(
+              controller: _descriptionController,
+              label: context.loc.groupDescription,
+              isRequired: true,
+            ),
+            Gap(PaddingConst.medium),
+            Text(context.loc.createGroupInfo),
+          ],
+        ),
       ),
       actions: [
         LinButton(
@@ -48,23 +54,25 @@ class _CreateGroupAlertState extends State<CreateGroupAlert> {
         LinButton(
           label: context.loc.createGroup,
           onTap: () async {
-            final groupCreationRes = await cubit.createGroup(_nameController.text, _descriptionController.text);
-            if (!groupCreationRes) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.loc.groupWasNotCreated),
-                  backgroundColor: theme.colorScheme.error,
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.loc.groupWasCreatedSuccessfully),
-                  backgroundColor: Colors.cyan[800],
-                ),
-              );
+            if (formKey.currentState?.validate() ?? false) {
+              final groupCreationRes = await cubit.createGroup(_nameController.text, _descriptionController.text);
+              if (!groupCreationRes) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(context.loc.groupWasNotCreated),
+                    backgroundColor: theme.colorScheme.error,
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(context.loc.groupWasCreatedSuccessfully),
+                    backgroundColor: Colors.cyan[800],
+                  ),
+                );
+              }
+              Navigator.of(context).pop();
             }
-            Navigator.of(context).pop();
           },
           isEnabled: _nameController.text.isNotEmpty && _descriptionController.text.isNotEmpty,
         ),

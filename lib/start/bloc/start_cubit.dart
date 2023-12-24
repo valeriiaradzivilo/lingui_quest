@@ -59,6 +59,8 @@ class StartCubit extends Cubit<StartState> {
 
   Future initProfile() async {
     emit(state.copyWith(status: StartStatus.progress));
+    await checkLoggedIn();
+    await getInitials();
     await findTutorProfile();
 
     final createdGamesRes = await _getCreatedGamesUsecase(NoParams());

@@ -45,7 +45,7 @@ class _LinTextFieldState extends State<LinTextField> {
       return null;
     }
     if (value?.isEmpty ?? widget.isRequired) {
-      return 'This field must not be empty';
+      return context.loc.fieldShouldNotBeEmpty;
     } else if (widget.option == TextFieldOption.email) {
       return ValidationConstant.email(value, context);
     } else if (widget.option == TextFieldOption.password) {

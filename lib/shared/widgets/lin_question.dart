@@ -41,7 +41,7 @@ enum TextTaskType {
   colonText; //'Fill in the gap : I ___ you.
 
   factory TextTaskType.getType(String text) {
-    final matchOneMissedText = RegExp(r"(^[a-zA-Z0-9 :.,']*(_+[a-zA-Z0-9 ]*){1}[^_]*$)");
+    final matchOneMissedText = RegExp(r"(^[a-zA-Z0-9 :.,';`]*(_+[a-zA-Z0-9 ]*){1}[^_]*$)");
     final matchOneMissedDottedText = RegExp(r'\b[A-Za-z0-9 ]*[\.]{2,100}\b');
 
     if (!text.contains(RegExp('[_"\']'))) {
@@ -71,7 +71,7 @@ enum TextTaskType {
 
         return Wrap(
           direction: Axis.horizontal,
-          alignment: WrapAlignment.center,
+          alignment: WrapAlignment.start,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(textBefore),
@@ -87,7 +87,7 @@ enum TextTaskType {
 
         return Wrap(
           direction: Axis.horizontal,
-          alignment: WrapAlignment.center,
+          alignment: WrapAlignment.start,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(textBefore),
