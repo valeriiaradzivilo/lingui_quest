@@ -1,6 +1,6 @@
 part of 'level_test_play_bloc.dart';
 
-enum TestStatus { progress, error, success, notLoggedIn, result }
+enum TestStatus { progress, error, success, result }
 
 class LevelTestPlayState extends Equatable {
   final TestStatus status;

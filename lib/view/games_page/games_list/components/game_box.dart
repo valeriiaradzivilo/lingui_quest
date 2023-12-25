@@ -32,11 +32,11 @@ class GameBox extends StatelessWidget {
                     child: Text(
                       game.name,
                       style: theme.textTheme.headlineSmall,
-                      overflow: TextOverflow.visible,
-                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
-                  Gap(PaddingConst.small),
+                  Gap(PaddingConst.medium),
                   Flexible(
                     child: Text(
                       '${context.loc.gameTheme}: ${game.theme}',

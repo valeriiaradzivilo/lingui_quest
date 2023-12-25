@@ -1,3 +1,4 @@
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -21,11 +22,20 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool obscureText = true;
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final SignInCubit bloc = BlocProvider.of<SignInCubit>(context);
     final StartCubit blocStart = BlocProvider.of<StartCubit>(context);
     final theme = Theme.of(context);
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
         appBar: AppBar(
           title: HomeIconButton(
@@ -35,6 +45,7 @@ class _SignInPageState extends State<SignInPage> {
           centerTitle: true,
         ),
         body: BlocConsumer<SignInCubit, SignInState>(
+            bloc: bloc..init(),
             listener: (context, state) {},
             builder: (context, state) {
               return Padding(
@@ -43,6 +54,7 @@ class _SignInPageState extends State<SignInPage> {
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: Form(
+                      key: formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -58,17 +70,39 @@ class _SignInPageState extends State<SignInPage> {
                             option: TextFieldOption.email,
                           ),
                           Gap(PaddingConst.small),
-                          LinTextField(
-                            controller: passwordController,
-                            label: context.loc.password,
-                            option: TextFieldOption.password,
+                          Container(
+                            constraints:
+                                BoxConstraints(maxWidth: TextFieldOption.password.maxFieldWidth ?? double.infinity),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: passwordController,
+                                    minLines: null,
+                                    maxLines: 1,
+                                    obscureText: obscureText,
+                                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                                    validator: (value) =>
+                                        value == null || value.isEmpty ? context.loc.fieldShouldNotBeEmpty : null,
+                                    decoration: InputDecoration(label: Text(context.loc.password), errorMaxLines: 10),
+                                  ),
+                                ),
+                                IconButton(
+                                    onPressed: () => setState(() => obscureText = !obscureText),
+                                    icon: Icon(obscureText ? FeatherIcons.eye : FeatherIcons.eyeOff)),
+                              ],
+                            ),
                           ),
                           if (state.status == SignInStatus.error)
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text('Error occured. Try again'),
+                                Gap(PaddingConst.medium),
+                                Text(
+                                  'The account was not found. Check email and password and try again!',
+                                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
+                                ),
                                 Text(state.errorMessage ?? ''),
                               ],
                             ),
@@ -76,10 +110,12 @@ class _SignInPageState extends State<SignInPage> {
                           LinMainButton(
                               label: context.loc.signIn,
                               onTap: () async {
-                                final res = await bloc.login(emailController.text, passwordController.text);
-                                if (res) {
-                                  blocStart.setLoggedIn();
-                                  Navigator.of(context).pushNamed(AppRoutes.initial.path);
+                                if (formKey.currentState?.validate() ?? false) {
+                                  final res = await bloc.login(emailController.text, passwordController.text);
+                                  if (res) {
+                                    blocStart.setLoggedIn();
+                                    Navigator.of(context).pushNamed(AppRoutes.initial.path);
+                                  }
                                 }
                               }),
                           Gap(PaddingConst.small),

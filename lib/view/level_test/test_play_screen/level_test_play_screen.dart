@@ -49,14 +49,12 @@ class _TestScreenState extends State<LevelTestPlayScreen> {
                             remainingTimeStream: bloc.remainingTimeStream,
                           );
                         }
-                        return const Text('Error generating test - try again :(');
+                        return CircularProgressIndicator();
                       }
                       return const SizedBox();
                     });
               } else if (state.status == TestStatus.error) {
                 return Text(context.loc.error);
-              } else if (state.status == TestStatus.notLoggedIn) {
-                return Text(context.loc.notLoggedIn);
               } else if (state.status == TestStatus.result) {
                 return Center(
                   child: Text('Your level is : ${state.currentLevel.levelName} (${state.currentLevel.name})'),

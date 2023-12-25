@@ -24,22 +24,24 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
   late final ValueStream<int> remainingTimeStream = _remainingTimeController.stream;
 
   void init() async {
+    emit(state.copyWith(status: TestStatus.progress));
+
     final myUser = await _currentUserUsecase(NoParams());
 
     if (myUser.isRight()) {
       final allTests = await _getAllTestTasksUsecase(NoParams());
+      _remainingTimeController.add(state.remainingTime);
       if (allTests.isRight()) {
         final Stream<List<LevelTestTaskModel>> allTestResult =
             allTests.foldRight(const Stream.empty(), (r, previous) => r);
+        startTimer();
         emit(state.copyWith(
-            status: TestStatus.progress,
+            status: TestStatus.success,
             testsData: allTestResult,
             currentUser: myUser.foldRight(UserModel.empty(), (r, previous) => r)));
       } else {
         emit(state.copyWith(status: TestStatus.error));
       }
-    } else {
-      emit(state.copyWith(status: TestStatus.notLoggedIn));
     }
   }
 
@@ -49,7 +51,6 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
       final createTreeRes = await _createTestTaskTreeUsecase(tasks);
       if (createTreeRes.isRight()) {
         final Node? tree = createTreeRes.foldRight(null, (r, previous) => r);
-        startTimer();
         emit(state.copyWith(status: TestStatus.success, tasksTree: tree, currentTest: tree));
       } else {
         emit(state.copyWith(status: TestStatus.error));
@@ -58,11 +59,11 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
   }
 
   void startTimer() {
-    Timer.periodic(const Duration(milliseconds: 1050), (timer) {
+    timer?.cancel();
+    timer = Timer.periodic(const Duration(milliseconds: 1050), (_) {
       if (_remainingTimeController.value > 0) {
         _remainingTimeController.add(_remainingTimeController.value - 1);
       } else {
-        timer.cancel();
         emit(state.copyWith(status: TestStatus.result));
         // Calculate and show the test result
       }
@@ -115,11 +116,13 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
   }
 
   void deleteTestData() {
+    _remainingTimeController.add(state.remainingTime);
+    timer?.cancel;
     emit(LevelTestPlayState.initial());
   }
 
   late final _remainingTimeController = BehaviorSubject.seeded(state.remainingTime);
-
+  Timer? timer;
   final GetCurrentUserUsecase _currentUserUsecase;
   final CreateTestTaskTreeUsecase _createTestTaskTreeUsecase;
   final GetAllTestTasksUsecase _getAllTestTasksUsecase;

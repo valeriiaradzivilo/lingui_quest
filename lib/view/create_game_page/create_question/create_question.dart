@@ -56,7 +56,6 @@ class CreateQuestionState extends State<CreateQuestionPage> {
               child: Form(
                 key: _formKey,
                 onChanged: () {
-                  _formKey.currentState?.validate();
                   cubit.setQuestion(_questionController.text);
                   cubit.setOptions(_optionsControllers.map((e) => e.text).toList());
                 },

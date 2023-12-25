@@ -47,7 +47,6 @@ class FullProfilePage extends StatelessWidget {
                                   state.currentUser.lastName.substring(0, 1).toUpperCase(),
                             )),
                         Gap(PaddingConst.medium),
-                        Text('Username: ${state.currentUser.username}'),
                         Gap(PaddingConst.small),
                         Text('Email: ${state.currentUser.email}'),
                         Gap(PaddingConst.small),

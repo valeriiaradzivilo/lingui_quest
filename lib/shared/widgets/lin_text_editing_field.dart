@@ -79,6 +79,7 @@ class _LinTextFieldState extends State<LinTextField> {
               validator: (value) => _validate(value, context),
               decoration: InputDecoration(label: Text(widget.label ?? ''), errorText: errorText, errorMaxLines: 10),
               onChanged: (value) => setState(() => errorText = _validate(value, context)),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
           ),
           if (widget.option == TextFieldOption.password) ...[

@@ -8,17 +8,19 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(PaddingConst.immense),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(context.loc.welcomeMessage.toUpperCase()),
-            Gap(PaddingConst.medium),
-            Text(context.loc.mainWebsiteDescription),
-          ],
+    return SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.all(PaddingConst.immense),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(context.loc.welcomeMessage.toUpperCase()),
+              Gap(PaddingConst.medium),
+              Text(context.loc.mainWebsiteDescription),
+            ],
+          ),
         ),
       ),
     );
