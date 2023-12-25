@@ -103,4 +103,9 @@ class GameCreationCubit extends Cubit<GameCreationState> {
       emit(state.copyWith(game: currentGame.copyWith(groups: newGroupList)));
     }
   }
+
+  void dispose() {
+    emit(state.copyWith(status: GameCreationStatus.progress));
+    emit(GameCreationState.initial());
+  }
 }

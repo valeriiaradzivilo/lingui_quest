@@ -62,6 +62,13 @@ class _CreateGamePageState extends State<CreateGamePage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _themeController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
+  late final GameCreationCubit bloc;
+
+  @override
+  void initState() {
+    bloc = BlocProvider.of<GameCreationCubit>(context);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -69,12 +76,12 @@ class _CreateGamePageState extends State<CreateGamePage> {
     _descriptionController.dispose();
     _themeController.dispose();
     _timeController.dispose();
+    bloc.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final GameCreationCubit bloc = BlocProvider.of<GameCreationCubit>(context);
     final formKey = GlobalKey<FormState>();
     final theme = Theme.of(context);
     return SafeArea(
@@ -171,7 +178,10 @@ class _CreateGamePageState extends State<CreateGamePage> {
                       children: [
                         LinButton(
                           label: context.loc.cancel,
-                          onTap: () => Navigator.pushNamed(context, AppRoutes.initial.path),
+                          onTap: () {
+                            bloc.dispose();
+                            Navigator.pushNamed(context, AppRoutes.initial.path);
+                          },
                           isTransparentBack: true,
                         ),
                         LinMainButton(
@@ -190,6 +200,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                                     : context.loc.couldNotCreateTheGame),
                                 backgroundColor: isSuccessfullyCreated ? Colors.green : theme.colorScheme.error,
                               ));
+                              bloc.dispose();
                               Navigator.pushNamed(context, AppRoutes.initial.path);
                             }
                           },
