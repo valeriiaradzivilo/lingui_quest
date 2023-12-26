@@ -53,14 +53,16 @@ class GroupsScreen extends StatelessWidget {
                     padding: EdgeInsets.all(PaddingConst.medium),
                     child: ReactiveWidget(
                       stream: state.allGroups,
-                      widget: (groups) => ListView.separated(
-                        itemBuilder: (context, index) => GroupBoxWidget(
-                          group: groups[index],
-                          isCreator: groups[index].creatorId == state.currentUser.userId,
-                        ),
-                        itemCount: groups.length,
-                        separatorBuilder: (__, _) => Gap(PaddingConst.medium),
-                      ),
+                      widget: (groups) => groups.isNotEmpty
+                          ? ListView.separated(
+                              itemBuilder: (context, index) => GroupBoxWidget(
+                                group: groups[index],
+                                isCreator: groups[index].creatorId == state.currentUser.userId,
+                              ),
+                              itemCount: groups.length,
+                              separatorBuilder: (__, _) => Gap(PaddingConst.medium),
+                            )
+                          : Text(context.loc.youHaveNoGroups),
                     ),
                   ),
                 )

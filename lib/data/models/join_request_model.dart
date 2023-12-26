@@ -12,11 +12,7 @@ class JoinRequestModel with _$JoinRequestModel {
     required String groupId,
     required String userId,
     required String id,
-    @JsonKey(
-      fromJson: fromTimestamp,
-      toJson: Timestamp.fromDate,
-    )
-    required DateTime requestDate,
+    @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate) required DateTime requestDate,
   }) = _JoinRequestModel;
   factory JoinRequestModel.fromJson(Json json) => _$JoinRequestModelFromJson(json);
 

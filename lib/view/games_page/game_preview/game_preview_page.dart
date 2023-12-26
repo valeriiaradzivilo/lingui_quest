@@ -68,15 +68,25 @@ class GamePreviewPage extends StatelessWidget {
                           Text(context.loc.youCreatedThisGame),
                           if (state.gameResults.isNotEmpty)
                             DataTable(dataRowMaxHeight: 200, headingRowHeight: 100, columns: [
-                              DataColumn(label: Expanded(child: Text('Student'))),
-                              DataColumn(label: Expanded(child: Text('Mark (%)'))),
-                              DataColumn(label: Expanded(child: Text('Errors'))),
-                              DataColumn(label: Expanded(child: Text('Time'))),
+                              DataColumn(label: Text(context.loc.student)),
+                              DataColumn(label: Expanded(child: Text(context.loc.mark))),
+                              DataColumn(label: Text(context.loc.mistakes)),
+                              DataColumn(
+                                  label: Expanded(
+                                child: Text(
+                                  context.loc.time,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )),
                             ], rows: [
                               for (final result in state.gameResults)
                                 DataRow(cells: [
-                                  DataCell(Text('${result.user.firstName} ${result.user.lastName}')),
-                                  DataCell(Text(result.result
+                                  DataCell(Container(
+                                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 4),
+                                    child: SelectableText('${result.user.firstName} ${result.user.lastName}'),
+                                  )),
+                                  DataCell(SelectableText(result.result
                                       .toString()
                                       .substring(0, result.result.toString().length > 4 ? 4 : null))),
                                   DataCell(result.errors.isNotEmpty
@@ -84,34 +94,28 @@ class GamePreviewPage extends StatelessWidget {
                                           onPressed: () => showAdaptiveDialog(
                                             context: context,
                                             useSafeArea: true,
-                                            builder: (context) => Padding(
-                                              padding: EdgeInsets.all(PaddingConst.immense),
-                                              child: Container(
-                                                padding: EdgeInsets.all(PaddingConst.medium),
-                                                color: theme.cardColor,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      for (final mistake in result.errors) ...[
-                                                        _MistakeWidget(mistake),
-                                                        Divider()
-                                                      ]
-                                                    ],
-                                                  ),
-                                                ),
+                                            builder: (context) => AlertDialog(
+                                              content: Padding(
+                                                padding: EdgeInsets.all(PaddingConst.immense),
+                                                child: Container(
+                                                    width: MediaQuery.of(context).size.width * 0.6,
+                                                    height: MediaQuery.of(context).size.height * 0.7,
+                                                    child: ListView.separated(
+                                                      itemBuilder: (context, index) =>
+                                                          _MistakeWidget(result.errors[index]),
+                                                      separatorBuilder: (context, index) => Divider(),
+                                                      itemCount: result.errors.length,
+                                                    )),
                                               ),
                                             ),
                                           ),
-                                          child: Text('Tap to see the mistakes'),
+                                          child: Text(context.loc.tapToSeeMistakes),
                                         )
-                                      : Text('No mistakes!')),
-                                  DataCell(Text(DateFormat('yyyy-MM-dd – kk:mm')
+                                      : SelectableText(context.loc.noMistakes)),
+                                  DataCell(SelectableText(DateFormat('yyyy-MM-dd – kk:mm')
                                       .format(DateTime.fromMillisecondsSinceEpoch(result.timeFinished))))
-                                ])
-                            ])
+                                ]),
+                            ]),
                         ]
                       ],
                     ),
@@ -148,13 +152,16 @@ class _MistakeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text('Question: ${model.question.question}'),
-        Text('Expected: ${model.question.correctAnswers.map((e) => model.question.options[e]).join(',')}'),
-        Text(
-            'Actual: ${model.actualResult.split(',').map((e) => model.question.options[int.tryParse(e) ?? 0]).join(',')}'),
-      ],
+    return IntrinsicHeight(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Question: ${model.question.question}'),
+          Text('Expected: ${model.question.correctAnswers.map((e) => model.question.options[e]).join(',')}'),
+          Text(
+              'Actual: ${model.actualResult.split(',').map((e) => model.question.options[int.tryParse(e) ?? 0]).join(',')}'),
+        ],
+      ),
     );
   }
 }

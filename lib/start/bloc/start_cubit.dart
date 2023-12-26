@@ -70,7 +70,7 @@ class StartCubit extends Cubit<StartState> {
     emit(state.copyWith(status: StartStatus.initial, passedGames: passedGamesRes.foldRight([], (r, previous) => r)));
   }
 
-  _findJoinRequests() async {
+  Future<void> _findJoinRequests() async {
     final joinRequests = await _getJoinRequestsUsecase(NoParams());
     emit(state.copyWith(
       joinRequests: joinRequests.foldRight(Stream.empty(), (r, previous) => r),

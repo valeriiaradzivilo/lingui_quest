@@ -157,6 +157,14 @@
   "noRequestsFound":"No requests to join were found",
 
 
+  "tapToSeeMistakes":"Tap to see the mistakes",
+  "noMistakes":"No mistakes!",
+  "mark":"Mark (%)",
+  "mistakes":"Mistakes",
+  "time":"Time finished",
+
+
+
   "myGroups":"My Groups",
   "group":"Group",
   "joinGroup":"Join Group",
@@ -173,6 +181,7 @@
   "couldNotFindGroup":"Could not find the group by this code. Check the correctness of your code.",
   "groupWasNotCreated":"Could not create your group. Try again!",
   "groupWasCreatedSuccessfully":"Your group was created successfully.",
+  "youHaveNoGroups":"You have no groups. Try joining by clicking on the button 'Join Group'",
   "createGroupInfo":"Students can request access to tests in this group using code. The code will be generated automatically. After a student sends a request, you will be able to add them through teacher tab."
 
 }

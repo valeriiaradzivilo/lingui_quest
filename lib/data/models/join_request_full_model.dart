@@ -13,11 +13,7 @@ class JoinRequestFullModel with _$JoinRequestFullModel {
     required GroupModel group,
     required UserModel user,
     required String id,
-    @JsonKey(
-      fromJson: fromTimestamp,
-      toJson: Timestamp.fromDate,
-    )
-    required DateTime requestDate,
+    @JsonKey(fromJson: fromTimestamp, toJson: Timestamp.fromDate) required DateTime requestDate,
   }) = _JoinRequestFullModel;
   factory JoinRequestFullModel.fromJson(Json json) => _$JoinRequestFullModelFromJson(json);
 

@@ -117,7 +117,7 @@ class LevelTestPlayCubit extends Cubit<LevelTestPlayState> {
 
   void deleteTestData() {
     _remainingTimeController.add(state.remainingTime);
-    timer?.cancel;
+    timer?.cancel();
     emit(LevelTestPlayState.initial());
   }
 

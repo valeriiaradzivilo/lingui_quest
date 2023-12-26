@@ -113,7 +113,7 @@ class GamePlayCubit extends Cubit<GamePlayState> {
 
   void deleteResults() {
     _remainingTimeController.add(state.currentGame.time);
-    timer?.cancel;
+    timer?.cancel();
     emit(GamePlayState.initial());
   }
 
