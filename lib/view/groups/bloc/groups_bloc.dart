@@ -100,7 +100,10 @@ class GroupsBloc extends Cubit<GroupsState> {
   Future<bool> sendRequestToJoinTheGroup() async {
     if (state.searchResultGroup != null) {
       final requestRes = await _requestToJoinGroupUsecase(state.searchResultGroup!.code);
-      return requestRes.isRight();
+      return requestRes.fold((l) {
+        emit(state.copyWith(errorMessage: l.failureMessage));
+        return false;
+      }, (r) => true);
     }
     return false;
   }
@@ -109,16 +112,22 @@ class GroupsBloc extends Cubit<GroupsState> {
     emit(state.copyWith(status: GroupsStatus.progress));
     final deleteStudentRes =
         await _deleteStudentFromGroupUsecase(StudentGroupModel(userId, state.chosenGroup.group.code));
+
     if (deleteStudentRes.isLeft()) {
       emit(state.copyWith(status: GroupsStatus.error, errorMessage: 'Could not delete the student'));
       return false;
     } else {
-      final searchGroupByCodeResult = await _getGroupByCodeUsecase(state.chosenGroup.group.code);
+      final searchGroupByCodeResult = await _getFullGroupInfoUsecase(state.chosenGroup.group);
 
-      return searchGroupByCodeResult.fold((l) => false, (r) {
-        final newStudents = [...r.students];
-        newStudents.remove(userId);
-        emit(state.copyWith(searchResultGroup: r.copyWith(students: newStudents), status: GroupsStatus.initial));
+      return searchGroupByCodeResult.fold((l) {
+        emit(state.copyWith(status: GroupsStatus.error));
+        return false;
+      }, (r) {
+        final students = [...r.students];
+        students.removeWhere((element) => element.userId == userId);
+        final updatedGroup = GroupFullInfoModel(r.group, r.tutor, r.tutorUserData, r.games, students);
+
+        emit(state.copyWith(chosenGroup: updatedGroup, status: GroupsStatus.initial));
         return true;
       });
     }

@@ -8,7 +8,7 @@ import 'package:lingui_quest/shared/constants/padding_constants.dart';
 import 'package:lingui_quest/shared/widgets/lin_main_button.dart';
 import 'package:lingui_quest/shared/widgets/lin_text_editing_field.dart';
 import 'package:lingui_quest/start/app_routes.dart';
-import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
+import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_cubit.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

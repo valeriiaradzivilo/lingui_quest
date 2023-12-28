@@ -1,4 +1,4 @@
-part of 'sign_up_bloc.dart';
+part of 'sign_up_cubit.dart';
 
 enum SignUpStatus { initial, progress, error, success }
 

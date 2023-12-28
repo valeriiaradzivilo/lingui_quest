@@ -61,49 +61,48 @@ class _ConfirmGroupSearch extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<GroupsBloc>(context);
     final theme = Theme.of(context);
-    return AlertDialog(
-      title: Text(context.loc.isItCorrectGroup),
-      content: BlocBuilder<GroupsBloc, GroupsState>(builder: (context, state) {
-        if (state.searchResultGroup != null) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('${context.loc.groupName}:${state.searchResultGroup!.name}'),
-              Gap(PaddingConst.medium),
-              Text('${context.loc.groupDescription}:${state.searchResultGroup!.description}')
-            ],
-          );
-        }
-        return Center(child: Text(context.loc.error));
-      }),
-      actions: [
-        LinButton(
-          label: context.loc.cancel,
-          onTap: () => Navigator.of(context).pop(),
-          isTransparentBack: true,
-        ),
-        LinButton(
-            label: context.loc.confirm,
-            onTap: () async {
-              final isRequested = await bloc.sendRequestToJoinTheGroup();
-              if (!isRequested) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: SelectableText(context.loc.couldNotRequestToJoinGroup),
-                    backgroundColor: theme.colorScheme.error,
-                  ),
-                );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: SelectableText(context.loc.requestToJoinGroupSuccessful),
-                    backgroundColor: theme.colorScheme.primary,
-                  ),
-                );
-              }
-              Navigator.of(context).pop();
-            })
-      ],
-    );
+    return BlocBuilder<GroupsBloc, GroupsState>(
+        builder: (context, state) => AlertDialog(
+              title: Text(context.loc.isItCorrectGroup),
+              content: state.searchResultGroup != null
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('${context.loc.groupName}:${state.searchResultGroup!.name}'),
+                        Gap(PaddingConst.medium),
+                        Text('${context.loc.groupDescription}:${state.searchResultGroup!.description}')
+                      ],
+                    )
+                  : Center(child: Text(context.loc.error)),
+              actions: [
+                LinButton(
+                  label: context.loc.cancel,
+                  onTap: () => Navigator.of(context).pop(),
+                  isTransparentBack: true,
+                ),
+                LinButton(
+                    label: context.loc.confirm,
+                    onTap: () async {
+                      final isRequested = await bloc.sendRequestToJoinTheGroup();
+                      if (!isRequested) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: SelectableText(
+                                context.loc.couldNotRequestToJoinGroup + " " + (state.errorMessage ?? '')),
+                            backgroundColor: theme.colorScheme.error,
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: SelectableText(context.loc.requestToJoinGroupSuccessful),
+                            backgroundColor: theme.colorScheme.primary,
+                          ),
+                        );
+                      }
+                      Navigator.of(context).pop();
+                    })
+              ],
+            ));
   }
 }

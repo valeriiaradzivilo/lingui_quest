@@ -38,18 +38,14 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
       );
       final User? user = _firebaseAuth.currentUser;
       if (user != null) {
-        try {
-          await saveUserData(UserModel(
-              email: params.email,
-              userId: user.uid,
-              username: params.email,
-              firstName: params.firstName,
-              lastName: params.lastName,
-              level: EnglishLevel.a1,
-              isTutor: false));
-        } catch (e) {
-          rethrow;
-        }
+        await saveUserData(UserModel(
+            email: params.email,
+            userId: user.uid,
+            username: params.email,
+            firstName: params.firstName,
+            lastName: params.lastName,
+            level: EnglishLevel.a1,
+            isTutor: false));
 
         SimpleLogger().info('Created an account for ${params.email}');
       } else {
@@ -70,13 +66,9 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
 
   @override
   Future<void> saveUserData(UserModel user) async {
-    try {
-      final CollectionReference userData = firestore.collection(FirebaseCollection.userData.collectionName);
-      await userData.add(user.toJson());
-      SimpleLogger().info('User added');
-    } catch (e) {
-      rethrow;
-    }
+    final CollectionReference userData = firestore.collection(FirebaseCollection.userData.collectionName);
+    await userData.add(user.toJson());
+    SimpleLogger().info('User added');
   }
 
   @override
@@ -96,99 +88,71 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
 
   @override
   Future<void> signOut() async {
-    try {
-      await _firebaseAuth.signOut();
-    } catch (e) {
-      rethrow;
-    }
+    await _firebaseAuth.signOut();
   }
 
   @override
   Future<void> crateNewTestTask(LevelTestTaskModel task) async {
-    try {
-      final CollectionReference testTasks = firestore.collection(FirebaseCollection.testTasks.collectionName);
-      await testTasks.add(task.toJson());
-      SimpleLogger().info('Task added');
-    } catch (e) {
-      rethrow;
-    }
+    final CollectionReference testTasks = firestore.collection(FirebaseCollection.testTasks.collectionName);
+    await testTasks.add(task.toJson());
+    SimpleLogger().info('Task added');
   }
 
   @override
   Future<Stream<List<LevelTestTaskModel>>> readTasks() async {
-    try {
-      return firestore
-          .collection(FirebaseCollection.testTasks.collectionName)
-          .snapshots()
-          .map((snapshot) => snapshot.docs.map((doc) => LevelTestTaskModel.fromJson(doc.data())).toList());
-    } catch (e) {
-      rethrow;
-    }
+    return firestore
+        .collection(FirebaseCollection.testTasks.collectionName)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => LevelTestTaskModel.fromJson(doc.data())).toList());
   }
 
   @override
   Future<Stream<List<UserModel>>> getAllUserDataTeachers() async {
-    try {
-      return firestore.collection(FirebaseCollection.userData.collectionName).snapshots().map((event) => event.docs
-          .map((e) {
-            if (e.data()['isTutor']) {
-              return UserModel.fromJson(e.data());
-            }
-          })
-          .whereType<UserModel>()
-          .toList());
-    } catch (e) {
-      rethrow;
-    }
+    return firestore.collection(FirebaseCollection.userData.collectionName).snapshots().map((event) => event.docs
+        .map((e) {
+          if (e.data()['isTutor']) {
+            return UserModel.fromJson(e.data());
+          }
+        })
+        .whereType<UserModel>()
+        .toList());
   }
 
   @override
   Future<UserModel> getCurrentUserData() async {
-    try {
-      if (_firebaseAuth.currentUser != null) {
-        final data = await firestore
-            .collection(FirebaseCollection.userData.collectionName)
-            .where('user_id', isEqualTo: _firebaseAuth.currentUser!.uid)
-            .limit(1)
-            .get();
-        return UserModel.fromJson(data.docs.first.data());
-      } else {
-        return UserModel.empty();
-      }
-    } catch (e) {
-      rethrow;
+    if (_firebaseAuth.currentUser != null) {
+      final data = await firestore
+          .collection(FirebaseCollection.userData.collectionName)
+          .where('user_id', isEqualTo: _firebaseAuth.currentUser!.uid)
+          .limit(1)
+          .get();
+      return UserModel.fromJson(data.docs.first.data());
+    } else {
+      return UserModel.empty();
     }
   }
 
   @override
   Future<void> createNewTutor(TutorModel tutor) async {
-    try {
-      final CollectionReference tutorInfoTable = firestore.collection(FirebaseCollection.tutor.collectionName);
-      await tutorInfoTable.add(tutor.copyWith(userId: _firebaseAuth.currentUser!.uid).toJson());
-      SimpleLogger().info('Tutor added');
-      final userDataDocToEdit = await firestore
-          .collection(FirebaseCollection.userData.collectionName)
-          .where('user_id', isEqualTo: _firebaseAuth.currentUser?.uid)
-          .limit(1)
-          .get();
-      final id = userDataDocToEdit.docs.first.id;
+    final CollectionReference tutorInfoTable = firestore.collection(FirebaseCollection.tutor.collectionName);
+    await tutorInfoTable.add(tutor.copyWith(userId: _firebaseAuth.currentUser!.uid).toJson());
+    SimpleLogger().info('Tutor added');
+    final userDataDocToEdit = await firestore
+        .collection(FirebaseCollection.userData.collectionName)
+        .where('user_id', isEqualTo: _firebaseAuth.currentUser?.uid)
+        .limit(1)
+        .get();
+    final id = userDataDocToEdit.docs.first.id;
 
-      await firestore.collection(FirebaseCollection.userData.collectionName).doc(id).update({'is_tutor': true});
-      SimpleLogger().info('User was edited');
-    } catch (e) {
-      rethrow;
-    }
+    await firestore.collection(FirebaseCollection.userData.collectionName).doc(id).update({'is_tutor': true});
+    SimpleLogger().info('User was edited');
   }
 
   @override
   Future<void> createNewGame(GameModel model) async {
-    try {
-      final CollectionReference gamesTable = firestore.collection(FirebaseCollection.games.collectionName);
-      await gamesTable.add(model.copyWith(creatorId: _firebaseAuth.currentUser!.uid, id: Uuid().v1()).toJson());
-      SimpleLogger().info('Game added');
-    } catch (e) {
-      rethrow;
-    }
+    final CollectionReference gamesTable = firestore.collection(FirebaseCollection.games.collectionName);
+    await gamesTable.add(model.copyWith(creatorId: _firebaseAuth.currentUser!.uid, id: Uuid().v1()).toJson());
+    SimpleLogger().info('Game added');
   }
 
   @override
@@ -214,57 +178,45 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
 
   @override
   Future<GameModel> getGameById(String id) async {
-    try {
-      final res =
-          await firestore.collection(FirebaseCollection.games.collectionName).where('id', isEqualTo: id).limit(1).get();
-      return GameModel.fromJson(res.docs.first.data());
-    } catch (e) {
-      rethrow;
-    }
+    final res =
+        await firestore.collection(FirebaseCollection.games.collectionName).where('id', isEqualTo: id).limit(1).get();
+    return GameModel.fromJson(res.docs.first.data());
   }
 
   @override
   Future<GroupModel> getGroupByCode(String code) async {
-    try {
-      final res = await firestore
-          .collection(FirebaseCollection.groups.collectionName)
-          .where('code', isEqualTo: code)
-          .limit(1)
-          .get();
-      return GroupModel.fromJson(res.docs.first.data());
-    } catch (e) {
-      rethrow;
-    }
+    final res = await firestore
+        .collection(FirebaseCollection.groups.collectionName)
+        .where('code', isEqualTo: code)
+        .limit(1)
+        .get();
+    return GroupModel.fromJson(res.docs.first.data());
   }
 
   @override
   Future<Stream<List<GroupModel>>> getAllGroupsForCurrentUser({bool mustBeCreator = false}) async {
-    try {
-      final resAsCreator = firestore
-          .collection(FirebaseCollection.groups.collectionName)
-          .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
-          .snapshots();
-      final resAsStudent = mustBeCreator
-          ? Stream.empty()
-          : firestore
-              .collection(FirebaseCollection.groups.collectionName)
-              .where('students', arrayContains: _firebaseAuth.currentUser!.uid)
-              .snapshots();
-      final Stream<List<GroupModel>> res = Rx.combineLatest2(resAsCreator, resAsStudent, (creator, student) {
-        final List<GroupModel> listOfGroups = [];
-        for (final doc in creator.docs) {
-          listOfGroups.add(GroupModel.fromJson(doc.data()));
-        }
-        for (final doc in student.docs) {
-          listOfGroups.add(GroupModel.fromJson(doc.data()));
-        }
-        return listOfGroups;
-      }).asBroadcastStream();
+    final resAsCreator = firestore
+        .collection(FirebaseCollection.groups.collectionName)
+        .where('creator_id', isEqualTo: _firebaseAuth.currentUser!.uid)
+        .snapshots();
+    final resAsStudent = mustBeCreator
+        ? Stream.empty()
+        : firestore
+            .collection(FirebaseCollection.groups.collectionName)
+            .where('students', arrayContains: _firebaseAuth.currentUser!.uid)
+            .snapshots();
+    final Stream<List<GroupModel>> res = Rx.combineLatest2(resAsCreator, resAsStudent, (creator, student) {
+      final List<GroupModel> listOfGroups = [];
+      for (final doc in creator.docs) {
+        listOfGroups.add(GroupModel.fromJson(doc.data()));
+      }
+      for (final doc in student.docs) {
+        listOfGroups.add(GroupModel.fromJson(doc.data()));
+      }
+      return listOfGroups;
+    }).asBroadcastStream();
 
-      return res;
-    } catch (e) {
-      rethrow;
-    }
+    return res;
   }
 
   @override
@@ -279,27 +231,19 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
 
   @override
   Future<void> postGroup(GroupModel group) async {
-    try {
-      final newGroup = group.copyWith(creatorId: _firebaseAuth.currentUser!.uid, code: Uuid().v1());
-      await firestore.collection(FirebaseCollection.groups.collectionName).add(newGroup.toJson());
-    } catch (e) {
-      rethrow;
-    }
+    final newGroup = group.copyWith(creatorId: _firebaseAuth.currentUser!.uid, code: Uuid().v1());
+    await firestore.collection(FirebaseCollection.groups.collectionName).add(newGroup.toJson());
   }
 
   @override
   Future<TutorModel> getCurrentTutor() async {
-    try {
-      final tutorModelMap = await firestore
-          .collection(FirebaseCollection.tutor.collectionName)
-          .where('user_id', isEqualTo: _firebaseAuth.currentUser!.uid)
-          .limit(1)
-          .get();
+    final tutorModelMap = await firestore
+        .collection(FirebaseCollection.tutor.collectionName)
+        .where('user_id', isEqualTo: _firebaseAuth.currentUser!.uid)
+        .limit(1)
+        .get();
 
-      return TutorModel.fromJson(tutorModelMap.docs.first.data());
-    } catch (e) {
-      rethrow;
-    }
+    return TutorModel.fromJson(tutorModelMap.docs.first.data());
   }
 
   @override
@@ -374,6 +318,10 @@ class FirebaseRemoteDatasourceImplementation implements FirebaseRemoteDatasource
 
   @override
   Future<void> requestToJoinTheGroup(String code) async {
+    final group = await getGroupByCode(code);
+    if (group.students.contains(_firebaseAuth.currentUser!.uid) || group.creatorId == _firebaseAuth.currentUser!.uid) {
+      throw 'User is trying to connect to the groups he is already part of.';
+    }
     final CollectionReference requestsTable = firestore.collection(FirebaseCollection.joinRequest.collectionName);
     await requestsTable.add(JoinRequestModel(
       groupId: code,

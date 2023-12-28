@@ -46,7 +46,7 @@ import 'package:lingui_quest/view/level_test/main_info_screen/bloc/level_test_bl
 import 'package:lingui_quest/view/level_test/test_play_screen/bloc/level_test_play_bloc.dart';
 import 'package:lingui_quest/view/profile_page/become_tutor/bloc/become_tutor_cubit.dart';
 import 'package:lingui_quest/view/sign_in_page/bloc/sign_in_bloc.dart';
-import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_bloc.dart';
+import 'package:lingui_quest/view/sign_up_page/bloc/sign_up_cubit.dart';
 
 final GetIt serviceLocator = GetIt.instance;
 
