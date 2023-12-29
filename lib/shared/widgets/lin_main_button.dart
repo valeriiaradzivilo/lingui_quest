@@ -18,7 +18,7 @@ class LinMainButton extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(PaddingConst.medium),
           decoration: BoxDecoration(
-            color: isEnabled && onTap == null ? Colors.transparent : Theme.of(context).colorScheme.secondaryContainer,
+            color: !isEnabled || onTap == null ? Colors.transparent : Theme.of(context).colorScheme.secondaryContainer,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Theme.of(context).colorScheme.secondaryContainer),
             boxShadow: [

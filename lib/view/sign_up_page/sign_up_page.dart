@@ -111,6 +111,7 @@ class _SignInPageState extends State<SignUpPage> {
                         LinMainButton(
                           key: ValueKey(KeyConstants.signUpButton),
                           label: context.loc.signUp,
+                          isEnabled: _formKey.currentState?.validate() ?? false,
                           onTap: () async {
                             final validated = _formKey.currentState?.validate() ?? false;
                             if (validated) {

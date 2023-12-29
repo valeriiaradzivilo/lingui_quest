@@ -21,35 +21,39 @@ class _JoinGroupAlertState extends State<JoinGroupAlert> {
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<GroupsBloc>(context);
     final theme = Theme.of(context);
-    return AlertDialog(
-      title: Text(context.loc.joinGroup),
-      content: LinTextField(
-        controller: _codeFieldController,
-        label: context.loc.code,
-      ),
-      actions: [
-        LinButton(
-          label: context.loc.cancel,
-          onTap: () => Navigator.of(context).pop(),
-          isTransparentBack: true,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: AlertDialog(
+        title: Text(context.loc.joinGroup),
+        content: LinTextField(
+          controller: _codeFieldController,
+          label: context.loc.code,
         ),
-        LinButton(
-            label: context.loc.findGroup,
-            onTap: () async {
-              final searchResult = await cubit.findGroupByCode(_codeFieldController.text);
-              if (!searchResult) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(context.loc.couldNotFindGroup),
-                    backgroundColor: theme.colorScheme.error,
-                  ),
-                );
-                return;
-              }
-              Navigator.of(context).pop();
-              showDialog(context: context, builder: (_) => _ConfirmGroupSearch());
-            }),
-      ],
+        actions: [
+          LinButton(
+            label: context.loc.cancel,
+            onTap: () => Navigator.of(context).pop(),
+            isTransparentBack: true,
+          ),
+          LinButton(
+              label: context.loc.findGroup,
+              isEnabled: _codeFieldController.text.isNotEmpty,
+              onTap: () async {
+                final searchResult = await cubit.findGroupByCode(_codeFieldController.text);
+                if (!searchResult) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(context.loc.couldNotFindGroup),
+                      backgroundColor: theme.colorScheme.error,
+                    ),
+                  );
+                  return;
+                }
+                Navigator.of(context).pop();
+                showDialog(context: context, builder: (_) => _ConfirmGroupSearch());
+              }),
+        ],
+      ),
     );
   }
 }
