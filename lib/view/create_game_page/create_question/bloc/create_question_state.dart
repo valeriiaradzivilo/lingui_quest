@@ -22,7 +22,7 @@ class QuestionCreationState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, _time, currentUser, question];
+  List<Object?> get props => [status, _time, currentUser, question, errorMessage];
 
   QuestionCreationState copyWith({
     QuestionCreationStatus? status,

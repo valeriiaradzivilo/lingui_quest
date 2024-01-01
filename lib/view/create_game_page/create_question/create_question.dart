@@ -1,6 +1,7 @@
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:lingui_quest/core/extensions/app_localization_context.dart';
 import 'package:lingui_quest/data/models/question_model.dart';
 import 'package:lingui_quest/shared/constants/padding_constants.dart';
@@ -24,10 +25,13 @@ class CreateQuestionState extends State<CreateQuestionPage> {
   final _formKey = GlobalKey<FormState>();
   bool _forgotToChooseRightAnswer = false;
   bool _showPreview = false;
+  late final QuestionCreationCubit cubit;
 
   @override
   void initState() {
     _optionsControllers = List.generate(widget.questionToEdit?.options.length ?? 4, (index) => TextEditingController());
+    cubit = BlocProvider.of<QuestionCreationCubit>(context);
+    cubit..init(widget.questionToEdit);
     super.initState();
   }
 
@@ -37,17 +41,16 @@ class CreateQuestionState extends State<CreateQuestionPage> {
     for (final element in _optionsControllers) {
       element.dispose();
     }
+    cubit.submitQuestion();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final cubit = BlocProvider.of<QuestionCreationCubit>(context);
+
     return AlertDialog(
-      title: const Text('Create Question'),
       content: BlocBuilder<QuestionCreationCubit, QuestionCreationState>(
-        bloc: cubit..init(widget.questionToEdit),
         builder: (context, state) {
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: PaddingConst.medium, vertical: PaddingConst.medium),
@@ -63,6 +66,8 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text('Create Question', style: theme.textTheme.displayMedium),
+                    Gap(PaddingConst.large),
                     const Text('Question'),
                     Row(
                       children: [
@@ -105,7 +110,9 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                                   chosenOptions.add(index);
                                 }
                                 cubit.setCorrectAnswers(chosenOptions);
-                                setState(() => _forgotToChooseRightAnswer = chosenOptions.isEmpty);
+                                if (_forgotToChooseRightAnswer) {
+                                  setState(() => _forgotToChooseRightAnswer = chosenOptions.isEmpty);
+                                }
                               },
                               child: CircleAvatar(
                                 backgroundColor: state.question.correctAnswers.contains(index)
@@ -153,10 +160,13 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                     ),
                     const SizedBox(height: 16),
                     if (_forgotToChooseRightAnswer)
-                      Flexible(
-                        child: Text(
-                          context.loc.forgotToChooseCorrectAnswer,
-                          style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
+                      Center(
+                        child: Flexible(
+                          child: Text(
+                            context.loc.forgotToChooseCorrectAnswer,
+                            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     Row(
@@ -176,8 +186,8 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                               setState(() => _forgotToChooseRightAnswer = state.question.correctAnswers.isEmpty);
 
                               if ((_formKey.currentState?.validate() ?? false) && state.question.validate) {
-                                Navigator.of(context).pop(state.question);
                                 cubit.submitQuestion();
+                                Navigator.of(context).pop(state.question);
                               }
                             },
                             label: context.loc.questionCreate,

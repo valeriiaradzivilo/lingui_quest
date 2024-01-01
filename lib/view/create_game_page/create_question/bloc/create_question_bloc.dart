@@ -15,8 +15,9 @@ class QuestionCreationCubit extends Cubit<QuestionCreationState> {
   void setQuestion(String text) => emit(state.copyWith(question: state.question.copyWith(question: text)));
   void setOptions(List<String> listOfOptions) =>
       emit(state.copyWith(question: state.question.copyWith(options: listOfOptions)));
-  void setCorrectAnswers(List<int> listOfAnswers) =>
-      emit(state.copyWith(question: state.question.copyWith(correctAnswers: listOfAnswers)));
+  void setCorrectAnswers(List<int> listOfAnswers) {
+    emit(state.copyWith(question: state.question.copyWithCustom(correctAnswers: listOfAnswers)));
+  }
 
   void submitQuestion() => emit(QuestionCreationState.initial());
 }

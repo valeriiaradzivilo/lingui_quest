@@ -24,15 +24,16 @@ enum CreateGameMainParts {
 
   Widget widget({TextEditingController? controller, required BuildContext context, required GameCreationState state}) =>
       switch (this) {
-        name => _TopicNTextField(controller: controller!, topic: topic(context), label: label(context)),
-        description => _TopicNTextField(controller: controller!, topic: topic(context), label: label(context)),
+        name ||
+        description ||
+        time =>
+          _TopicNTextField(controller: controller!, topic: topic(context), label: label(context)),
         theme => _ThemeWidget(
             themeController: controller!,
             label: label(context),
             topic: topic(context),
             state: state,
           ),
-        time => _TopicNTextField(controller: controller!, topic: topic(context), label: label(context))
       };
 
   String topic(BuildContext context) => switch (this) {
@@ -176,7 +177,12 @@ class _CreateGamePageState extends State<CreateGamePage> {
                         LinMainButton(
                           label: context.loc.createGame,
                           onTap: () async {
-                            if ((formKey.currentState?.validate() ?? false) && state.game.validate) {
+                            if (state.game.questions.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(context.loc.gameMustHaveAtLeastOneQuestion),
+                                backgroundColor: theme.colorScheme.error,
+                              ));
+                            } else if ((formKey.currentState?.validate() ?? false) && state.game.validate) {
                               final isSuccessfullyCreated = await bloc.submitGame();
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(isSuccessfullyCreated
@@ -275,6 +281,7 @@ class _TopicNTextField extends StatelessWidget {
             ? LinNumberEditingField(
                 controller: controller,
                 label: label,
+                isRequired: true,
               )
             : LinTextField(
                 controller: controller,

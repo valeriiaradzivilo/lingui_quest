@@ -88,6 +88,7 @@
   "public":"Public",
   "publicInfo":"Public game is the game that is visible to everyone. In case you want it to be visible to specific groups - turn off the switch.",
   "youCreatedThisGame":"You are the creator of this game so only you can see this statistic",
+  "gameMustHaveAtLeastOneQuestion":"Game must have at least one question.",
  
   "rateTheGame":"Rate the game you have just played!",
   "rate":"Rate",
