@@ -24,16 +24,4 @@ class QuestionModel with _$QuestionModel {
   const QuestionModel._();
 
   bool get validate => question.isNotEmpty && options.isNotEmpty && correctAnswers.isNotEmpty;
-
-  QuestionModel copyWithCustom({
-    String? question,
-    List<String>? options,
-    List<int>? correctAnswers,
-  }) {
-    return QuestionModel(
-      question: question ?? this.question,
-      options: options ?? this.options,
-      correctAnswers: correctAnswers ?? this.correctAnswers,
-    );
-  }
 }

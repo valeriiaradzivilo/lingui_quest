@@ -79,7 +79,7 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                         ),
                         Tooltip(
                           message:
-                              'Try adding ___ for missing text. Student will be able to see his input when they choose an option. ',
+                              'Try adding ___ for missing text. Student will be able to see his input when they choose an option. Please avoid using this sign: " .',
                           child: const Icon(Icons.info_outline_rounded),
                         ),
                       ],
