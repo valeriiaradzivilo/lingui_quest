@@ -161,12 +161,10 @@ class CreateQuestionState extends State<CreateQuestionPage> {
                     const SizedBox(height: 16),
                     if (_forgotToChooseRightAnswer)
                       Center(
-                        child: Flexible(
-                          child: Text(
-                            context.loc.forgotToChooseCorrectAnswer,
-                            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
-                            textAlign: TextAlign.center,
-                          ),
+                        child: Text(
+                          context.loc.forgotToChooseCorrectAnswer,
+                          style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     Row(
